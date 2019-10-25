@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  Annotate ML
+
+  Created by Emily Blackwell on 25/10/2019.
+  Copyright © 2019 Emily Blackwell. All rights reserved.
+*/
+
+// export //
+"E0" = "Export Failed!"; // export (0 = false)
+"E1" = "Export Successful!"; // export (1 = true)
+"EIT0" = "There was a problem exporting your data!"; //export informative text (failed)
+"EIT1" = "Your exported data can be found in"; // export informative text (success)
+
+// action labels //
+"Ok" = "Ok";
+"Del" = "Delete";
+
+// labels //
+"ALD" = "No Label"; // annotation label default
