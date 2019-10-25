@@ -115,10 +115,12 @@ class Document: NSDocument {
 			
 			// export our photos
 			for (i, object) in objects.enumerated() {
-				let photoName = "photo-\(i).tiff"
+				let photoName = "photo-\(i).png"
+				let photoData = object.photo.tiffRepresentation!.bitmap!.png
+				
 				let filename = url.appendingPathComponent(photoName).path
 				
-				fm.createFile(atPath: filename, contents: object.photo.tiffRepresentation, attributes: .none)
+				fm.createFile(atPath: filename, contents: photoData, attributes: .none)
 				
 				// log its annotations
 				var objectEntry: [String: Any] = ["image": photoName]

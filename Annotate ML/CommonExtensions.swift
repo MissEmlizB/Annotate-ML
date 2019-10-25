@@ -74,3 +74,15 @@ extension String {
 		}
 	}
 }
+
+// https://stackoverflow.com/questions/29262624/nsimage-to-nsdata-as-png-swift
+extension NSBitmapImageRep {
+    var png: Data? {
+        return representation(using: .png, properties: [:])
+    }
+}
+extension Data {
+    var bitmap: NSBitmapImageRep? {
+        return NSBitmapImageRep(data: self)
+    }
+}
