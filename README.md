@@ -1,4 +1,3 @@
-# Annotate-ML
 ![Banner](/Readme%20Photos/banner.png)
 
 ### Annotate ML is an easy-to-use photo annotation app for Create ML object detectors.
