@@ -16,7 +16,7 @@ https://unsplash.com/photos/sVRSQNPJMq4
 
 
 ### Downloads
-There are currently no available downloads for Annotate ML. However, feel free to download and build the current work-in-progress version and try it out for yourself!
+There are currently no available releases for Annotate ML. However, feel free to download and build the current work-in-progress version and try it out for yourself!
 
 
 ### Contact
