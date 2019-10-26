@@ -44,6 +44,14 @@ class ViewController: NSViewController {
 		photosTableView.delegate = self
 		
 		scrollView.wantsLayer = true
+		
+		// allow the user to drop photos or links to theirhotos table view
+		photosTableView.registerForDraggedTypes([.fileURL, .png, .tiff, .URL])
+		
+		photosTableView.setDraggingSourceOperationMask(.move, forLocal: true)
+		photosTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(thumbnailAvailable(notification:)), name: PhotoAnnotation.thumbnailAvailable, object: nil)
 	}
 
 	override var representedObject: Any? {
@@ -69,13 +77,18 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 	}
 	
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		let cell = photosTableView.makeView(withIdentifier: cellIdentifier, owner: nil) as! NSTableCellView
 		
-		guard row >= 0 && row < document!.objects.count else {
-			return nil
+		let cell = photosTableView.makeView(withIdentifier: cellIdentifier, owner: nil) as! ThumbnailCellView
+		
+		cell.photo.image = document!.objects[row].thumbnail
+		
+		// thumbnail "processing" indicator
+		if document!.objects[row].thumbnail == nil {
+			cell.processingIndicator.startAnimation(self)
+		} else {
+			cell.processingIndicator.stopAnimation(self)
 		}
 		
-		cell.imageView?.image = document!.objects[row].thumbnail
 		return cell
 	}
 	
@@ -87,24 +100,10 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		
 		let delete = NSTableViewRowAction(style: .destructive, title: "Del".l) { _, row in
 			
-			let object = self.document!.objects[row]
-			
-			// reset our detail view if we're deleting the active object
-			if self.annotationsView.object == object {
-				self.annotationsView.object = nil
-			}
-			
-			self.document!.objects.remove(at: row)
-			self.document!.updateChangeCount(.changeDone)
-			
-			self.photosTableView.removeRows(at: [row], withAnimation: .slideUp)
-
-			// no crashes allowed!
-			self.lastPopover?.performClose(self)
+			self.deletePhoto(at: row)
 		}
 		
 		return [delete]
-		
 	}
 	
 	func tableViewSelectionDidChange(_ notification: Notification) {
@@ -114,7 +113,58 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		
 		annotationsView.object = object
 	}
-}
+	
+	// MARK: Drag and Drop
+	
+	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+		
+		// re-ordering operation
+		if let source = info.draggingSource as? NSTableView, source == photosTableView {
+			return .move
+		}
+		
+		// add photos operation
+		return .copy
+	}
+	
+	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+		
+		guard dropOperation == .above else {
+			return false
+		}
+		
+		let pb = info.draggingPasteboard
+		
+		// actual photo data
+		if let images = pb.readObjects(forClasses: [NSImage.self], options: [:]) as? [NSImage] {
+			
+			self.addImages(images: images, at: row)
+		}
+		
+		// URLS
+		if let urls = pb.readObjects(forClasses: [NSURL.self], options: [:]) as? [URL] {
+			
+			DispatchQueue.global(qos: .userInitiated).async {
+				var images: [NSImage] = []
+				
+				for url in urls {
+					guard let data = try? Data(contentsOf: url),
+						let image = NSImage(data: data)
+						else {
+							continue
+					}
+					
+					images.append(image)
+				}
+				
+				DispatchQueue.main.sync {
+					self.addImages(images: images, at: row)
+				}
+			}
+		}
+		
+		return true
+	}}
 
 extension ViewController: DocumentDelegate {
 	
@@ -137,6 +187,11 @@ extension ViewController: DocumentDelegate {
 		photosTableView.reloadData()
 		
 		document!.indexLabels()
+		
+		// refresh thumbnails
+		DispatchQueue.main.asyncAfter(deadline: .now() + 50) {
+			self.thumbnailAvailable(notification: nil)
+		}
 	}
 	
 	func projectChanged() {
@@ -209,21 +264,51 @@ extension ViewController {
 	
 	// MARK: Actions
 	
-	func addImages(images: [NSImage]) {
+	func addImages(images: [NSImage], at: Int? = nil) {
 		var rows = IndexSet()
+		
+		let start = at ?? document!.objects.count
 		
 		// i... photo... get it? Ok, I'm leaving.
 		
 		for (i, photo) in images.enumerated() {
 			let object = PhotoAnnotation(photo: photo)
-			document!.objects.append(object)
+			object.wasAdded = true
 			
-			rows.insert(i)
+			document!.objects.insert(object, at: start)
+			rows.insert(start + i)
 		}
 		
 		// update our table view
 		photosTableView.insertRows(at: rows, withAnimation: .slideDown)
 		document!.updateChangeCount(.changeDone)
+	}
+	
+	func deletePhoto(at row: Int) {
+		let object = self.document!.objects[row]
+		
+		// reset our detail view if we're deleting the active object
+		if self.annotationsView.object == object {
+			self.annotationsView.object = nil
+		}
+		
+		self.document!.objects.remove(at: row)
+		self.document!.updateChangeCount(.changeDone)
+		
+		self.photosTableView.removeRows(at: [row], withAnimation: .slideUp)
+
+		// no crashes allowed!
+		self.lastPopover?.performClose(self)
+	}
+	
+	func deleteSelectedPhoto() {
+		let selected = photosTableView?.selectedRow ?? -1
+		
+		guard selected >= 0 && selected < document!.objects.count else {
+			return
+		}
+		
+		deletePhoto(at: selected)
 	}
 	
 	func previousPhoto() {
@@ -270,5 +355,15 @@ extension ViewController: NSServicesMenuRequestor {
 		
 		addImages(images: [image])
 		return true
+	}
+}
+
+extension ViewController {
+	
+	// MARK: Notification Actions
+	
+	@objc func thumbnailAvailable(notification: NSNotification?) {
+		photosTableView.reloadData()
+		photosTableView.scrollToEndOfDocument(self)
 	}
 }

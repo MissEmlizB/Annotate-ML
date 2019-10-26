@@ -13,19 +13,40 @@ fileprivate let kAnnotations = "annotations"
 
 class PhotoAnnotation: NSObject, NSSecureCoding {
 	
+	/// this notification is posted whenever a photo object's thumbnail becomes available
+	static let thumbnailAvailable = NSNotification.Name(rawValue: "notificationWasAvailable")
+	
 	var photo: NSImage!
-	var thumbnail: NSImage!
+	var thumbnail: NSImage?
 	var annotations: [Annotation] = []
+	
+	var wasAdded: Bool = false
 	
 	init(photo: NSImage) {
 		super.init()
 		
 		self.photo = photo
+		
 		makeThumbnail()
 	}
 	
 	func makeThumbnail() {
-		thumbnail = photo.resize(NSSize(width: 64, height: 64))
+		guard let photo = self.photo else {
+			return
+		}
+		
+		DispatchQueue.global(qos: .userInitiated).async {
+			let thumbnail = photo.resize(NSSize(width: 64, height: 64))
+			
+			DispatchQueue.main.sync {
+				self.thumbnail = thumbnail
+				
+				// only added objects send this notification
+				if self.wasAdded {
+					NotificationCenter.default.post(name: PhotoAnnotation.thumbnailAvailable, object: nil)
+				}
+			}
+		}
 	}
 	
 	// MARK: NSCoding

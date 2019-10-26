@@ -94,6 +94,14 @@
                                         <menuItem title="Continuity Camera" identifier="NSMenuItemImportFromDeviceIdentifier" id="5PP-e0-CQ2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
+                                        <menuItem title="Delete Photo" id="6nD-UB-ewh">
+                                            <string key="keyEquivalent" base64-UTF8="YES">
+CA
+</string>
+                                            <connections>
+                                                <action selector="deleteSelectedPhotoWithSender:" target="Ady-hI-5gd" id="tQc-nA-Z4K"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                                         <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                             <connections>
@@ -110,6 +118,12 @@
                                                 <action selector="saveAsSender:" target="Ady-hI-5gd" id="l2V-cL-qSa"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Revert to Saved" keyEquivalent="r" id="KaW-ft-85H">
+                                            <connections>
+                                                <action selector="revertDocumentToSaved:" target="Ady-hI-5gd" id="iJ3-Pv-kwq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="qfw-pb-Vsq"/>
                                         <menuItem title="Export" id="XCV-oK-Q2u">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Export" id="O6k-qS-8ED">
@@ -121,11 +135,6 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
-                                        </menuItem>
-                                        <menuItem title="Revert to Saved" keyEquivalent="r" id="KaW-ft-85H">
-                                            <connections>
-                                                <action selector="revertDocumentToSaved:" target="Ady-hI-5gd" id="iJ3-Pv-kwq"/>
-                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -460,7 +469,7 @@
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="37" y="-315"/>
+            <point key="canvasLocation" x="37" y="-371"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -788,7 +797,7 @@
                                                             <tableColumns>
                                                                 <tableColumn width="138" minWidth="40" maxWidth="1000" id="vrG-KO-Ldp">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="controlContent" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -799,7 +808,7 @@
                                                                     </textFieldCell>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                     <prototypeCellViews>
-                                                                        <tableCellView identifier="cell" id="oMg-uZ-JVW">
+                                                                        <tableCellView identifier="cell" id="oMg-uZ-JVW" customClass="ThumbnailCellView" customModule="Annotate_ML" customModuleProvider="target">
                                                                             <rect key="frame" x="1" y="1" width="138" height="137"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
@@ -811,13 +820,23 @@
                                                                                     </constraints>
                                                                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="thumbnailTest" id="GQn-Y1-BvT"/>
                                                                                 </imageView>
+                                                                                <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="FGL-50-OhQ">
+                                                                                    <rect key="frame" x="53" y="53" width="32" height="32"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="height" constant="32" id="6Hl-kH-QbO"/>
+                                                                                        <constraint firstAttribute="width" constant="32" id="6SW-Tg-62x"/>
+                                                                                    </constraints>
+                                                                                </progressIndicator>
                                                                             </subviews>
                                                                             <constraints>
                                                                                 <constraint firstItem="ojY-H9-Q61" firstAttribute="centerY" secondItem="oMg-uZ-JVW" secondAttribute="centerY" id="pY0-dh-gp4"/>
+                                                                                <constraint firstItem="FGL-50-OhQ" firstAttribute="centerX" secondItem="oMg-uZ-JVW" secondAttribute="centerX" id="r3R-UW-aSp"/>
+                                                                                <constraint firstItem="FGL-50-OhQ" firstAttribute="centerY" secondItem="oMg-uZ-JVW" secondAttribute="centerY" id="tck-eb-cuT"/>
                                                                                 <constraint firstItem="ojY-H9-Q61" firstAttribute="centerX" secondItem="oMg-uZ-JVW" secondAttribute="centerX" id="vmC-uP-XLv"/>
                                                                             </constraints>
                                                                             <connections>
-                                                                                <outlet property="imageView" destination="ojY-H9-Q61" id="WjG-39-5Sg"/>
+                                                                                <outlet property="photo" destination="ojY-H9-Q61" id="Ghs-vC-ZH2"/>
+                                                                                <outlet property="processingIndicator" destination="FGL-50-OhQ" id="Zr9-l2-YXj"/>
                                                                             </connections>
                                                                         </tableCellView>
                                                                     </prototypeCellViews>
@@ -996,7 +1015,7 @@
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="9Ec-6N-uCQ">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="controlContent" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1033,7 +1052,7 @@
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="hWV-TP-Xuq">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="controlContent" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1132,7 +1151,7 @@
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="0FV-7n-xGe">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="controlContent" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1172,7 +1191,7 @@
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="wB9-EA-rPW">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="controlContent" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>

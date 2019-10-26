@@ -18,6 +18,9 @@ protocol DocumentDelegate {
 
 class Document: NSDocument {
 	
+	// our document will be package-based later
+	var fileWrapper: FileWrapper!
+	
 	/// This is posted whenever the document has finished indexing its class labels
 	static let labelsIndexed = NSNotification.Name(rawValue: "labelsWereIndexed")
 	
