@@ -8,45 +8,16 @@
 
 import Cocoa
 
-fileprivate let kPhoto = "photo"
+fileprivate let kFilename = "filename"
 fileprivate let kAnnotations = "annotations"
 
 class PhotoAnnotation: NSObject, NSSecureCoding {
-	
-	/// this notification is posted whenever a photo object's thumbnail becomes available
-	static let thumbnailAvailable = NSNotification.Name(rawValue: "notificationWasAvailable")
-	
-	var photo: NSImage!
-	var thumbnail: NSImage?
+
+	var photoFilename: String!
 	var annotations: [Annotation] = []
-	
-	var wasAdded: Bool = false
-	
-	init(photo: NSImage) {
-		super.init()
 		
-		self.photo = photo
-		
-		makeThumbnail()
-	}
-	
-	func makeThumbnail() {
-		guard let photo = self.photo else {
-			return
-		}
-		
-		DispatchQueue.global(qos: .userInitiated).async {
-			let thumbnail = photo.resize(NSSize(width: 64, height: 64))
-			
-			DispatchQueue.main.sync {
-				self.thumbnail = thumbnail
-				
-				// only added objects send this notification
-				if self.wasAdded {
-					NotificationCenter.default.post(name: PhotoAnnotation.thumbnailAvailable, object: nil)
-				}
-			}
-		}
+	init(filename: String) {
+		self.photoFilename = filename
 	}
 	
 	// MARK: NSCoding
@@ -54,9 +25,8 @@ class PhotoAnnotation: NSObject, NSSecureCoding {
 	required init?(coder: NSCoder) {
 		super.init()
 		
-		if let photo = coder.decodeObject(of: NSImage.self, forKey: kPhoto) {
-			self.photo = photo
-			makeThumbnail()
+		if let filename = coder.decodeObject(of: NSString.self, forKey: kFilename) as String? {
+			self.photoFilename = filename
 		}
 		
 		if let annotations = coder.decodeObject(of: [NSArray.self, Annotation.self], forKey: kAnnotations) as? [Annotation] {
@@ -65,7 +35,7 @@ class PhotoAnnotation: NSObject, NSSecureCoding {
 	}
 	
 	func encode(with coder: NSCoder) {
-		coder.encode(photo, forKey: kPhoto)
+		coder.encode(photoFilename, forKey: kFilename)
 		coder.encode(annotations, forKey: kAnnotations)
 	}
 	

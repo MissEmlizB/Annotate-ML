@@ -15,10 +15,6 @@
 			<string></string>
 			<key>CFBundleTypeName</key>
 			<string>Annotate ML Project</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>????</string>
-			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -65,7 +61,9 @@
 	<array>
 		<dict>
 			<key>UTTypeConformsTo</key>
-			<array/>
+			<array>
+				<string>com.apple.package</string>
+			</array>
 			<key>UTTypeDescription</key>
 			<string>Annotate ML Project</string>
 			<key>UTTypeIdentifier</key>
@@ -81,9 +79,7 @@
 					<string>annotateml</string>
 				</array>
 				<key>public.mime-type</key>
-				<array>
-					<string>application/octet-stream</string>
-				</array>
+				<array/>
 			</dict>
 		</dict>
 	</array>

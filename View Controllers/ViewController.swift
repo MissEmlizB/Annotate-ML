@@ -18,10 +18,11 @@ class ViewController: NSViewController {
 	@IBOutlet weak var scrollView: NSScrollView!
 	
 	@IBOutlet weak var splitView: NSSplitView!
-	@IBOutlet weak var loadIndicator: NSProgressIndicator!
 	
 	private weak var lastPopover: NSPopover?
 	private weak var document: Document?
+	
+	var thumbnails: [NSImage] = []
 	
 	var activeObject: PhotoAnnotation? {
 		get {
@@ -50,8 +51,6 @@ class ViewController: NSViewController {
 		
 		photosTableView.setDraggingSourceOperationMask(.move, forLocal: true)
 		photosTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
-		
-		NotificationCenter.default.addObserver(self, selector: #selector(thumbnailAvailable(notification:)), name: PhotoAnnotation.thumbnailAvailable, object: nil)
 	}
 
 	override var representedObject: Any? {
@@ -80,13 +79,13 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		
 		let cell = photosTableView.makeView(withIdentifier: cellIdentifier, owner: nil) as! ThumbnailCellView
 		
-		cell.photo.image = document!.objects[row].thumbnail
-		
 		// thumbnail "processing" indicator
-		if document!.objects[row].thumbnail == nil {
-			cell.processingIndicator.startAnimation(self)
-		} else {
+		if row >= 0 && row < thumbnails.count {
 			cell.processingIndicator.stopAnimation(self)
+			cell.photo.image = thumbnails[row]
+		} else {
+			cell.processingIndicator.startAnimation(self)
+			cell.photo.image = nil
 		}
 		
 		return cell
@@ -172,26 +171,18 @@ extension ViewController: DocumentDelegate {
 	
 	func loadingStarted() {
 		splitView.isHidden = true
-		
-		loadIndicator.isHidden = false
-		loadIndicator.startAnimation(self)
 	}
 	
 	func projectDidLoad() {
 		
 		// show the main UI once our project loads completely
-		loadIndicator.stopAnimation(self)
-		loadIndicator.isHidden = true
-		
 		splitView.isHidden = false
 		photosTableView.reloadData()
 		
 		document!.indexLabels()
 		
-		// refresh thumbnails
-		DispatchQueue.main.asyncAfter(deadline: .now() + 50) {
-			self.thumbnailAvailable(notification: nil)
-		}
+		// start getting photo thumbnails
+		getThumbnails()
 	}
 	
 	func projectChanged() {
@@ -225,6 +216,10 @@ extension ViewController: AnnotationsViewDelegate {
 		
 		editorVC.popover = popover
 		popover.show(relativeTo: annotation.cgRect, of: annotationsView, preferredEdge: .maxX)
+	}
+	
+	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage? {
+		return document!.getPhoto(for: object)
 	}
 }
 
@@ -264,24 +259,48 @@ extension ViewController {
 	
 	// MARK: Actions
 	
-	func addImages(images: [NSImage], at: Int? = nil) {
-		var rows = IndexSet()
-		
-		let start = at ?? document!.objects.count
-		
-		// i... photo... get it? Ok, I'm leaving.
-		
-		for (i, photo) in images.enumerated() {
-			let object = PhotoAnnotation(photo: photo)
-			object.wasAdded = true
+	func addImages(images: [NSImage], at start: Int = -1) {
+				
+		document!.addPhotos(images, at: start) { row in
+			self.photosTableView.insertRows(at: [row], withAnimation: .slideDown)
+			self.getThumbnails()
 			
-			document!.objects.insert(object, at: start)
-			rows.insert(start + i)
+			self.document!.updateChangeCount(.changeDone)
+		}
+	}
+	
+	func addImages(images: [URL], at start: Int = -1) {
+				
+		document!.addPhotos(from: images, at: start) { row in
+			self.photosTableView.insertRows(at: [row], withAnimation: .slideDown)
+			self.getThumbnails()
+			
+			self.document!.updateChangeCount(.changeDone)
+		}
+	}
+	
+	func getThumbnails() {
+		guard let document = self.document else {
+			return
 		}
 		
-		// update our table view
-		photosTableView.insertRows(at: rows, withAnimation: .slideDown)
-		document!.updateChangeCount(.changeDone)
+		DispatchQueue.global(qos: .background).async {
+			var thumbnails: [NSImage] = []
+			
+			// get thumbnail images from our package
+			for object in document.objects {
+				guard let thumbnail = document.getPhoto(for: object, isThumbnail: true) else {
+					continue
+				}
+				
+				thumbnails.append(thumbnail)
+			}
+			
+			DispatchQueue.main.async {
+				self.thumbnails = thumbnails
+				self.photosTableView.reloadData()
+			}
+		}
 	}
 	
 	func deletePhoto(at row: Int) {
@@ -292,7 +311,7 @@ extension ViewController {
 			self.annotationsView.object = nil
 		}
 		
-		self.document!.objects.remove(at: row)
+		self.document!.removePhoto(at: row)
 		self.document!.updateChangeCount(.changeDone)
 		
 		self.photosTableView.removeRows(at: [row], withAnimation: .slideUp)
@@ -361,9 +380,5 @@ extension ViewController: NSServicesMenuRequestor {
 extension ViewController {
 	
 	// MARK: Notification Actions
-	
-	@objc func thumbnailAvailable(notification: NSNotification?) {
-		photosTableView.reloadData()
-		photosTableView.scrollToEndOfDocument(self)
-	}
+
 }

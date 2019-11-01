@@ -69,7 +69,7 @@
                                         </menuItem>
                                         <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                             <connections>
-                                                <action selector="openDocument:" target="Ady-hI-5gd" id="bVn-NM-KNZ"/>
+                                                <action selector="openDocument:" target="Ady-hI-5gd" id="cEr-Rv-mrN"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Open Recent" id="tXI-mr-wws">
@@ -110,12 +110,12 @@ CA
                                         </menuItem>
                                         <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                             <connections>
-                                                <action selector="saveWithSender:" target="Ady-hI-5gd" id="FzM-Ke-6P9"/>
+                                                <action selector="saveDocument:" target="Ady-hI-5gd" id="Lj6-Gw-0Dh"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
                                             <connections>
-                                                <action selector="saveAsSender:" target="Ady-hI-5gd" id="l2V-cL-qSa"/>
+                                                <action selector="saveDocumentAs:" target="Ady-hI-5gd" id="iIR-68-lBw"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Revert to Saved" keyEquivalent="r" id="KaW-ft-85H">
@@ -516,10 +516,10 @@ CA
                                         <action selector="exportWithSender:" target="jGA-0Y-lOj" id="dVF-Hu-hO1"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="BBCFB294-AB09-49B6-A31A-2F803569AA10" explicitItemIdentifier="indicator" label="" paletteLabel="Save Indicator" tag="-1" sizingBehavior="auto" autovalidates="NO" id="ubt-Fh-kRO">
+                                <toolbarItem implicitItemIdentifier="BBCFB294-AB09-49B6-A31A-2F803569AA10" explicitItemIdentifier="indicator" label="" paletteLabel="Export Indicator" tag="-1" sizingBehavior="auto" autovalidates="NO" id="ubt-Fh-kRO">
                                     <nil key="toolTip"/>
                                     <progressIndicator key="view" wantsLayer="YES" maxValue="100" indeterminate="YES" controlSize="small" style="spinning" id="zFD-x5-vVY">
-                                        <rect key="frame" x="33" y="14" width="16" height="16"/>
+                                        <rect key="frame" x="38" y="14" width="16" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </progressIndicator>
                                 </toolbarItem>
@@ -764,32 +764,25 @@ CA
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="5gI-5U-AMq" customClass="ViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="ERx-hH-rdd">
-                        <rect key="frame" x="0.0" y="0.0" width="641" height="431"/>
+                    <view key="view" id="ERx-hH-rdd">
+                        <rect key="frame" x="0.0" y="0.0" width="641" height="442"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <progressIndicator hidden="YES" wantsLayer="YES" maxValue="100" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="lBG-g0-Aiu">
-                                <rect key="frame" x="305" y="205" width="32" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="I8e-aM-sjI"/>
-                                    <constraint firstAttribute="width" constant="32" id="zru-y3-oG0"/>
-                                </constraints>
-                            </progressIndicator>
-                            <splitView misplaced="YES" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
-                                <rect key="frame" x="0.0" y="-12" width="641" height="443"/>
+                            <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
+                                <rect key="frame" x="0.0" y="0.0" width="641" height="439"/>
                                 <subviews>
-                                    <customView misplaced="YES" id="n6S-qq-ccF">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="443"/>
+                                    <customView id="n6S-qq-ccF">
+                                        <rect key="frame" x="0.0" y="0.0" width="143" height="439"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
-                                                <rect key="frame" x="0.0" y="0.0" width="143" height="443"/>
+                                            <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
+                                                <rect key="frame" x="0.0" y="0.0" width="143" height="439"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="5q7-hE-Sez">
-                                                    <rect key="frame" x="1" y="1" width="141" height="441"/>
+                                                    <rect key="frame" x="1" y="1" width="141" height="437"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="5vY-MX-0AQ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="441"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="437"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -797,7 +790,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="138" minWidth="40" maxWidth="1000" id="vrG-KO-Ldp">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -866,18 +859,18 @@ CA
                                             <constraint firstItem="nsb-gn-Aan" firstAttribute="leading" secondItem="n6S-qq-ccF" secondAttribute="leading" id="z7H-SR-FEI"/>
                                         </constraints>
                                     </customView>
-                                    <customView misplaced="YES" id="14O-xD-Zmz">
-                                        <rect key="frame" x="144" y="0.0" width="497" height="443"/>
+                                    <customView id="14O-xD-Zmz">
+                                        <rect key="frame" x="144" y="0.0" width="497" height="439"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="20" minMagnification="0.0001" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rik-Es-Gue">
-                                                <rect key="frame" x="0.0" y="0.0" width="497" height="442"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="497" height="439"/>
                                                 <clipView key="contentView" id="7l0-fe-uJU">
-                                                    <rect key="frame" x="1" y="1" width="495" height="440"/>
+                                                    <rect key="frame" x="1" y="1" width="495" height="437"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r38-hr-pgj" customClass="AnnotationsView" customModule="Annotate_ML" customModuleProvider="target">
-                                                            <rect key="frame" x="3" y="-8" width="489" height="445"/>
+                                                            <rect key="frame" x="3" y="-11" width="489" height="445"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" id="42g-qE-bAJ"/>
                                                         </imageView>
@@ -885,11 +878,11 @@ CA
                                                     <color key="backgroundColor" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xbV-x7-h5p">
-                                                    <rect key="frame" x="1" y="425" width="495" height="16"/>
+                                                    <rect key="frame" x="1" y="422" width="495" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.59999999999999998" horizontal="NO" id="7zK-ks-tXZ">
-                                                    <rect key="frame" x="480" y="1" width="16" height="440"/>
+                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.5" horizontal="NO" id="7zK-ks-tXZ">
+                                                    <rect key="frame" x="480" y="1" width="16" height="437"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -909,17 +902,14 @@ CA
                             </splitView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="lBG-g0-Aiu" firstAttribute="centerX" secondItem="ERx-hH-rdd" secondAttribute="centerX" id="O4L-P7-anh"/>
-                            <constraint firstItem="gxT-F3-w3a" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" id="R6E-al-oso"/>
+                            <constraint firstItem="gxT-F3-w3a" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="3" id="R6E-al-oso"/>
                             <constraint firstAttribute="bottom" secondItem="gxT-F3-w3a" secondAttribute="bottom" id="aMn-BV-kEh"/>
                             <constraint firstItem="gxT-F3-w3a" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" id="eTf-Kd-ujp"/>
-                            <constraint firstItem="lBG-g0-Aiu" firstAttribute="centerY" secondItem="ERx-hH-rdd" secondAttribute="centerY" id="pti-m4-Flk"/>
                             <constraint firstAttribute="trailing" secondItem="gxT-F3-w3a" secondAttribute="trailing" id="v4A-wC-X8x"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="annotationsView" destination="r38-hr-pgj" id="Nrb-HE-9yY"/>
-                        <outlet property="loadIndicator" destination="lBG-g0-Aiu" id="sWe-Z4-ZbN"/>
                         <outlet property="photosTableView" destination="5vY-MX-0AQ" id="ycV-fR-iib"/>
                         <outlet property="scrollView" destination="Rik-Es-Gue" id="7aR-Wi-c6l"/>
                         <outlet property="splitView" destination="gxT-F3-w3a" id="0Eo-CH-xyj"/>
@@ -927,7 +917,7 @@ CA
                 </viewController>
                 <customObject id="2Tp-Fl-jBw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="43.5" y="715.5"/>
+            <point key="canvasLocation" x="43.5" y="715"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="nR8-FG-E2h">
@@ -1015,7 +1005,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="9Ec-6N-uCQ">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1052,7 +1042,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="hWV-TP-Xuq">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1151,7 +1141,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="0FV-7n-xGe">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1191,7 +1181,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="wB9-EA-rPW">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>

@@ -7,50 +7,9 @@
 //
 
 import Cocoa
+import ImageIO
 
-extension NSImage {
-	
-	// original function from:
-	// https://blog.alexseifert.com/2016/06/18/resize-an-nsimage-proportionately-in-swift/
-	// (Updated to Swift 5!)
-	
-	func resize(_ maxSize: NSSize) -> NSImage {
-		var ratio: Float = 0.0
-		
-		let imageWidth = Float(size.width)
-		let imageHeight = Float(size.height)
-		let maxWidth = Float(maxSize.width)
-		let maxHeight = Float(maxSize.height)
-
-		// Get ratio (landscape or portrait)
-		if (imageWidth > imageHeight) {
-			// Landscape
-			ratio = maxWidth / imageWidth
-		}
-		else {
-			// Portrait
-			ratio = maxHeight / imageHeight
-		}
-
-		// Calculate new size based on the ratio
-		let newWidth = imageWidth * ratio
-		let newHeight = imageHeight * ratio
-
-		// Create a new NSSize object with the newly calculated size
-		let newSize: NSSize = NSSize(width: Int(newWidth), height: Int(newHeight))
-
-		// Cast the NSImage to a CGImage
-		var imageRect: CGRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-		let imageRef = cgImage(forProposedRect: &imageRect, context: nil, hints: nil)
-
-		// Create NSImage from the CGImage using the new size
-		let imageWithNewSize = NSImage(cgImage: imageRef!, size: newSize)
-
-		// Return the new image
-		return imageWithNewSize
-	}
-
-}
+fileprivate let thumbnailSize: CGFloat = 120
 
 extension NSColor {
 	var bestForeground: NSColor {
@@ -85,4 +44,45 @@ extension Data {
     var bitmap: NSBitmapImageRep? {
         return NSBitmapImageRep(data: self)
     }
+}
+
+extension FileWrapper {
+	func setFilename(_ filename: String) {
+		self.filename = filename
+		self.preferredFilename = filename
+	}
+	
+	func removeFileWrapper(withFilename name: String) {
+		guard let wrapper = self.fileWrappers?[name] else {
+			return
+		}
+		
+		self.removeFileWrapper(wrapper)
+	}
+}
+
+/// Creates a thumbnail of a photo
+/// - Parameter photo: the photo to use
+func thumbnailify(photo: NSImage) -> NSImage? {
+	
+	let options: [CFString: Any] = [
+		kCGImageSourceCreateThumbnailFromImageIfAbsent: true,
+		kCGImageSourceCreateThumbnailWithTransform: true,
+		kCGImageSourceShouldCacheImmediately: true,
+		kCGImageSourceThumbnailMaxPixelSize: thumbnailSize
+	]
+	
+	// create image thumbnail using Image I/O
+	guard let imageSource = CGImageSourceCreateWithData(photo.tiffRepresentation! as CFData, nil),
+		let image = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options as CFDictionary)
+		else {
+			return nil
+	}
+	
+	// thumbnail size
+	let ratio = thumbnailSize * photo.size.width
+	let width = photo.size.width * ratio
+	let height = photo.size.height * ratio
+	
+	return NSImage(cgImage: image, size: NSSize(width: width, height: height))
 }

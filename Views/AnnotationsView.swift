@@ -8,15 +8,31 @@
 
 import Cocoa
 
+enum AnnotationsViewState {
+	case normal
+	case canEnterDragMode
+	case dragMode
+}
+
 protocol AnnotationsViewDelegate {
 	func annotationCreated(annotation: Annotation)
 	func annotationSelected(annotation: Annotation, at: NSPoint)
+	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage?
 }
 
 class AnnotationsView: NSImageView {
 
 	var delegate: AnnotationsViewDelegate?
+	var state: AnnotationsViewState = .normal
 	
+	// moving variables
+	var trackingArea : NSTrackingArea?
+	
+	var moveAnchor: NSPoint!
+	var originalPosition: NSPoint!
+	weak var highlightedAnnotation: Annotation?
+	
+	// annotation creation properties
 	var start: NSPoint!
 	var w: Float = 0
 	var h: Float = 0
@@ -37,36 +53,50 @@ class AnnotationsView: NSImageView {
 		}
 	}
 	
+	var controlHighlightColour: NSColor {
+		get {
+			return controlColour.highlight(withLevel: 0.1)!
+		}
+	}
+	
 	// this will make exporting sooo much easier later
 	override var isFlipped: Bool {
+		return true
+	}
+	
+	override var acceptsFirstResponder: Bool {
 		return true
 	}
 	
 	// reference to our currently active object's annotations array
 	weak var object: PhotoAnnotation? {
 		didSet {
-			self.image = object?.photo
-			
-			guard let object = object else {
-				return
+			guard let object = object,
+				let image = delegate?.annotationPhotoRequested(for: object)
+				else {
+					self.image = nil
+					return
 			}
 			
-			let size = object.photo.size
-			
-			// make sure that our image view matches the image's size
-			self.frame.size = size
+			DispatchQueue.main.async {
+				// update our image view
+				self.image = image
+				let size = image.size
+				
+				// make sure that our image view matches the image's size
+				self.frame.size = size
 
-			// also, make sure our UI scales well with the image
-			let scale = (size.width + size.height) / 1000
+				// also, make sure our UI scales well with the image
+				let scale = (size.width + size.height) / 1000
 
-			annotationUIScale = scale
-			annotationLineThickness = 4.0 * scale
-			annotationLabelSize = 12.0 * scale
-			annotationMinArea = Float(16.0 * scale)
-			
-			// finally, make sure that the entire image is visible when it has been selected
-			enclosingScrollView?.magnify(toFit: frame)
-			
+				self.annotationUIScale = scale
+				self.annotationLineThickness = 4.0 * scale
+				self.annotationLabelSize = 12.0 * scale
+				self.annotationMinArea = Float(16.0 * scale)
+				
+				// finally, make sure that the entire image is visible when it has been selected
+				self.enclosingScrollView?.magnify(toFit: self.frame)
+			}
 		}
 	}
 	
@@ -88,12 +118,31 @@ class AnnotationsView: NSImageView {
 		}
 	}
 	
+	// MARK: View Set Up
+	
+	/// from https://stackoverflow.com/questions/7543684/mousemoved-not-called
+	
+	override func updateTrackingAreas() {
+		if trackingArea != nil {
+            self.removeTrackingArea(trackingArea!)
+        }
+		
+		let options : NSTrackingArea.Options =
+            [.mouseEnteredAndExited, .mouseMoved, .activeInKeyWindow]
+		
+        trackingArea = NSTrackingArea(rect: self.bounds, options: options,
+                                      owner: self, userInfo: nil)
+		
+        self.addTrackingArea(trackingArea!)
+	}
+	
 	// MARK: Drawing
 
 	private func draw(rect: CGRect) {
 		let path = NSBezierPath.init(rect: rect)
 		path.lineWidth = annotationLineThickness
 		path.lineCapStyle = .round
+		path.lineJoinStyle = .bevel
 		path.stroke()
 	}
 	
@@ -106,7 +155,7 @@ class AnnotationsView: NSImageView {
 		
 		// annotation "preview"
 		
-		NSColor.white.setStroke()
+		controlColour.setStroke()
 		
 		if let start = start {
 			let rect = CGRect(x: start.x, y: start.y, width: CGFloat(w), height: CGFloat(h))
@@ -114,13 +163,25 @@ class AnnotationsView: NSImageView {
 		}
 		
 		for annotation in object.annotations {
+			// only draw visible annotations
+			guard NSIntersectsRect(dirtyRect, annotation.cgRect) else {
+				continue
+			}
 			
+			var isSelected = false
+			
+			if let active = highlightedAnnotation, active == annotation {
+				isSelected = true
+			}
+						
 			// annotation outline
-			controlColour.setStroke()
+			isSelected ? controlHighlightColour.setStroke() : controlColour.setStroke()
+		
 			draw(rect: annotation.cgRect)
 			
 			// label BG
-			controlColour.setFill()
+			isSelected ? controlHighlightColour.setFill() : controlColour.setFill()
+			
 			var labelBG = annotation.cgRect
 			labelBG.size.height = annotationLabelSize + (12 * annotationUIScale)
 			
@@ -128,8 +189,13 @@ class AnnotationsView: NSImageView {
 			bgPath.fill()
 			
 			// label
-			let label = NSString(string: annotation.label)
+			var label = NSString(string: annotation.label)
 			var point = annotation.cgRect.origin
+			
+			// dragging indicator
+			if isSelected && state == .dragMode {
+				label = NSString(string: "DrML".l)
+			}
 			
 			let padding = 4 * annotationUIScale
 			point.x += padding
@@ -152,11 +218,68 @@ extension AnnotationsView {
 	}
 	
 	override func mouseDown(with event: NSEvent) {
-		start = convert(event.locationInWindow, from: nil)
+		
+		let cursor = convert(event.locationInWindow, from: nil)
+		
+		switch state {
+			
+		case .normal:
+			start = cursor
+			
+		default:
+			break
+		}
+	}
+	
+	override func mouseMoved(with event: NSEvent) {
+		
+		guard let object = object else {
+			state = .normal
+			return
+		}
+		
+		let cursor = convert(event.locationInWindow, from: nil)
+		
+		// if a user moves their cursor over an annotation, we can enter "drag" mode
+		
+		for annotation in object.annotations {
+			if NSPointInRect(cursor, annotation.cgRect) {
+				state = .canEnterDragMode
+				highlightedAnnotation = annotation
+				setNeedsDisplay()
+				return
+			}
+		}
+		
+		state = .normal
+		highlightedAnnotation = nil
+		setNeedsDisplay()
 	}
 	
 	override func mouseDragged(with event: NSEvent) {
-		updateSize(with: event)
+		
+		let cursor = convert(event.locationInWindow, from: nil)
+		
+		switch state {
+			
+		case .normal:
+			updateSize(with: event)
+			
+		case .canEnterDragMode:
+			state = .dragMode
+			originalPosition = highlightedAnnotation?.cgRect.origin
+			moveAnchor = cursor
+			
+		case .dragMode:
+			let deltaX = CGFloat(moveAnchor.x - cursor.x)
+			let deltaY = CGFloat(moveAnchor.y - cursor.y)
+			
+			highlightedAnnotation?.x = Float(originalPosition.x - deltaX)
+			highlightedAnnotation?.y = Float(originalPosition.y - deltaY)
+			
+			break
+		} 
+		
 		self.setNeedsDisplay()
 	}
 	
@@ -166,8 +289,16 @@ extension AnnotationsView {
 		
 		guard object != nil, a > annotationMinArea, let start = start else {
 			
-			// if the annotation box area is less than 16 assume that the user is selecting
-			findClickedAnnotation(in: event)
+			if state != .dragMode {
+				// if the annotation box area is less than 16 assume that the user is selecting
+				findClickedAnnotation(in: event)
+			}
+			
+			// end of drag-move
+			if state == .dragMode {
+				state = .normal
+				highlightedAnnotation = nil
+			}
 			
 			self.start = nil
 			self.setNeedsDisplay()

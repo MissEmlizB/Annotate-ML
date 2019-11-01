@@ -36,12 +36,14 @@ class Annotation: NSObject, NSSecureCoding {
 		self.h = Float(rect.size.height)
 	}
 	
+	/// A representation of this object in CGRect/NSRect form
 	var cgRect: CGRect {
 		get {
 			 CGRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(w), height: CGFloat(h))
 		}
 	}
 	
+	/// a representation of this object in JSON form
 	var json: [String: Any] {
 		get {
 			["x": x, "y": y, "width": w, "height": h]

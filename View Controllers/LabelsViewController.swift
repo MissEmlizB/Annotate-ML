@@ -79,9 +79,7 @@ class LabelsViewController: NSViewController {
 				let indexesB = IndexSet(self.document!.customLabels.enumerated().compactMap{ $0.offset })
 				
 				self.myLabels.reloadData(forRowIndexes: indexesB, columnIndexes: [1])
-				self.detectedLabels.reloadData(forRowIndexes: indexesA, columnIndexes: [1])
-				
-				print(tally)
+				self.detectedLabels.reloadData(forRowIndexes: indexesA, columnIndexes: [1])				
 			}
 		}
 	}

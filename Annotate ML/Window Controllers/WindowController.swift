@@ -18,14 +18,13 @@ class WindowController: NSWindowController {
 	
 	var openImagePanel: NSOpenPanel!
 	var exportPanel: NSSavePanel!
-	var savePanel: NSSavePanel!
-	
 	var lastURL: URL?
 
     override func windowDidLoad() {
         super.windowDidLoad()
 		
 		window!.delegate = self
+		window!.acceptsMouseMovedEvents = true
 		
 		saveIndicator?.isHidden = true
     
@@ -33,10 +32,7 @@ class WindowController: NSWindowController {
 		openImagePanel.allowedFileTypes = NSImage.imageTypes
 		openImagePanel.allowsMultipleSelection = true
 		openImagePanel.resolvesAliases = true
-		
-		savePanel = NSSavePanel()
-		savePanel.allowedFileTypes = ["annotateml"]
-		
+
 		exportPanel = NSSavePanel()
 		
 		viewController = (contentViewController as! ViewController)
@@ -159,63 +155,6 @@ class WindowController: NSWindowController {
 extension WindowController {
 	
 	// MARK: Document Actions
-	
-	private func save(_ normalSave: Bool) {
-		
-		guard let document = self.document as? Document else {
-			return
-		}
-		
-		setIndicator(isVisible: true)
-		
-		// since our project files tend to be ginormous
-		// we'll save it in the background
-		
-		let url = lastURL!
-		
-		DispatchQueue.global(qos: .userInitiated).async {
-			let type: NSDocument.SaveOperationType = normalSave ? .saveOperation : .saveAsOperation
-			
-			document.save(to: url, ofType: "annotateml", for: type) { error in
-				
-				DispatchQueue.main.async {
-					if error != nil {
-						self.showMessage(title: "Error", message: "There was a problem saving your project!", style: .critical)
-					}
-					
-					self.setIndicator(isVisible: false)
-				}
-			}
-		}
-	}
-	
-	func performSave(normalSave: Bool) {
-		if lastURL == nil || !normalSave {
-			savePanel.beginSheetModal(for: window!) { response in
-				guard response == .OK else {
-					return
-				}
-				
-				self.lastURL = self.savePanel.url
-				self.save(normalSave)
-			}
-		} else {
-			self.save(normalSave)
-		}
-	}
-	
-	@IBAction func save(sender: AnyObject) {
-		
-		if lastURL == nil {
-			lastURL = document!.fileURL
-		}
-		
-		performSave(normalSave: true)
-	}
-	
-	@IBAction func saveAs(sender: AnyObject) {
-		performSave(normalSave: false)
-	}
 	
 	@IBAction func export(sender: AnyObject) {
 
