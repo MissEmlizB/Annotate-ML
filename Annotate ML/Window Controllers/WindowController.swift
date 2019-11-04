@@ -127,10 +127,6 @@ class WindowController: NSWindowController {
 		}
 	}
 	
-	@IBAction func deleteSelectedPhoto(sender: AnyObject) {
-		viewController?.deleteSelectedPhoto()
-	}
-	
 	// MARK: Other Actions
 	
 	func setIndicator(isVisible: Bool) {

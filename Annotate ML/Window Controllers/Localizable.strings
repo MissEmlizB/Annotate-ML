@@ -16,7 +16,5 @@
 "Ok" = "Ok";
 "Del" = "Delete";
 
-"DrML" = "Moving..."; // drag mode label
-
 // labels //
 "ALD" = "No Label"; // annotation label default

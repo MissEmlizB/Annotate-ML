@@ -43,7 +43,7 @@ class Annotation: NSObject, NSSecureCoding {
 		}
 	}
 	
-	/// a representation of this object in JSON form
+	/// A representation of this object in JSON form
 	var json: [String: Any] {
 		get {
 			["x": x, "y": y, "width": w, "height": h]

@@ -215,7 +215,7 @@ extension ViewController: AnnotationsViewDelegate {
 		lastPopover = popover
 		
 		editorVC.popover = popover
-		popover.show(relativeTo: annotation.cgRect, of: annotationsView, preferredEdge: .maxX)
+		popover.show(relativeTo: annotation.cgRect, of: annotationsView, preferredEdge: .maxY)
 	}
 	
 	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage? {

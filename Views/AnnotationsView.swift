@@ -12,6 +12,7 @@ enum AnnotationsViewState {
 	case normal
 	case canEnterDragMode
 	case dragMode
+	case resizeMode
 }
 
 protocol AnnotationsViewDelegate {
@@ -25,12 +26,19 @@ class AnnotationsView: NSImageView {
 	var delegate: AnnotationsViewDelegate?
 	var state: AnnotationsViewState = .normal
 	
-	// moving variables
+	// modification variables
 	var trackingArea : NSTrackingArea?
+	var moveAnchor: NSPoint?
 	
-	var moveAnchor: NSPoint!
+	// moving variables
 	var originalPosition: NSPoint!
 	weak var highlightedAnnotation: Annotation?
+	
+	// resizing variables
+	var originalRect: NSRect!
+
+	// (-1 = none, 0 = tl, 1 = tr, 2 = bl, 3 = br)
+	var highlightedHandle = -1
 	
 	// annotation creation properties
 	var start: NSPoint!
@@ -39,26 +47,11 @@ class AnnotationsView: NSImageView {
 	
 	// UI Scaling
 	private var annotationLineThickness: CGFloat = 4.0
+	private var annotationBGOffset: CGFloat = 2.0
 	private var annotationLabelSize: CGFloat = 12.0
 	private var annotationUIScale: CGFloat = 1.0
 	private var annotationMinArea: Float = 16
 
-	var controlColour: NSColor {
-		get {
-			if #available(macOS 10.14, *) {
-				return .controlAccentColor
-			} else {
-				return .systemGreen
-			}
-		}
-	}
-	
-	var controlHighlightColour: NSColor {
-		get {
-			return controlColour.highlight(withLevel: 0.1)!
-		}
-	}
-	
 	// this will make exporting sooo much easier later
 	override var isFlipped: Bool {
 		return true
@@ -93,6 +86,8 @@ class AnnotationsView: NSImageView {
 				self.annotationLineThickness = 4.0 * scale
 				self.annotationLabelSize = 12.0 * scale
 				self.annotationMinArea = Float(16.0 * scale)
+				
+				self.annotationBGOffset = self.annotationLineThickness / 2
 				
 				// finally, make sure that the entire image is visible when it has been selected
 				self.enclosingScrollView?.magnify(toFit: self.frame)
@@ -138,12 +133,25 @@ class AnnotationsView: NSImageView {
 	
 	// MARK: Drawing
 
-	private func draw(rect: CGRect) {
+	private func drawOutline(rect: CGRect) {
 		let path = NSBezierPath.init(rect: rect)
 		path.lineWidth = annotationLineThickness
 		path.lineCapStyle = .round
 		path.lineJoinStyle = .bevel
 		path.stroke()
+	}
+	
+	private func drawHandles(in rect: NSRect) {
+		
+		let handles = rect.getAllHandles(withScale: annotationUIScale)
+		
+		for (i, handle) in handles.enumerated() {
+			
+			// highlight the selected handle
+			highlightedHandle == i ? handleHighlightColour.setFill() : handleColour.setFill()
+			
+			handle.fill()
+		}
 	}
 	
     override func draw(_ dirtyRect: NSRect) {
@@ -159,9 +167,9 @@ class AnnotationsView: NSImageView {
 		
 		if let start = start {
 			let rect = CGRect(x: start.x, y: start.y, width: CGFloat(w), height: CGFloat(h))
-			draw(rect: rect)
+			drawOutline(rect: rect)
 		}
-		
+				
 		for annotation in object.annotations {
 			// only draw visible annotations
 			guard NSIntersectsRect(dirtyRect, annotation.cgRect) else {
@@ -173,11 +181,11 @@ class AnnotationsView: NSImageView {
 			if let active = highlightedAnnotation, active == annotation {
 				isSelected = true
 			}
-						
+			
 			// annotation outline
 			isSelected ? controlHighlightColour.setStroke() : controlColour.setStroke()
 		
-			draw(rect: annotation.cgRect)
+			drawOutline(rect: annotation.cgRect)
 			
 			// label BG
 			isSelected ? controlHighlightColour.setFill() : controlColour.setFill()
@@ -185,25 +193,62 @@ class AnnotationsView: NSImageView {
 			var labelBG = annotation.cgRect
 			labelBG.size.height = annotationLabelSize + (12 * annotationUIScale)
 			
+			// make sure the outline and the label background won't overlap
+			labelBG.origin.x += annotationBGOffset
+			labelBG.origin.y += annotationBGOffset
+			labelBG.size.width -= annotationLineThickness
+			
 			let bgPath = NSBezierPath.init(rect: labelBG)
+			bgPath.lineCapStyle = .round
+			bgPath.lineJoinStyle = .bevel
 			bgPath.fill()
 			
 			// label
-			var label = NSString(string: annotation.label)
+			let label = NSString(string: annotation.label)
 			var point = annotation.cgRect.origin
-			
-			// dragging indicator
-			if isSelected && state == .dragMode {
-				label = NSString(string: "DrML".l)
-			}
 			
 			let padding = 4 * annotationUIScale
 			point.x += padding
 			point.y += padding
 			
 			label.draw(at: point, withAttributes: [.font: NSFont.labelFont(ofSize: annotationLabelSize), .foregroundColor: controlColour.bestForeground])
+			
+			// show resize handles when it's selected
+			if isSelected {
+				drawHandles(in: annotation.cgRect)
+			}
 		}
     }
+	
+	// MARK: Colours
+	
+	var controlColour: NSColor {
+		var colour: NSColor!
+		
+		if #available(macOS 10.14, *) {
+			colour = .controlAccentColor
+		} else {
+			colour = .systemBlue
+		}
+		
+		return colour.withAlphaComponent(0.8)
+	}
+
+	var handleColour: NSColor {
+		return controlColour
+			.shadow(withLevel: 0.3)!
+			.withAlphaComponent(0.5)
+	}
+	
+	var controlHighlightColour: NSColor {
+		return controlColour.highlight(withLevel: 0.1)!
+			.withAlphaComponent(1.0)
+	}
+	
+	var handleHighlightColour: NSColor {
+		return handleColour.highlight(withLevel: 0.1)!
+			.withAlphaComponent(1.0)
+	}
 }
 
 extension AnnotationsView {
@@ -211,42 +256,56 @@ extension AnnotationsView {
 	// MARK: Annotation Creation
 	
 	private func updateSize(with event: NSEvent) {
+		guard let start = self.start else {
+			return
+		}
+		
 		let end = convert(event.locationInWindow, from: nil)
 		
 		w = Float(end.x - start.x)
 		h = Float(end.y - start.y)
 	}
 	
-	override func mouseDown(with event: NSEvent) {
-		
-		let cursor = convert(event.locationInWindow, from: nil)
-		
-		switch state {
-			
-		case .normal:
-			start = cursor
-			
-		default:
-			break
-		}
-	}
-	
 	override func mouseMoved(with event: NSEvent) {
 		
 		guard let object = object else {
 			state = .normal
+			highlightedHandle = -1
+			highlightedAnnotation = nil
+		
 			return
 		}
 		
 		let cursor = convert(event.locationInWindow, from: nil)
+					
+		// try to find handles under the cursor
+		if state == .canEnterDragMode {
+			if let activeAnnotation = highlightedAnnotation {
+				
+				highlightedHandle = -1
+				let handles = activeAnnotation.cgRect.getAllHandles(withScale: annotationUIScale)
+				
+				for (corner, handle) in handles.enumerated() {
+					if NSPointInRect(cursor, handle) {
+						highlightedHandle = corner
+						setNeedsDisplay()
+
+						return
+					}
+				}
+				
+				highlightedHandle = -1
+				setNeedsDisplay()
+			}
+		}
 		
-		// if a user moves their cursor over an annotation, we can enter "drag" mode
-		
+		// try to find annotations under the cursor
 		for annotation in object.annotations {
 			if NSPointInRect(cursor, annotation.cgRect) {
 				state = .canEnterDragMode
 				highlightedAnnotation = annotation
 				setNeedsDisplay()
+
 				return
 			}
 		}
@@ -256,9 +315,28 @@ extension AnnotationsView {
 		setNeedsDisplay()
 	}
 	
+	override func mouseDown(with event: NSEvent) {
+		
+		let cursor = convert(event.locationInWindow, from: nil)
+		
+		switch state {
+			
+		case .normal:
+			if highlightedAnnotation == nil {
+				start = cursor
+			}
+			
+		default:
+			break
+		}
+	}
+	
 	override func mouseDragged(with event: NSEvent) {
 		
 		let cursor = convert(event.locationInWindow, from: nil)
+		
+		let deltaX = CGFloat((moveAnchor?.x ?? 0) - cursor.x)
+		let deltaY = CGFloat((moveAnchor?.y ?? 0) - cursor.y)
 		
 		switch state {
 			
@@ -266,18 +344,22 @@ extension AnnotationsView {
 			updateSize(with: event)
 			
 		case .canEnterDragMode:
-			state = .dragMode
-			originalPosition = highlightedAnnotation?.cgRect.origin
+			
+			if highlightedHandle == -1 {
+				state = .dragMode
+				originalPosition = highlightedAnnotation!.cgRect.origin
+			} else {
+				state = .resizeMode
+				originalRect = highlightedAnnotation!.cgRect
+			}
+			
 			moveAnchor = cursor
 			
 		case .dragMode:
-			let deltaX = CGFloat(moveAnchor.x - cursor.x)
-			let deltaY = CGFloat(moveAnchor.y - cursor.y)
+			move(x: deltaX, y: deltaY)
 			
-			highlightedAnnotation?.x = Float(originalPosition.x - deltaX)
-			highlightedAnnotation?.y = Float(originalPosition.y - deltaY)
-			
-			break
+		case .resizeMode:
+			resize(x: deltaX, y: deltaY)
 		} 
 		
 		self.setNeedsDisplay()
@@ -289,17 +371,17 @@ extension AnnotationsView {
 		
 		guard object != nil, a > annotationMinArea, let start = start else {
 			
-			if state != .dragMode {
+			if state != .dragMode && state != .resizeMode {
 				// if the annotation box area is less than 16 assume that the user is selecting
 				findClickedAnnotation(in: event)
 			}
 			
-			// end of drag-move
-			if state == .dragMode {
+			// end of drag actions
+			if state == .dragMode || state == .resizeMode {
 				state = .normal
 				highlightedAnnotation = nil
 			}
-			
+	
 			self.start = nil
 			self.setNeedsDisplay()
 			
@@ -323,5 +405,70 @@ extension AnnotationsView {
 		h = 0
 		
 		self.setNeedsDisplay()
+	}
+}
+
+extension AnnotationsView {
+	
+	private func isBelowMinArea(_ f: Float) -> Bool {
+		return f < annotationMinArea
+	}
+	
+	/// prevents the annotation box from getting smaller than the minimum area
+	private func keepBoxSize() {
+		guard highlightedAnnotation != nil else {
+			return
+		}
+		
+		if isBelowMinArea(highlightedAnnotation!.w) {
+			highlightedAnnotation!.w = annotationMinArea
+		}
+		
+		if isBelowMinArea(highlightedAnnotation!.h) {
+			highlightedAnnotation!.h = annotationMinArea
+		}
+	}
+	
+	// MARK: Actions
+	
+	private func move(x deltaX: CGFloat, y deltaY: CGFloat) {
+		highlightedAnnotation!.x = Float(originalPosition.x - deltaX)
+		highlightedAnnotation!.y = Float(originalPosition.y - deltaY)
+	}
+	
+	private func resize(x deltaX: CGFloat, y deltaY: CGFloat) {
+		
+		switch highlightedHandle {
+				
+			// top left
+			case 0:
+				highlightedAnnotation!.x = Float(originalRect.origin.x - deltaX)
+				highlightedAnnotation!.y = Float(originalRect.origin.y - deltaY)
+				highlightedAnnotation!.w = Float(originalRect.width + deltaX)
+				highlightedAnnotation!.h = Float(originalRect.height + deltaY)
+			
+			// top right
+			case 1:
+				highlightedAnnotation!.w = Float(originalRect.width - deltaX)
+				highlightedAnnotation!.y = Float(originalRect.origin.y - deltaY)
+				highlightedAnnotation!.h = Float(originalRect.height + deltaY)
+			
+			// bottom left
+			case 2:
+				highlightedAnnotation!.x = Float(originalRect.origin.x - deltaX)
+				// highlightedAnnotation!.y = Float(originalRect.origin.y + deltaY)
+				highlightedAnnotation!.w = Float(originalRect.width + deltaX)
+				highlightedAnnotation!.h = Float(originalRect.height - deltaY)
+			
+			// bottom right (aka. my favourite resize handle)
+			case 3:
+				highlightedAnnotation!.w = Float(originalRect.width - deltaX)
+				highlightedAnnotation!.h = Float(originalRect.height - deltaY)
+				
+			default:
+				break
+		}
+		
+		keepBoxSize()
 	}
 }

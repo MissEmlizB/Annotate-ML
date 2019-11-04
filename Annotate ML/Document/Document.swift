@@ -90,7 +90,7 @@ class Document: NSDocument {
 	
 	// MARK: Save / Read
 	
-	override func fileWrapper(ofType typeName: String) throws -> FileWrapper {
+	override func write(to url: URL, ofType typeName: String) throws {
 		
 		// remove our old annotations file
 		fileWrapper.removeFileWrapper(withFilename: "annotations")
@@ -106,8 +106,7 @@ class Document: NSDocument {
 		annotationsWrapper.setFilename("annotations")
 		
 		fileWrapper.addFileWrapper(annotationsWrapper)
-		
-		return self.fileWrapper
+		try? fileWrapper.write(to: url, options: .atomic, originalContentsURL: self.fileURL)
 	}
 	
 	override func read(from fileWrapper: FileWrapper, ofType typeName: String) throws {

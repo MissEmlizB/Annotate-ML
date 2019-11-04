@@ -9,7 +9,7 @@
 import Cocoa
 
 fileprivate let mlids = ["mlname", "mlcount"].compactMap { NSUserInterfaceItemIdentifier(rawValue: $0) }
-fileprivate let dlids = ["dlname", "dlcount"].compactMap { NSUserInterfaceItemIdentifier(rawValue: $0) } 
+fileprivate let dlids = ["dlname", "dlcount"].compactMap { NSUserInterfaceItemIdentifier(rawValue: $0) }
 
 
 class LabelsViewController: NSViewController {
