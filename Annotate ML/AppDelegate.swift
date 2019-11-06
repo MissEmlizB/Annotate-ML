@@ -7,11 +7,24 @@
 //
 
 import Cocoa
+import Vision
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+	
+	var model: VNCoreMLModel?
+	 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
-		// Insert code here to initialize your application
+		
+		guard #available(macOS 10.14, *) else {
+			return
+		}
+		
+		do {
+			model = try VNCoreMLModel(for: Resnet50Int8LUT().model)
+		} catch {
+			print("There was a problem loading the classification model!")
+		}
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {

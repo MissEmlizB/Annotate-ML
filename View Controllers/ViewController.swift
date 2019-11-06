@@ -51,6 +51,9 @@ class ViewController: NSViewController {
 		
 		photosTableView.setDraggingSourceOperationMask(.move, forLocal: true)
 		photosTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
+		
+		// update our annotations view whenever the user renames a label
+		annotationsView.setup()
 	}
 
 	override var representedObject: Any? {
@@ -82,9 +85,11 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		// thumbnail "processing" indicator
 		if row >= 0 && row < thumbnails.count {
 			cell.processingIndicator.stopAnimation(self)
+			cell.processingIndicator.isHidden = true
 			cell.photo.image = thumbnails[row]
 		} else {
 			cell.processingIndicator.startAnimation(self)
+			cell.processingIndicator.isHidden = false
 			cell.photo.image = nil
 		}
 		
@@ -198,13 +203,12 @@ extension ViewController: AnnotationsViewDelegate {
 		document!.updateChangeCount(.changeDone)
 	}
 	
-	func annotationSelected(annotation: Annotation, at: NSPoint) {
-		// print("Annotation \(annotation.label) clicked at \(at)")
-		
+	func annotationSelected(annotation: Annotation, at: NSPoint) {		
 		// pop open our annotation editor
 		let editorVC = storyboard!.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Annotation Popover")) as! AnnotationLabelViewController
 		
 		editorVC.object = annotation
+		editorVC.photo = document!.getPhoto(for: activeObject)
 		editorVC.document = document
 		editorVC.delegate = self
 		

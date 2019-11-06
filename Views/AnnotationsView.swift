@@ -95,6 +95,10 @@ class AnnotationsView: NSImageView {
 		}
 	}
 	
+	func setup() {
+		NotificationCenter.default.addObserver(self, selector: #selector(labelWasRenamed(notfication:)), name: LabelsViewController.labelRenamed, object: nil)
+	}
+	
 	private func findClickedAnnotation(in event: NSEvent) {
 		
 		guard let object = object else {
@@ -470,5 +474,14 @@ extension AnnotationsView {
 		}
 		
 		keepBoxSize()
+	}
+}
+
+extension AnnotationsView {
+	
+	// MARK: Notification Centre
+	
+	@objc func labelWasRenamed(notfication: NSNotification) {
+		self.setNeedsDisplay()
 	}
 }

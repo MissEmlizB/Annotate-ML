@@ -18,3 +18,13 @@
 
 // labels //
 "ALD" = "No Label"; // annotation label default
+"CLD" = "Custom Label"; // custom label default
+
+// suggestions //
+"SUGNL" = "no suggestions available"; // no suggestions label
+"SUGUN" = "Label suggestions is only available in macOS 10.14 or newer..."; // suggestions unavailable
+"SUGDIS" = "Label suggestions is disabled. You can enable them in Annotate ML -> Preferences."; // suggestions disabled
+
+// label renaming //
+"RFT" = "Unable to rename"; // rename failure title
+"RFIT" = "Sorry, but that label was already used in your project."; // rename failure informative text

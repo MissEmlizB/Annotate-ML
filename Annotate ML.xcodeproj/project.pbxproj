@@ -21,6 +21,8 @@
 		A14D07EF235DC86500E47BD3 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07EE235DC86500E47BD3 /* WindowController.swift */; };
 		A14D07F1235DD9C000E47BD3 /* AnnotationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07F0235DD9C000E47BD3 /* AnnotationsView.swift */; };
 		A14D07F3235DF48F00E47BD3 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */; };
+		A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */; };
+		A18ECD1823730BEB00B8851C /* Resnet50Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */; };
 		A1F0BE7E2360546900AF1FD9 /* AnnotationLabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */; };
 		A1F1AD55236469FB003261C6 /* ThumbnailCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F1AD54236469FB003261C6 /* ThumbnailCellView.swift */; };
 /* End PBXBuildFile section */
@@ -64,6 +66,8 @@
 		A14D07EE235DC86500E47BD3 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		A14D07F0235DD9C000E47BD3 /* AnnotationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsView.swift; sourceTree = "<group>"; };
 		A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
+		A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = "Annotate ML/PreferencesViewController.swift"; sourceTree = SOURCE_ROOT; };
+		A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50Int8LUT.mlmodel; sourceTree = "<group>"; };
 		A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationLabelViewController.swift; sourceTree = "<group>"; };
 		A1F1AD54236469FB003261C6 /* ThumbnailCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ThumbnailCellView.swift; path = "View Controllers/ThumbnailCellView.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -96,6 +100,7 @@
 		A1111A772361AB500090A74F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */,
 				A14D07BA235DC28900E47BD3 /* ViewController.swift */,
 				A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */,
 				A1111A792361ABAA0090A74F /* LabelsViewController.swift */,
@@ -123,6 +128,7 @@
 		A12B29282363112700116875 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */,
 				A12B29242363110400116875 /* Localizable.strings */,
 				A14D07BE235DC28B00E47BD3 /* Assets.xcassets */,
 			);
@@ -364,7 +370,9 @@
 				A14D07F3235DF48F00E47BD3 /* CommonExtensions.swift in Sources */,
 				A14D07ED235DC42500E47BD3 /* Annotation.swift in Sources */,
 				A14D07F1235DD9C000E47BD3 /* AnnotationsView.swift in Sources */,
+				A18ECD1823730BEB00B8851C /* Resnet50Int8LUT.mlmodel in Sources */,
 				A14D07E7235DC2CD00E47BD3 /* PhotoAnnotation.swift in Sources */,
+				A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */,
 				A1111A7A2361ABAA0090A74F /* LabelsViewController.swift in Sources */,
 				A14D07B9235DC28900E47BD3 /* AppDelegate.swift in Sources */,
 				A14D07BD235DC28900E47BD3 /* Document.swift in Sources */,
@@ -541,6 +549,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.emilyblackwell.Annotate-ML";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -561,6 +570,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.emilyblackwell.Annotate-ML";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

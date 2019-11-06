@@ -17,6 +17,12 @@ class LabelsViewController: NSViewController {
 	@IBOutlet weak var myLabels: NSTableView!
 	@IBOutlet weak var detectedLabels: NSTableView!
 	
+	/// this notification is posted when a user renames a label
+	static let labelRenamed = NSNotification.Name(rawValue: "labelWasRenamed")
+	
+	/// this is the value of the cell we're currently editing
+	private var oldLabel: String?
+	
 	weak var document: Document! {
 		didSet {
 			// initial tally
@@ -129,15 +135,115 @@ extension LabelsViewController: NSTableViewDelegate, NSTableViewDataSource {
 			break
 		}
 		
+		cell.textField!.delegate = self
 		return cell
+	}
+	
+	func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge:
+		NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
+		
+		guard tableView == myLabels && edge == .trailing else {
+			return []
+		}
+		
+		let deleteAction = NSTableViewRowAction(style: .destructive, title: "Del".l) { _, row in
+			
+			self.document!.customLabels.remove(at: row)
+			tableView.removeRows(at: [row], withAnimation: .slideUp)
+			
+			self.document!.updateChangeCount(.changeDone)
+		}
+		
+		return [deleteAction]
+	}
+	
+}
+
+extension LabelsViewController: NSTextFieldDelegate {
+	
+	// MARK: Table View Editing
+
+	func controlTextDidBeginEditing(_ obj: Notification) {
+		let textField = obj.object as! NSTextField
+		oldLabel = textField.stringValue
+	}
+	
+	func controlTextDidEndEditing(_ obj: Notification) {
+		
+		guard let old = oldLabel else {
+			return
+		}
+		
+		let textField = obj.object as! NSTextField
+		let new = textField.stringValue
+		
+		// make sure that we can't rename it to an already-existing label
+		guard !document!.allLabels.contains(new) else {
+			
+			let alert = NSAlert()
+			alert.alertStyle = .critical
+			
+			alert.messageText = "RFT".l
+			alert.informativeText = "RFIT".l
+			
+			alert.addButton(withTitle: "Ok".l)
+			alert.runModal()
+			
+			// restore it to its old label
+			textField.stringValue = old
+			
+			return
+		}
+		
+		// replace EVERY annotation that has the old label with our new one
+		for object in document!.objects {
+			for annotation in object.annotations {
+				if annotation.label == old {
+					annotation.label = new
+				}
+			}
+		}
+		
+		// and of course, finalise it by renaming our old label in the document
+		for i in 0 ..< document!.labels.count {
+			if document!.labels[i] == old {
+				document!.labels[i] = new
+			}
+		}
+		
+		for i in 0 ..< document!.customLabels.count {
+			if document!.customLabels[i] == old {
+				document!.customLabels[i] = new
+			}
+		}
+		
+		// update our UI
+		document!.updateChangeCount(.changeDone)
+		NotificationCenter.default.post(name: LabelsViewController.labelRenamed, object: nil)
 	}
 }
 
 extension LabelsViewController {
 	
 	// MARK: Notification Centre
+	
 	@objc func labelsAreAvailable(notification: NSNotification) {
 		detectedLabels.reloadData()
-		tallyLabels()
+		tallyLabels()		
+	}
+
+	// MARK: Actions
+	@IBAction func addCustomLabel(sender: AnyObject) {
+		var name = "CLD".l
+		let count = document!.customLabels.count
+		
+		if count > 0 {
+			name += " \(count + 1)"
+		}
+		
+		document!.customLabels.append(name)
+		document!.updateChangeCount(.changeDone)
+		
+		myLabels.insertRows(at: [count], withAnimation: .slideDown)
 	}
 }
