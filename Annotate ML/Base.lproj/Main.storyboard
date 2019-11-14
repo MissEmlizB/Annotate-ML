@@ -501,14 +501,14 @@ CA
             <objects>
                 <viewController showSeguePresentationStyle="single" id="r3B-4W-2X0" customClass="PreferencesViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="nul-ug-KTb">
-                        <rect key="frame" x="0.0" y="0.0" width="382" height="76"/>
+                        <rect key="frame" x="0.0" y="0.0" width="382" height="122"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hhj-LO-EW0">
-                                <rect key="frame" x="10" y="19" width="362" height="38"/>
+                                <rect key="frame" x="10" y="19" width="362" height="84"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lSE-Pw-ubJ">
-                                        <rect key="frame" x="-2" y="22" width="366" height="16"/>
+                                        <rect key="frame" x="-2" y="68" width="366" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Editor" id="xpp-WK-evC">
                                             <font key="font" metaFont="systemMedium" size="13"/>
                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -516,13 +516,31 @@ CA
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FZJ-LB-RSg">
-                                        <rect key="frame" x="-2" y="-2" width="284" height="18"/>
+                                        <rect key="frame" x="-2" y="44" width="284" height="18"/>
                                         <buttonCell key="cell" type="check" title="Show suggestions in the annotations editor" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="c9l-Ui-LH5">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
                                             <action selector="checkboxChangedWithSender:" target="r3B-4W-2X0" id="hFV-MZ-ubR"/>
+                                        </connections>
+                                    </button>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="50i-oW-BeY">
+                                        <rect key="frame" x="-2" y="22" width="79" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Appearance" id="MfD-I8-HD7">
+                                            <font key="font" metaFont="systemMedium" size="13"/>
+                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <button verticalHuggingPriority="750" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="0Ar-OS-dXW">
+                                        <rect key="frame" x="-2" y="-2" width="359" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Combine title bar and tool bar (like Calendar and Safari)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="VTK-mM-eO7">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="checkboxChangedWithSender:" target="r3B-4W-2X0" id="zif-3d-N0W"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -533,8 +551,12 @@ CA
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
@@ -548,19 +570,20 @@ CA
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="caltoolbarCheckbox" destination="0Ar-OS-dXW" id="PRR-Mq-mKu"/>
                         <outlet property="suggestionsCheckbox" destination="FZJ-LB-RSg" id="gNC-Gf-pjo"/>
                     </connections>
                 </viewController>
                 <customObject id="hXf-f9-bgi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="671" y="-358"/>
+            <point key="canvasLocation" x="671" y="-335"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController storyboardIdentifier="Document Window Controller" id="jGA-0Y-lOj" customClass="WindowController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Annotate ML" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="Ckk-yw-fiv">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="641" height="353"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
@@ -741,6 +764,19 @@ CA
                                         </connections>
                                     </segmentedControl>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="FBBCC1AD-9BFD-43A0-A9F9-63F5687345CD" label="Share" paletteLabel="Share Document" image="NSShareTemplate" id="pYf-rv-5SC">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="64" height="25"/>
+                                    <size key="maxSize" width="64" height="25"/>
+                                    <button key="view" verticalHuggingPriority="750" id="BoE-a8-DZe">
+                                        <rect key="frame" x="16" y="14" width="64" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSShareTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Klw-DH-WYx">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="hcy-c7-am5"/>
@@ -750,6 +786,7 @@ CA
                                 <toolbarItem reference="TJT-BX-87M"/>
                                 <toolbarItem reference="s0L-16-Tb0"/>
                                 <toolbarItem reference="ubt-Fh-kRO"/>
+                                <toolbarItem reference="pYf-rv-5SC"/>
                                 <toolbarItem reference="aGw-WC-6D2"/>
                             </defaultToolbarItems>
                         </toolbar>
@@ -787,23 +824,50 @@ CA
                                     </button>
                                 </viewController>
                             </touchBarItem>
+                            <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFixedSpaceSmall" id="7Ch-NI-SrK"/>
+                            <touchBarItem id="Iif-1F-q3P">
+                                <viewController key="viewController" id="1sy-jq-FQy">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g0o-Hw-71L">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <buttonCell key="cell" type="push" title="Undo" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ef5-da-bAK">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="undo:" target="6f7-a7-6o1" id="pQ4-TH-9jY"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="LQc-BD-q71">
+                                <viewController key="viewController" id="ab6-ZI-xoc">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1Tc-zm-4R2">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <buttonCell key="cell" type="push" title="Redo" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ey9-6z-gnN">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="redo:" target="6f7-a7-6o1" id="9J0-7h-vui"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="DgQ-2x-Obd">
+                                <viewController key="viewController" id="I7I-E5-wcH">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dQy-6D-zZH">
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <buttonCell key="cell" type="push" title="Reset Zoom" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6UC-hr-cRg">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="zoomResetWithSender:" target="jGA-0Y-lOj" id="Wmi-81-4uI"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
                             <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFlexibleSpace" id="wPZ-aO-qf0"/>
-                            <sliderTouchBarItem customizationLabel="Zoom Level" label="" id="cZn-Nr-qb2">
-                                <sliderAccessory key="minimumValueAccessory" id="WLP-Lp-RRv">
-                                    <sliderAccessoryBehavior key="behavior" id="OgR-8U-Wb7"/>
-                                </sliderAccessory>
-                                <sliderAccessory key="maximumValueAccessory" id="8Fd-1N-OWm">
-                                    <sliderAccessoryBehavior key="behavior" id="QaV-Ys-akp"/>
-                                </sliderAccessory>
-                                <slider key="slider" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VPh-Gz-8Fa">
-                                    <rect key="frame" x="12" y="1" width="337" height="15"/>
-                                    <sliderCell key="cell" state="on" alignment="left" minValue="0.001" maxValue="20" doubleValue="1.3756018124297285" tickMarkPosition="above" sliderType="linear" id="GlK-Q4-xNw"/>
-                                    <connections>
-                                        <action selector="zoomSliderChangedWithSender:" target="jGA-0Y-lOj" id="6Sa-vc-Zez"/>
-                                    </connections>
-                                </slider>
-                            </sliderTouchBarItem>
-                            <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFlexibleSpace" id="bMh-oH-WC1"/>
                             <touchBarItem id="etE-8I-qtb">
                                 <viewController key="viewController" id="gb0-K1-mea">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TPP-mr-BrA">
@@ -832,11 +896,24 @@ CA
                                     </button>
                                 </viewController>
                             </touchBarItem>
+                            <touchBarItem id="H6e-kX-gvB">
+                                <viewController key="viewController" id="P3N-kF-und">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oPb-dy-EO1">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <buttonCell key="cell" type="push" title="Labels" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fFN-1r-J2S">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="showLabelsWithSender:" target="jGA-0Y-lOj" id="XDk-Hy-4CQ"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
                         </touchBarItems>
                     </touchBar>
                     <connections>
                         <outlet property="saveIndicator" destination="zFD-x5-vVY" id="eMB-79-rDy"/>
-                        <outlet property="zoomSlider" destination="VPh-Gz-8Fa" id="1cJ-7x-doP"/>
                         <segue destination="5gI-5U-AMq" kind="relationship" relationship="window.shadowedContentViewController" id="nsd-lR-9xd"/>
                     </connections>
                 </windowController>
@@ -853,20 +930,20 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
-                                <rect key="frame" x="0.0" y="0.0" width="641" height="430"/>
+                                <rect key="frame" x="0.0" y="0.0" width="641" height="422"/>
                                 <subviews>
                                     <customView misplaced="YES" id="n6S-qq-ccF">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="430"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="143" height="422"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
-                                                <rect key="frame" x="0.0" y="-1" width="143" height="430"/>
+                                                <rect key="frame" x="0.0" y="-1" width="143" height="422"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="5q7-hE-Sez">
-                                                    <rect key="frame" x="1" y="1" width="141" height="428"/>
+                                                    <rect key="frame" x="1" y="1" width="141" height="420"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="5vY-MX-0AQ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="428"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="420"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -874,7 +951,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="138" minWidth="40" maxWidth="1000" id="vrG-KO-Ldp">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                        <font key="font" metaFont="menu" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -944,17 +1021,17 @@ CA
                                         </constraints>
                                     </customView>
                                     <customView misplaced="YES" id="14O-xD-Zmz">
-                                        <rect key="frame" x="144" y="0.0" width="497" height="430"/>
+                                        <rect key="frame" x="144" y="0.0" width="497" height="422"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="20" minMagnification="0.0001" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rik-Es-Gue">
-                                                <rect key="frame" x="0.0" y="-1" width="497" height="430"/>
+                                                <rect key="frame" x="0.0" y="-1" width="497" height="422"/>
                                                 <clipView key="contentView" id="7l0-fe-uJU">
-                                                    <rect key="frame" x="1" y="1" width="495" height="428"/>
+                                                    <rect key="frame" x="1" y="1" width="495" height="420"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r38-hr-pgj" customClass="AnnotationsView" customModule="Annotate_ML" customModuleProvider="target">
-                                                            <rect key="frame" x="3" y="-20" width="489" height="445"/>
+                                                            <rect key="frame" x="3" y="-28" width="489" height="445"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" id="42g-qE-bAJ"/>
                                                         </imageView>
@@ -962,11 +1039,11 @@ CA
                                                     <color key="backgroundColor" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xbV-x7-h5p">
-                                                    <rect key="frame" x="1" y="413" width="495" height="16"/>
+                                                    <rect key="frame" x="1" y="405" width="495" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.64705882352941169" horizontal="NO" id="7zK-ks-tXZ">
-                                                    <rect key="frame" x="480" y="1" width="16" height="428"/>
+                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.76000000000000001" horizontal="NO" id="7zK-ks-tXZ">
+                                                    <rect key="frame" x="480" y="1" width="16" height="420"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -1001,7 +1078,7 @@ CA
                 </viewController>
                 <customObject id="2Tp-Fl-jBw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="43.5" y="715"/>
+            <point key="canvasLocation" x="43.5" y="714.5"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="nR8-FG-E2h">
@@ -1012,18 +1089,62 @@ CA
                         <windowCollectionBehavior key="collectionBehavior" transient="YES" fullScreenAuxiliary="YES" fullScreenDisallowsTiling="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="249" width="305" height="448"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
                         <connections>
                             <outlet property="delegate" destination="Qr5-WZ-fj1" id="ete-2V-SYx"/>
                         </connections>
                     </window>
+                    <touchBar key="touchBar" id="o3B-Mo-Hfy">
+                        <touchBarItems>
+                            <touchBarItem id="kch-CI-VQG">
+                                <viewController key="viewController" id="X5I-gh-CqU">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BH0-RK-g8b">
+                                        <rect key="frame" x="0.0" y="0.0" width="108" height="30"/>
+                                        <buttonCell key="cell" type="push" title="Mass Rename" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ad9-ih-8GP">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="massRenameLabelsWithSender:" target="LGN-b1-RUb" id="DDe-A9-LcY"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFlexibleSpace" id="4N1-2w-qa2"/>
+                            <touchBarItem id="k4v-AA-t8W">
+                                <viewController key="viewController" id="ka0-P2-2Kw">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6kd-b5-Ay1">
+                                        <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
+                                        <buttonCell key="cell" type="push" title="New Custom Label" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qJG-dc-qpV">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="addCustomLabelWithSender:" target="LGN-b1-RUb" id="xHC-xO-Fic"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="Hl8-eT-Kje">
+                                <viewController key="viewController" id="iks-8o-yHG">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KHW-o3-44q">
+                                        <rect key="frame" x="0.0" y="0.0" width="162" height="30"/>
+                                        <buttonCell key="cell" type="push" title="Delete Custom Label" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5H8-FZ-b1m">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                        </touchBarItems>
+                    </touchBar>
                     <connections>
                         <segue destination="X2x-B9-AWw" kind="relationship" relationship="window.shadowedContentViewController" id="US2-bz-gqL"/>
                     </connections>
                 </windowController>
                 <customObject id="LGN-b1-RUb" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="633" y="154"/>
+            <point key="canvasLocation" x="857" y="154"/>
         </scene>
         <!--Labels-->
         <scene sceneID="FjA-5E-wjb">
@@ -1092,7 +1213,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="9Ec-6N-uCQ">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="menu" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1129,7 +1250,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="hWV-TP-Xuq">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="menu" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1228,7 +1349,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="0FV-7n-xGe">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="menu" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1268,7 +1389,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="wB9-EA-rPW">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="menu" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1365,7 +1486,7 @@ CA
                 </viewController>
                 <customObject id="QeM-ZF-lqm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1023" y="154"/>
+            <point key="canvasLocation" x="1247" y="154"/>
         </scene>
         <!--Annotation Label View Controller-->
         <scene sceneID="39L-DC-AKn">
@@ -1537,6 +1658,7 @@ CA
         <image name="NSGoLeftTemplate" width="9" height="12"/>
         <image name="NSGoRightTemplate" width="9" height="12"/>
         <image name="NSListViewTemplate" width="14" height="10"/>
+        <image name="NSShareTemplate" width="11" height="16"/>
         <image name="NSTouchBarAddDetailTemplate" width="18" height="30"/>
         <image name="NSTouchBarDeleteTemplate" width="15" height="30"/>
         <image name="NSTouchBarFolderTemplate" width="22" height="30"/>

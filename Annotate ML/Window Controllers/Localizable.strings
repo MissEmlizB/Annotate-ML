@@ -17,6 +17,7 @@
 "Del" = "Delete";
 
 // labels //
+"TCL" = "Label"; // table column label
 "ALD" = "No Label"; // annotation label default
 "CLD" = "Custom Label"; // custom label default
 
@@ -28,3 +29,12 @@
 // label renaming //
 "RFT" = "Unable to rename"; // rename failure title
 "RFIT" = "Sorry, but that label was already used in your project."; // rename failure informative text
+
+// undo labels //
+"uACR" = "create annotation"; // undo: annotation creation
+"uADEL" = "remove annotation"; // undo: annotation deletion
+"uAREN" = "rename annotation"; // undo: annotation rename
+"uAR" = "resize annotation"; // undo: annotation resized
+"uAM" = "move annotation"; // undo: annotation moved
+"uPSW" = "select photo"; // undo: photo switched
+"uLVMREN" = "mass rename labels"; // undo: labels view mass rename

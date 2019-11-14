@@ -12,6 +12,8 @@ import Vision
 protocol AnnotationLabelViewControllerDelegate {
 	func labelChanged()
 	func delete(annotation: Annotation)
+	func renameStarted(oldLabel label: String)
+	func renameEnded(annotation: Annotation, newLabel label: String)
 }
 
 class AnnotationLabelViewController: NSViewController {
@@ -29,7 +31,14 @@ class AnnotationLabelViewController: NSViewController {
 	
 	var delegate: AnnotationLabelViewControllerDelegate?
 	
-	weak var object: Annotation?
+	weak var object: Annotation? {
+		didSet {
+			self.originalLabel = object?.label ?? ""
+		}
+	}
+	
+	
+	var originalLabel: String = ""
 	var photo: NSImage!
 
     override func viewDidLoad() {
@@ -59,6 +68,13 @@ class AnnotationLabelViewController: NSViewController {
 	
 	override func viewWillDisappear() {
 		super.viewWillDisappear()
+		
+		let label = labelField.stringValue
+		
+		if originalLabel != label {
+			delegate?.renameEnded(annotation: object!, newLabel: label)
+		}
+		
 		updateLabel()
 	}
 }
@@ -74,6 +90,10 @@ extension AnnotationLabelViewController: NSComboBoxDelegate, NSComboBoxDataSourc
 	
 	func controlTextDidChange(_ obj: Notification) {
 		updateLabel()
+	}
+	
+	func controlTextDidBeginEditing(_ obj: Notification) {
+		delegate?.renameStarted(oldLabel: labelField.stringValue)
 	}
 	
 	func controlTextDidEndEditing(_ obj: Notification) {

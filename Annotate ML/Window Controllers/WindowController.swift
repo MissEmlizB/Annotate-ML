@@ -10,8 +10,10 @@ import Cocoa
 
 class WindowController: NSWindowController {
 	
+	/// this gets posted whenever this window becomes active
+	static let documentAvailable = NSNotification.Name(rawValue: "documentIsAvailable")
+	
 	@IBOutlet weak var saveIndicator: NSProgressIndicator?
-	@IBOutlet weak var zoomSlider: NSSlider!
 	
 	weak var viewController: ViewController?
 	weak var labelsWC: NSWindowController?
@@ -22,8 +24,7 @@ class WindowController: NSWindowController {
 
     override func windowDidLoad() {
         super.windowDidLoad()
-		
-		window!.delegate = self
+
 		window!.acceptsMouseMovedEvents = true
 		
 		saveIndicator?.isHidden = true
@@ -38,17 +39,53 @@ class WindowController: NSWindowController {
 		viewController = (contentViewController as! ViewController)
 		window!.delegate = viewController
 		
-		// we'll use this to synchronise our touchbar slider to the actual zoom level
-		NotificationCenter.default.addObserver(self, selector: #selector(magnificationEnd(notification:)), name: NSScrollView.didEndLiveMagnifyNotification, object: viewController?.scrollView)
+		NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSWindow.didBecomeKeyNotification, object: window)
 		
-		updateZoomSlider(viewController?.scrollView.magnification)
+		NotificationCenter.default.addObserver(self, selector: #selector(willClose(notification:)), name: NSWindow.willCloseNotification, object: window)
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(changeTitlebarAppearance(notification:)), name: PreferencesViewController.preferencesChanged, object: nil)
+		
+		// update our title/tool bar appearance
+		
+		let usesModernLook = UserDefaults.standard.bool(forKey: kPreferencesCalendarStyleTitlebar)
+		
+		useModernTitlebarAppearance(usesModernLook)
     }
-
-	// MARK: View Actions
 	
-	@IBAction func zoomSliderChanged(sender: NSSlider) {
-		viewController?.scrollView?.magnification = CGFloat(sender.floatValue)
+	// MARK: Notification Actions
+	@objc func didBecomeActive(notification: NSNotification) {
+		// allow our labels view to adapt it's UI for the currently-active document
+		NotificationCenter.default.post(name: WindowController.documentAvailable, object: document, userInfo: nil)
 	}
+	
+	@objc func willClose(notification: NSNotification) {
+
+		// unregister our observers
+		NotificationCenter.default.removeObserver(self, name: NSWindow.didBecomeKeyNotification, object: window)
+		
+		NotificationCenter.default.removeObserver(self, name: NSWindow.willCloseNotification, object: window)
+		
+		NotificationCenter.default.removeObserver(self, name: PreferencesViewController.preferencesChanged, object: nil)
+	}
+	
+	@objc func changeTitlebarAppearance(notification: NSNotification) {
+		guard let changes = notification.userInfo as? [String: Bool],
+			let usesModernLook = changes[kPreferencesCalendarStyleTitlebar] else {
+			return
+		}
+		
+		useModernTitlebarAppearance(usesModernLook)
+	}
+	
+	private func useModernTitlebarAppearance(_ modern: Bool) {
+		window?.titleVisibility = modern ? .hidden : .visible
+		
+		if !modern {
+			window?.toolbar?.displayMode = .iconAndLabel
+		}
+	}
+	
+	// MARK: View Actions
 	
 	@IBAction func zoomControl(sender: NSSegmentedControl) {
 		guard sender.selectedSegment == 1 else {
@@ -57,22 +94,18 @@ class WindowController: NSWindowController {
 		}
 		
 		zoomIn(sender: sender)
-		updateZoomSlider(viewController?.scrollView.magnification)
 	}
 	
 	@IBAction func zoomIn(sender: AnyObject) {
 		viewController?.zoom(zoomIn: true)
-		updateZoomSlider(viewController?.scrollView.magnification)
 	}
 	
 	@IBAction func zoomOut(sender: AnyObject) {
 		viewController?.zoom(zoomIn: false)
-		updateZoomSlider(viewController?.scrollView.magnification)
 	}
 	
 	@IBAction func zoomReset(sender: AnyObject) {
 		viewController?.zoomReset()
-		updateZoomSlider(viewController?.scrollView.magnification)
 	}
 	
 	@IBAction func showLabels(sender: AnyObject) {
@@ -190,25 +223,6 @@ extension WindowController {
 
 extension WindowController {
 	
-	// MARK: Notification Actions
-	
-	private func updateZoomSlider(_ zoom: CGFloat?) {
-		
-		guard let zoom = zoom else {
-			return
-		}
-		
-		zoomSlider.floatValue = Float(zoom)
-	}
-	
-	@objc func magnificationEnd(notification: NSNotification) {
-		let object = notification.object as! NSScrollView
-		updateZoomSlider(object.magnification)
-	}
-}
-
-extension WindowController {
-	
 	// MARK: Segues
 	
 	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
@@ -219,14 +233,5 @@ extension WindowController {
 			vc.document = viewController?.representedObject as? Document
 			labelsWC = wc
 		}
-	}
-}
-
-extension WindowController: NSWindowDelegate {
-	
-	// MARK: Window Delegate
-	
-	func windowWillClose(_ notification: Notification) {
-		labelsWC?.close()
 	}
 }

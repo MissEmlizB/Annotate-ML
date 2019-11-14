@@ -22,6 +22,12 @@ class ViewController: NSViewController {
 	private weak var lastPopover: NSPopover?
 	private weak var document: Document?
 	
+	// labels renaming
+	private var previousLabel: String = ""
+	
+	// photo selection
+	private var previousRow = -1
+	
 	var thumbnails: [NSImage] = []
 	
 	var activeObject: PhotoAnnotation? {
@@ -110,12 +116,19 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		return [delete]
 	}
 	
+	func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: IndexSet) -> IndexSet {
+		
+		previousRow = tableView.selectedRow
+		return proposedSelectionIndexes
+	}
+	
 	func tableViewSelectionDidChange(_ notification: Notification) {
 		guard let object = activeObject else {
 			return
 		}
 		
 		annotationsView.object = object
+		selectPhoto(old: previousRow, new: photosTableView.selectedRow)
 	}
 	
 	// MARK: Drag and Drop
@@ -203,8 +216,9 @@ extension ViewController: AnnotationsViewDelegate {
 		document!.updateChangeCount(.changeDone)
 	}
 	
-	func annotationSelected(annotation: Annotation, at: NSPoint) {		
-		// pop open our annotation editor
+	func annotationSelected(annotation: Annotation, at: NSPoint) {
+		
+		// pop open our label editor
 		let editorVC = storyboard!.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Annotation Popover")) as! AnnotationLabelViewController
 		
 		editorVC.object = annotation
@@ -225,11 +239,27 @@ extension ViewController: AnnotationsViewDelegate {
 	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage? {
 		return document!.getPhoto(for: object)
 	}
+	
+	func annotationActionUndone() {
+		document!.updateChangeCount(.changeUndone)
+	}
+	
+	func annotationActionRedone() {
+		document!.updateChangeCount(.changeRedone)
+	}
 }
 
 extension ViewController: AnnotationLabelViewControllerDelegate {
 	
 	// MARK: Annotation Label Del.
+	
+	func renameStarted(oldLabel label: String) {
+		self.previousLabel = label
+	}
+	
+	func renameEnded(annotation: Annotation, newLabel label: String) {
+		self.renameAnnotation(annotation: annotation, old: previousLabel, new: label)
+	}
 	
 	func labelChanged() {
 		annotationsView.setNeedsDisplay()
@@ -240,16 +270,12 @@ extension ViewController: AnnotationLabelViewControllerDelegate {
 		
 		for (i, object) in activeObject!.annotations.enumerated() {
 			if object == annotation {
-				activeObject!.annotations.remove(at: i)
+				deleteAnnotation(position: i)
 				break
 			}
 		}
 		
 		document!.indexLabels()
-		
-		// update our annotations view
-		document!.updateChangeCount(.changeDone)
-		annotationsView.setNeedsDisplay()
 	}
 }
 
@@ -350,7 +376,7 @@ extension ViewController {
 		scrollView.animator().magnification += (zoomIn ? 0.15 : -0.15)
 	}
 	
-	func zoomReset() {
+	@IBAction func zoomReset(sender: AnyObject? = nil) {
 		scrollView.animator().magnify(toFit: annotationsView.frame)
 	}
 }
@@ -383,6 +409,36 @@ extension ViewController: NSServicesMenuRequestor {
 
 extension ViewController {
 	
-	// MARK: Notification Actions
-
+	// MARK: Undo Actions
+	
+	private func selectPhoto(old: Int, new: Int) {
+		
+		// nothing was selected
+		guard new != -1 else {
+			photosTableView.deselectAll(self)
+			return
+		}
+		
+		// update our selection
+		photosTableView.selectRowIndexes([new], byExtendingSelection: false)
+		
+		// register our undo action
+		undoManager?.registerUndo(withTarget: self) {
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.selectPhoto(old: old, new: new)
+			}
+			
+			$0.selectPhoto(old: new, new: old)
+		}
+		
+		undoManager?.setActionName("uPSW".l)
+	}
+	
+	private func deleteAnnotation(position: Int) {
+		annotationsView.deleteAnnotation(position: position)
+	}
+	
+	private func renameAnnotation(annotation: Annotation, old: String, new: String) {
+		annotationsView.renameAnnotation(annotation: annotation, old: old, new: new)
+	}
 }

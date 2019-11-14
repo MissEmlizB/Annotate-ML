@@ -41,6 +41,13 @@ class Annotation: NSObject, NSSecureCoding {
 		get {
 			 CGRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(w), height: CGFloat(h))
 		}
+		
+		set {
+			self.x = Float(newValue.origin.x)
+			self.y = Float(newValue.origin.y)
+			self.w = Float(newValue.width)
+			self.h = Float(newValue.height)
+		}
 	}
 	
 	/// A representation of this object in JSON form

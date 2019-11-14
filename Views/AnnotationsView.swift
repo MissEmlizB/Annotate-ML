@@ -19,6 +19,9 @@ protocol AnnotationsViewDelegate {
 	func annotationCreated(annotation: Annotation)
 	func annotationSelected(annotation: Annotation, at: NSPoint)
 	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage?
+	
+	func annotationActionUndone()
+	func annotationActionRedone()
 }
 
 class AnnotationsView: NSImageView {
@@ -382,6 +385,18 @@ extension AnnotationsView {
 			
 			// end of drag actions
 			if state == .dragMode || state == .resizeMode {
+				
+				if state == .resizeMode {
+					resizeAnnotation(annotation: highlightedAnnotation!, withRect: highlightedAnnotation!.cgRect, oldRect: self.originalRect)
+				}
+				
+				else {
+					let newPosition = CGPoint(x: CGFloat(highlightedAnnotation!.x),
+											  y: CGFloat(highlightedAnnotation!.y))
+					
+					moveAnnotation(annotation: highlightedAnnotation!, oldPosition: originalPosition, newPosition: newPosition)
+				}
+				
 				state = .normal
 				highlightedAnnotation = nil
 			}
@@ -396,19 +411,15 @@ extension AnnotationsView {
 				
 		let rect = CGRect(x: start.x, y: start.y, width: CGFloat(w), height: CGFloat(h)).standardized
 		
-		// create an empty annotation object
-		let annotation = Annotation(rect: rect)
-		object?.annotations.append(annotation)
-		
-		delegate?.annotationCreated(annotation: annotation)
-		delegate?.annotationSelected(annotation: annotation, at: annotation.cgRect.origin)
-		
 		// we don't need these anymore
 		self.start = nil
 		w = 0
 		h = 0
-		
-		self.setNeedsDisplay()
+			
+		// create and select our new annotation
+		createAnnotation(withRect: rect) {
+			self.delegate?.annotationSelected(annotation: $0, at: $0.cgRect.origin)
+		}
 	}
 }
 
@@ -483,5 +494,203 @@ extension AnnotationsView {
 	
 	@objc func labelWasRenamed(notfication: NSNotification) {
 		self.setNeedsDisplay()
+	}
+}
+
+extension AnnotationsView {
+	
+	private func findMissing(annotation: Annotation?, withRectToMatch rect: CGRect) -> Annotation? {
+		
+		// if our annotation is not nil then return itself
+		guard annotation == nil else {
+			return annotation
+		}
+		
+		// otherwise, search our active object's annotations for a possible match
+		guard let object = self.object else {
+			return nil
+		}
+		
+		for anno in object.annotations {
+			if anno.cgRect == rect {
+				return anno
+			}
+		}
+		
+		// it doesn't exist anymore... HOW???
+		// we shouldn't return this in a normal undo/redo action
+		
+		return nil
+	}
+	
+	private func findMissing(annotation: Annotation?, withPositionToMatch position: CGPoint) -> Annotation? {
+		
+		guard annotation == nil else {
+			return annotation
+		}
+		
+		guard let object = self.object else {
+			return nil
+		}
+		
+		let x = Float(position.x)
+		let y = Float(position.y)
+		
+		for anno in object.annotations {
+			if anno.x == x && anno.y == y {
+				return anno
+			}
+		}
+		
+		return nil
+	}
+	
+	// MARK: Undo Actions
+	
+	func renameAnnotation(annotation: Annotation?, old: String, new: String) {
+		guard let annotation = annotation else {
+			return
+		}
+		
+		setNeedsDisplay()
+		annotation.label = new
+		
+		let rect = annotation.cgRect
+		
+		undoManager?.registerUndo(withTarget: self) {
+			
+			weak var annotation = $0.findMissing(annotation: annotation, withRectToMatch: rect)
+			
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.renameAnnotation(annotation: annotation, old: old, new: new)
+				$0.delegate?.annotationActionRedone()
+			}
+			
+			annotation?.label = old
+			$0.setNeedsDisplay()
+			
+			$0.delegate?.annotationActionUndone()
+		}
+		
+		undoManager?.setActionName("uAREN".l)
+	}
+	
+	func deleteAnnotation(position: Int) {
+		guard let object = self.object else {
+			return
+		}
+		
+		let annotation = object.annotations[position]
+		let rect = annotation.cgRect
+		
+		object.annotations.remove(at: position)
+		setNeedsDisplay()
+	
+		undoManager?.registerUndo(withTarget: self) {
+			
+			guard let annotation = $0.findMissing(annotation: annotation, withRectToMatch: rect) else {
+				return
+			}
+			
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.deleteAnnotation(position: position)
+			}
+			
+			object.annotations.insert(annotation, at: position)
+			$0.setNeedsDisplay()
+		}
+		
+		undoManager?.setActionName("uADEL".l)
+	}
+	
+	private func createAnnotation(withRect rect: CGRect, completion: ((Annotation) -> ())? = nil) {
+		
+		// create a new annotation object
+		let annotation = Annotation(rect: rect)
+		object?.annotations.append(annotation)
+		
+		delegate?.annotationCreated(annotation: annotation)
+		
+		setNeedsDisplay()
+		
+		// register our undo action
+		undoManager?.registerUndo(withTarget: self) {
+			
+			weak var annotation = $0.findMissing(annotation: annotation, withRectToMatch: rect)
+			
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.createAnnotation(withRect: rect)
+				$0.delegate?.annotationActionRedone()
+			}
+			
+			$0.delegate?.annotationActionUndone()
+			$0.object?.annotations.removeAll { $0 == annotation }
+			$0.setNeedsDisplay()
+		}
+		
+		undoManager?.setActionName("uACR".l)
+		completion?(annotation)
+	}
+	
+	private func resizeAnnotation(annotation: Annotation?, withRect newRect: CGRect, oldRect: CGRect) {
+		
+		guard let annotation = annotation else {
+			return
+		}
+		
+		annotation.cgRect = newRect
+		setNeedsDisplay()
+		
+		undoManager?.registerUndo(withTarget: annotation) {
+			
+			weak var annotation = self.findMissing(annotation: $0, withRectToMatch: newRect)
+			
+			self.undoManager?.registerUndo(withTarget: self) {
+				
+				weak var annotation = $0.findMissing(annotation: annotation, withRectToMatch: oldRect)
+				
+				$0.resizeAnnotation(annotation: annotation, withRect: newRect, oldRect: oldRect)
+				$0.delegate?.annotationActionRedone()
+			}
+			
+			annotation?.cgRect = oldRect
+			self.delegate?.annotationActionUndone()
+			self.setNeedsDisplay()
+		}
+		
+		undoManager?.setActionName("uAR".l)
+	}
+	
+	private func moveAnnotation(annotation: Annotation?, oldPosition: CGPoint, newPosition: CGPoint) {
+		
+		guard let annotation = annotation else {
+			return
+		}
+		
+		annotation.x = Float(newPosition.x)
+		annotation.y = Float(newPosition.y)
+		
+		setNeedsDisplay()
+		
+		undoManager?.registerUndo(withTarget: annotation) {
+			
+			weak var annotation = self.findMissing(annotation: $0, withPositionToMatch: newPosition)
+			
+			self.undoManager?.registerUndo(withTarget: self) {
+				
+				weak var annotation = $0.findMissing(annotation: annotation, withPositionToMatch: oldPosition)
+				
+				$0.moveAnnotation(annotation: annotation, oldPosition: oldPosition, newPosition: newPosition)
+				$0.delegate?.annotationActionRedone()
+			}
+			
+			annotation?.x = Float(oldPosition.x)
+			annotation?.y = Float(oldPosition.y)
+			
+			self.setNeedsDisplay()
+			self.delegate?.annotationActionUndone()
+		}
+		
+		undoManager?.setActionName("uAM".l)
 	}
 }

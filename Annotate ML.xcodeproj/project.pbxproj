@@ -68,6 +68,7 @@
 		A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
 		A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = "Annotate ML/PreferencesViewController.swift"; sourceTree = SOURCE_ROOT; };
 		A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50Int8LUT.mlmodel; sourceTree = "<group>"; };
+		A1D724CA237D819F00C54DCF /* ib-cant-see-redo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ib-cant-see-redo.h"; sourceTree = "<group>"; };
 		A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationLabelViewController.swift; sourceTree = "<group>"; };
 		A1F1AD54236469FB003261C6 /* ThumbnailCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ThumbnailCellView.swift; path = "View Controllers/ThumbnailCellView.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -216,6 +217,7 @@
 		A14D07EA235DC2EC00E47BD3 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				A1D724CA237D819F00C54DCF /* ib-cant-see-redo.h */,
 				A14D07B8235DC28900E47BD3 /* AppDelegate.swift */,
 				A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */,
 			);

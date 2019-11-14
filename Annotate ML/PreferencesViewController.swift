@@ -10,6 +10,7 @@ import Cocoa
 
 // preferences keys
 let kPreferencesSuggestionsEnabled = "suggestionsEnabled"
+let kPreferencesCalendarStyleTitlebar = "combinedTitleBarAndToolBarAppearance"
 
 class PreferencesViewController: NSViewController {
 
@@ -19,12 +20,15 @@ class PreferencesViewController: NSViewController {
 	private let defaults = UserDefaults.standard
 	
 	@IBOutlet weak var suggestionsCheckbox: NSButton!
+	@IBOutlet weak var caltoolbarCheckbox: NSButton!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
         // update our UI to match the user's preferences
 		setState(of: suggestionsCheckbox, forKey: kPreferencesSuggestionsEnabled, default: false)
+		
+		setState(of: caltoolbarCheckbox, forKey: kPreferencesCalendarStyleTitlebar, default: false)
     }
 	
 	// MARK: Actions
@@ -46,10 +50,16 @@ class PreferencesViewController: NSViewController {
 		let isChecked = sender.state == .on
 		
 		switch tag {
-			
+		
+		// show suggestions in labels editor
 		case 0:
 			changes[kPreferencesSuggestionsEnabled] = isChecked
 			defaults.set(isChecked, forKey: kPreferencesSuggestionsEnabled)
+			
+		// combine title bar and tool bar (like in Calendar and Safari)
+		case 1:
+			changes[kPreferencesCalendarStyleTitlebar] = isChecked
+			defaults.set(isChecked, forKey: kPreferencesCalendarStyleTitlebar)
 			
 		default:
 			break

@@ -16,6 +16,7 @@ class LabelsViewController: NSViewController {
 	
 	@IBOutlet weak var myLabels: NSTableView!
 	@IBOutlet weak var detectedLabels: NSTableView!
+	weak var activeTableView: NSTableView!
 	
 	/// this notification is posted when a user renames a label
 	static let labelRenamed = NSNotification.Name(rawValue: "labelWasRenamed")
@@ -29,7 +30,7 @@ class LabelsViewController: NSViewController {
 			tallyLabels()
 			
 			// register ourselves to receive indexing notifications
-			NotificationCenter.default.addObserver(self, selector: #selector(labelsAreAvailable(notification:)), name: Document.labelsIndexed, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(labelsAreAvailable(notification:)), name: Document.labelsIndexed, object: document)
 			
 			// update our UI
 			myLabels.reloadData()
@@ -47,7 +48,10 @@ class LabelsViewController: NSViewController {
 		
 		detectedLabels.delegate = self
 		detectedLabels.dataSource = self
-    }
+    
+		// whenever the active window changes, adapt our UI to match their document
+		NotificationCenter.default.addObserver(self, selector: #selector(activeDocumentChanged(notification:)), name: WindowController.documentAvailable, object: nil)
+	}
 	
 	// MARK: Tally
 	
@@ -111,7 +115,7 @@ extension LabelsViewController: NSTableViewDelegate, NSTableViewDataSource {
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		
 		var cell: NSTableCellView!
-		let column = tableColumn!.title == "Label" ? 0 : 1
+		let column = tableColumn!.title == "TCL".l ? 0 : 1
 		
 		switch tableView {
 			
@@ -195,6 +199,74 @@ extension LabelsViewController: NSTextFieldDelegate {
 			return
 		}
 		
+		self.massRename(old: old, new: new)
+	}
+}
+
+extension LabelsViewController {
+	
+	// MARK: Notification Centre
+	
+	@objc func labelsAreAvailable(notification: NSNotification) {
+		detectedLabels.reloadData()
+		tallyLabels()		
+	}
+
+	@objc func activeDocumentChanged(notification: NSNotification) {
+		
+		// we don't really need to do anything if we're switching to the same document
+		guard let document = notification.object as? Document,
+			document != self.document
+			else {
+			return
+		}
+		
+		// if we have any previous document references, remove this as its observer
+		if self.document != nil {
+			NotificationCenter.default.removeObserver(self, name: Document.labelsIndexed, object: self.document)
+		}
+		
+		self.document = document
+	}
+	
+	// MARK: Actions
+	@IBAction func addCustomLabel(sender: AnyObject) {
+		var name = "CLD".l
+		let count = document!.customLabels.count
+		
+		if count > 0 {
+			name += " \(count + 1)"
+		}
+		
+		document!.customLabels.append(name)
+		document!.updateChangeCount(.changeDone)
+		
+		myLabels.insertRows(at: [count], withAnimation: .slideDown)
+	}
+	
+	// MARK: Touchbar Actions
+	@IBAction func massRenameLabels(sender: AnyObject) {
+		let selectedTable = myLabels.isHighlighted ? myLabels : detectedLabels
+		
+		guard let selection = selectedTable?.selectedRow else {
+			return
+		}
+		
+		selectedTable?.editColumn(0, row: selection, with: nil, select: true)
+	}
+}
+
+extension LabelsViewController {
+	
+	// MARK: Undo Action
+	
+	private func massRename(old: String, new: String, registersUndo: Bool = true) {
+		
+		// this is obviously not a rename
+		guard old != new else {
+			return
+		}
+		
 		// replace EVERY annotation that has the old label with our new one
 		for object in document!.objects {
 			for annotation in object.annotations {
@@ -220,30 +292,24 @@ extension LabelsViewController: NSTextFieldDelegate {
 		// update our UI
 		document!.updateChangeCount(.changeDone)
 		NotificationCenter.default.post(name: LabelsViewController.labelRenamed, object: nil)
-	}
-}
-
-extension LabelsViewController {
-	
-	// MARK: Notification Centre
-	
-	@objc func labelsAreAvailable(notification: NSNotification) {
-		detectedLabels.reloadData()
-		tallyLabels()		
-	}
-
-	// MARK: Actions
-	@IBAction func addCustomLabel(sender: AnyObject) {
-		var name = "CLD".l
-		let count = document!.customLabels.count
 		
-		if count > 0 {
-			name += " \(count + 1)"
+		// update our tables
+		detectedLabels?.reloadData()
+		myLabels?.reloadData()
+		
+		// register our undo action
+		guard registersUndo else {
+			return
 		}
 		
-		document!.customLabels.append(name)
-		document!.updateChangeCount(.changeDone)
+		undoManager?.registerUndo(withTarget: self) {
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.massRename(old: old, new: new)
+			}
+			
+			$0.massRename(old: new, new: old, registersUndo: false)
+		}
 		
-		myLabels.insertRows(at: [count], withAnimation: .slideDown)
+		undoManager?.setActionName("uLVMREN".l)
 	}
 }
