@@ -15,6 +15,8 @@ fileprivate let kPhotoIndex = "photoIndex"
 fileprivate let kPhotosDir = "Photos"
 fileprivate let kThumbnailsDir = "Thumbnails"
 
+fileprivate let CreateMLImageTypes = ["png", "jpg", "jpeg"]
+
 protocol DocumentDelegate {
 	func projectDidLoad()
 	func projectChanged()
@@ -25,7 +27,9 @@ class Document: NSDocument {
 	var fileWrapper: FileWrapper!
 	var photosWrapper: FileWrapper!
 	var thumbnailWrapper: FileWrapper!
+	
 	private var photoIndex: Int = 0
+	private var indexingTask: DispatchWorkItem?
 	
 	var fileWasLoaded = false
 	
@@ -50,6 +54,8 @@ class Document: NSDocument {
 	override init() {
 	    super.init()
 		
+		self.hasUndoManager = true
+		
 		if !fileWasLoaded {
 			// create our file structure
 			fileWrapper = FileWrapper(directoryWithFileWrappers: [:])
@@ -60,8 +66,8 @@ class Document: NSDocument {
 			thumbnailWrapper = FileWrapper(directoryWithFileWrappers: [:])
 			thumbnailWrapper.setFilename(kThumbnailsDir)
 			
-			fileWrapper.addFileWrapper(photosWrapper)
-			fileWrapper.addFileWrapper(thumbnailWrapper)
+			fileWrapper.addFileWrapper(photosWrapper, canOverwrite: true)
+			fileWrapper.addFileWrapper(thumbnailWrapper, canOverwrite: true)
 		}
 	}
 
@@ -91,10 +97,7 @@ class Document: NSDocument {
 	// MARK: Save / Read
 	
 	override func write(to url: URL, ofType typeName: String) throws {
-		
-		// remove our old annotations file
-		fileWrapper.removeFileWrapper(withFilename: "annotations")
-		
+
 		let encoder = NSKeyedArchiver(requiringSecureCoding: true)
 		encoder.encode(objects, forKey: kObjects)
 		encoder.encode(customLabels, forKey: kLabels)
@@ -105,7 +108,8 @@ class Document: NSDocument {
 		let annotationsWrapper = FileWrapper(regularFileWithContents: encoder.encodedData)
 		annotationsWrapper.setFilename("annotations")
 		
-		fileWrapper.addFileWrapper(annotationsWrapper)
+		fileWrapper.addFileWrapper(annotationsWrapper, canOverwrite: true)
+		
 		try? fileWrapper.write(to: url, options: .atomic, originalContentsURL: self.fileURL)
 	}
 	
@@ -225,109 +229,277 @@ class Document: NSDocument {
 	
 	// MARK: Package Actions
 	
-	private func photoAndThumbnailWrapper(for photo: NSImage, filename: String) -> [FileWrapper]? {
+	/// Converts an image to PNG
+	/// - Parameter original: Original file wrapper
+	/// - Parameter image: Original image
+	
+	private func convertToPng(original: FileWrapper, image: NSImage) {
 		
-		guard let pngData = photo.tiffRepresentation?.bitmap?.png else {
-				return nil
+		guard let pngData = image.tiffRepresentation?.bitmap?.png else {
+			return
 		}
 		
-		let photoWrapper = FileWrapper(regularFileWithContents: pngData)
-		photoWrapper.setFilename(filename)
-
-		// create a thumbnail for this photo
+		// update our wrapper
+		photosWrapper.removeFileWrapper(original)
 		
-		guard let thumbnail = thumbnailify(photo: photo),
-			let thumbnailData = thumbnail.tiffRepresentation?.bitmap?.png
-			else {
-			return nil
-		}
+		let pngPhotoWrapper = FileWrapper(regularFileWithContents: pngData)
+		pngPhotoWrapper.setFilename(original.filename!)
 		
-		let thumbnailWrapper = FileWrapper(regularFileWithContents: thumbnailData)
-		thumbnailWrapper.setFilename(filename)
-		
-		return [photoWrapper, thumbnailWrapper]
+		photosWrapper.addFileWrapper(pngPhotoWrapper)
 	}
 	
-	private func add(filename: String, wrappers: [FileWrapper], at start: Int = -1) {
+	private func createThumbnail(from data: Data, withFilename filename: String, withSize size: NSSize) -> NSImage? {
 	
-		// create a new photo annotation object pointing to it
-		let object = PhotoAnnotation(filename: filename)
+		// generate its thumbnail using Image I/O
+		let thumbnail = thumbnailify(photoData: data, size: size)
 		
-		DispatchQueue.main.async {
-			self.photosWrapper.addFileWrapper(wrappers[0])
-			self.thumbnailWrapper.addFileWrapper(wrappers[1])
-			
-			if start != -1 {
-				self.objects.insert(object, at: start)
-			} else {
-				self.objects.append(object)
-			}
-		}
+		let thumbnailCacheWrapper = FileWrapper(regularFileWithContents: thumbnail!.tiffRepresentation!.bitmap!.png!)
+		
+		thumbnailCacheWrapper.setFilename(filename)
+		self.thumbnailWrapper.addFileWrapper(thumbnailCacheWrapper, canOverwrite: true)
+		
+		return thumbnail
 	}
 	
-	func addPhotos(from urls: [URL], at start: Int = -1, available: ((Int) -> ())? = nil) {
+	func addPhotos(from urls: [URL], at start: Int = -1, available: ((Int, Bool) -> ())? = nil, thumbnailAvailable: (() -> ())? = nil) {
 		
 		let index = photoIndex
+		var importCount = 0
+	
+		let base = start == -1 ? 0 : start
 		
-		DispatchQueue.global(qos: .userInitiated).async {
-			for (i, url) in urls.enumerated() {
+		let task = DispatchWorkItem {
+			for url in urls {
 				
-				let filename = "Photo \(index + i).png"
-				
-				// copy the image data to our "Photos" directory
 				guard let data = try? Data(contentsOf: url),
-					let image = NSImage(data: data),
-					let wrappers = self.photoAndThumbnailWrapper(for: image, filename: filename), wrappers.count == 2
+					let image = NSImage(data: data)
 					else {
 					continue
 				}
 				
-				self.add(filename: filename, wrappers: wrappers, at: start)
+				// unsupported images will be converted to PNG
+				let isAnAcceptedFileType = CreateMLImageTypes.contains(url.pathExtension.lowercased())
+				let fileExtension = isAnAcceptedFileType ? url.pathExtension : "png"
+				
+				let filename = "Photo \(index + importCount).\(fileExtension)"
+				
+				// copy the image data to our "Photos" directory
+				
+				let photoWrapper = FileWrapper(regularFileWithContents: data)
+				photoWrapper.setFilename(filename)
+				self.photosWrapper.addFileWrapper(photoWrapper, canOverwrite: true)
+				
+				// add our photo annotation object to the list
+				let object = PhotoAnnotation(filename: filename)
+				self.objects.insert(object, at: base)
 				
 				// a new object is available!
 				DispatchQueue.main.async {
-					available?(i)
-					self.photoIndex += urls.count
+					available?(base, true)
 				}
-			}
-		}
-	}
-	
-	func addPhotos(_ images: [NSImage], at start: Int = -1, available: ((Int) -> ())? = nil) {
-		
-		let index = photoIndex
-		
-		DispatchQueue.global(qos: .userInitiated).async {
-			for (i, photo) in images.enumerated() {
-					
-				let filename = "Photo \(index + i).png"
-					
-				guard let wrappers = self.photoAndThumbnailWrapper(for: photo, filename: filename), wrappers.count == 2 else {
-						continue
+				
+				// convert unsupported images to PNG (so we can quickly export them to Create ML later)
+				if !isAnAcceptedFileType {
+					self.convertToPng(original: photoWrapper, image: image)
 				}
-					
-				self.add(filename: filename, wrappers: wrappers, at: start)
+				
+				// generate its thumbnail
+				let thumbnail = self.createThumbnail(from: data, withFilename: filename, withSize: image.size)
+				
+				object.thumbnail = thumbnail
 				
 				DispatchQueue.main.async {
-					available?(i)
-					self.photoIndex += images.count
+					thumbnailAvailable?()
 				}
+				
+				self.photoIndex += 1
+				importCount += 1
+			}
+		}
+		
+		// perform our import actions in a different thread (to keep our UI responsive)
+		DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now(), execute: task)
+		self.updateChangeCount(.changeDone)
+		
+		// register our undo import action
+		undoManager?.registerUndo(withTarget: self) {
+			
+			// stop importing photos (if it's still running)
+			task.cancel()
+			
+			// exterminate... exterminate...
+			for _ in 0 ..< importCount {
+				
+				guard base < $0.objects.count,
+					let filename = $0.objects[base].photoFilename,
+					let photoWrapper = $0.photosWrapper.fileWrappers?[filename] else {
+					continue
+				}
+				
+				$0.objects.remove(at: base)
+				$0.photosWrapper.removeFileWrapper(photoWrapper)
+			
+				if let thumbnailWrapper = $0.thumbnailWrapper.fileWrappers?[filename] {
+					$0.thumbnailWrapper.removeFileWrapper(thumbnailWrapper)
+				}
+				
+				DispatchQueue.main.async {
+					available?(base, false)
+				}
+			}
+			
+			// revert our photo index back to its previous value
+			$0.photoIndex = index
+			$0.updateChangeCount(.changeUndone)
+			
+			// redo import action
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.addPhotos(from: urls, at: start, available: available, thumbnailAvailable: thumbnailAvailable)
+			}
+		}
+		
+		undoManager?.setActionName("uDPIMP".l)
+	}
+	
+	func addPhotos(_ images: [NSImage], at start: Int = -1, available: ((Int, Bool) -> ())? = nil, thumbnailAvailable: (() -> ())? = nil) {
+		
+		let index = photoIndex
+		var importCount = 0
+
+		let base = start == -1 ? 0 : start
+		
+		let task = DispatchWorkItem {
+			
+			for image in images {
+				let filename = "Photo \(index + importCount).png"
+				
+				guard let data = image.tiffRepresentation,
+					let image = NSImage(data: data) else {
+					continue
+				}
+				
+				// create a temporary file wrapper
+				let fileWrapper = FileWrapper(regularFileWithContents: data)
+				
+				fileWrapper.setFilename(filename)
+				
+				let object = PhotoAnnotation(filename: filename)
+				self.objects.insert(object, at: base)
+				
+				DispatchQueue.main.async {
+					available?(base, true)
+				}
+				
+				// generate its thumbnail
+				let thumbnail = self.createThumbnail(from: data, withFilename: filename, withSize: image.size)
+				
+				object.thumbnail = thumbnail
+				
+				DispatchQueue.main.async {
+					thumbnailAvailable?()
+				}
+				
+				// convert it into PNG
+				self.convertToPng(original: fileWrapper, image: image)
+				
+				importCount += 1
+				self.photoIndex += 1
+			}
+		}
+		
+		DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now(), execute: task)
+		
+		// register its undo action
+		undoManager?.registerUndo(withTarget: self) {
+			
+			task.cancel()
+			
+			//
+			for _ in 0 ..< importCount {
+				
+				guard base < $0.objects.count,
+					let filename = $0.objects[base].photoFilename,
+					let photoWrapper = $0.photosWrapper.fileWrappers?[filename] else {
+					continue
+				}
+				
+				$0.objects.remove(at: base)
+				$0.photosWrapper.removeFileWrapper(photoWrapper)
+			
+				if let thumbnailWrapper = $0.thumbnailWrapper.fileWrappers?[filename] {
+					$0.thumbnailWrapper.removeFileWrapper(thumbnailWrapper)
+				}
+				
+				DispatchQueue.main.async {
+					available?(base, false)
+				}
+			}
+			
+			//
+			self.photoIndex = index
+			$0.updateChangeCount(.changeUndone)
+			
+			//
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.addPhotos(images, at: start, available: available, thumbnailAvailable: thumbnailAvailable)
 			}
 		}
 	}
 	
-	func removePhoto(at row: Int) {
+	func removePhoto(at row: Int, completion: ((Bool) -> ())? = nil) {
 		guard row >= 0 && row < objects.count else {
 			return
 		}
 		
-		// remove it from our objects list
-		let filename = objects[row].photoFilename
-		objects.remove(at: row)
+		let object = objects[row]
 		
-		// and remove it from our package
-		photosWrapper.removeFileWrapper(withFilename: filename!)
-		thumbnailWrapper.removeFileWrapper(withFilename: filename!)
+		guard let filename = object.photoFilename else {
+			return
+		}
+		
+		// remove it from our objects list
+		objects.remove(at: row)
+
+		guard let photo = photosWrapper.fileWrappers?[filename]?.regularFileContents,
+			let thumbnail = thumbnailWrapper.fileWrappers?[filename]?.regularFileContents else {
+				return
+		}
+		
+		let photoWrapper = FileWrapper(regularFileWithContents: photo)
+		let ThumbnailWrapper = FileWrapper(regularFileWithContents: thumbnail)
+		
+		photoWrapper.setFilename(filename)
+		ThumbnailWrapper.setFilename(filename)
+
+		// remove its photo and thumbnail files from our package
+		photosWrapper.removeFileWrapper(withFilename: filename)
+		thumbnailWrapper.removeFileWrapper(withFilename: filename)
+		
+		// register our undo action
+		undoManager?.registerUndo(withTarget: self) {
+			// re-insert the deleted object back to our list
+			$0.objects.insert(object, at: row)
+			
+			//
+			
+			$0.photosWrapper.addFileWrapper(photoWrapper)
+			$0.thumbnailWrapper.addFileWrapper(ThumbnailWrapper)
+			
+			//
+			
+			$0.updateChangeCount(.changeUndone)
+			completion?(false)
+			
+			$0.undoManager?.registerUndo(withTarget: $0) {
+				$0.removePhoto(at: row, completion: completion)
+			}
+		}
+		
+		undoManager?.setActionName("uDPDEL".l)
+		
+		//
+		self.updateChangeCount(.changeDone)
+		completion?(true)
 	}
 	
 	func getPhoto(for object: PhotoAnnotation?, isThumbnail: Bool = false) -> NSImage? {
@@ -356,7 +528,10 @@ class Document: NSDocument {
 		let objects = self.objects
 		let udl = customLabels
 		
-		DispatchQueue.global(qos: .background).async {
+		// cancel our previously-uncompleted indexing task
+		indexingTask?.cancel()
+		
+		let task = DispatchWorkItem {
 			var labels: [String] = []
 			
 			for object in objects {
@@ -364,7 +539,7 @@ class Document: NSDocument {
 					let label = annotation.label
 					
 					// exclude unlabled items and user-defined labels
-					guard label != "No Label" && !label.isEmpty && !udl.contains(label) else {
+					guard label != "ALD".l && !label.isEmpty && !udl.contains(label) else {
 						continue
 					}
 					
@@ -378,8 +553,15 @@ class Document: NSDocument {
 			DispatchQueue.main.async {
 				self.labels = labels
 				NotificationCenter.default.post(name: Document.labelsIndexed, object: self, userInfo: nil)
+				
+				// this task has finished successfully!
+				self.indexingTask = nil
 			}
 		}
+		
+		// run our indexing task in the background
+		indexingTask = task
+		
+		DispatchQueue.global(qos: .background).asyncAfter(deadline: .now(), execute: task)
 	}
 }
-

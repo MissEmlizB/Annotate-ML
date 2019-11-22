@@ -36,5 +36,9 @@
 "uAREN" = "rename annotation"; // undo: annotation rename
 "uAR" = "resize annotation"; // undo: annotation resized
 "uAM" = "move annotation"; // undo: annotation moved
+
 "uPSW" = "select photo"; // undo: photo switched
 "uLVMREN" = "mass rename labels"; // undo: labels view mass rename
+
+"uDPIMP" = "import photo(s)"; // undo: document photo import
+"uDPDEL" = "delete photo"; // undo: document photo delete

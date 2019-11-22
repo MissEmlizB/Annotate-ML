@@ -28,8 +28,6 @@ class ViewController: NSViewController {
 	// photo selection
 	private var previousRow = -1
 	
-	var thumbnails: [NSImage] = []
-	
 	var activeObject: PhotoAnnotation? {
 		get {
 			let row = photosTableView.selectedRow
@@ -52,9 +50,8 @@ class ViewController: NSViewController {
 		
 		scrollView.wantsLayer = true
 		
-		// allow the user to drop photos or links to theirhotos table view
+		// allow the user to drop photos or links to the photos table view
 		photosTableView.registerForDraggedTypes([.fileURL, .png, .tiff, .URL])
-		
 		photosTableView.setDraggingSourceOperationMask(.move, forLocal: true)
 		photosTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
 		
@@ -86,18 +83,19 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 	
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		
+		var thumbnail: NSImage?
+		
+		if row >= 0 && row < document!.objects.count {
+			thumbnail = document!.objects[row].thumbnail
+		}
+		
 		let cell = photosTableView.makeView(withIdentifier: cellIdentifier, owner: nil) as! ThumbnailCellView
 		
-		// thumbnail "processing" indicator
-		if row >= 0 && row < thumbnails.count {
-			cell.processingIndicator.stopAnimation(self)
-			cell.processingIndicator.isHidden = true
-			cell.photo.image = thumbnails[row]
-		} else {
-			cell.processingIndicator.startAnimation(self)
-			cell.processingIndicator.isHidden = false
-			cell.photo.image = nil
-		}
+		let isProcessing = thumbnail == nil
+		cell.photo.image = thumbnail
+		
+		isProcessing ? cell.processingIndicator.startAnimation(self) : cell.processingIndicator.stopAnimation(self)
+		cell.processingIndicator.isHidden = !isProcessing
 		
 		return cell
 	}
@@ -160,24 +158,7 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		
 		// URLS
 		if let urls = pb.readObjects(forClasses: [NSURL.self], options: [:]) as? [URL] {
-			
-			DispatchQueue.global(qos: .userInitiated).async {
-				var images: [NSImage] = []
-				
-				for url in urls {
-					guard let data = try? Data(contentsOf: url),
-						let image = NSImage(data: data)
-						else {
-							continue
-					}
-					
-					images.append(image)
-				}
-				
-				DispatchQueue.main.sync {
-					self.addImages(images: images, at: row)
-				}
-			}
+			self.addImages(images: urls, at: row)
 		}
 		
 		return true
@@ -188,19 +169,24 @@ extension ViewController: DocumentDelegate {
 	// MARK: Document Delegate
 	
 	func loadingStarted() {
-		splitView.isHidden = true
 	}
 	
 	func projectDidLoad() {
 		
-		// show the main UI once our project loads completely
-		splitView.isHidden = false
-		photosTableView.reloadData()
-		
+		var rows: IndexSet = []
+
+		// start processing thumbnails
+		for (row, object) in document!.objects.enumerated() {
+			guard let thumbnail = document?.getPhoto(for: object, isThumbnail: true) else {
+				continue
+			}
+			
+			object.thumbnail = thumbnail
+			rows.insert(row)
+		}
+
+		photosTableView.insertRows(at: rows, withAnimation: .slideDown)
 		document!.indexLabels()
-		
-		// start getting photo thumbnails
-		getThumbnails()
 	}
 	
 	func projectChanged() {
@@ -279,75 +265,75 @@ extension ViewController: AnnotationLabelViewControllerDelegate {
 	}
 }
 
-extension ViewController: NSWindowDelegate {
-	func windowDidResize(_ notification: Notification) {
-		// let window = notification.object as! NSWindow
-	}
-}
-
 extension ViewController {
 	
 	// MARK: Actions
 	
-	func addImages(images: [NSImage], at start: Int = -1) {
-				
-		document!.addPhotos(images, at: start) { row in
-			self.photosTableView.insertRows(at: [row], withAnimation: .slideDown)
-			self.getThumbnails()
-			
-			self.document!.updateChangeCount(.changeDone)
+	private func insertOrRemoveRow(at row: Int, inserting: Bool) {
+		if inserting {
+			photosTableView.insertRows(at: [row], withAnimation: .slideDown)
+		} else {
+			photosTableView.removeRows(at: [row], withAnimation: .slideUp)
 		}
+	}
+	
+	private func reloadTableView() {
+		let selection = self.photosTableView.selectedRow
+		self.photosTableView.reloadData()
+		
+		// restore previous selection
+		self.photosTableView.selectRowIndexes([selection], byExtendingSelection: false)
 	}
 	
 	func addImages(images: [URL], at start: Int = -1) {
-				
-		document!.addPhotos(from: images, at: start) { row in
-			self.photosTableView.insertRows(at: [row], withAnimation: .slideDown)
-			self.getThumbnails()
-			
-			self.document!.updateChangeCount(.changeDone)
-		}
-	}
-	
-	func getThumbnails() {
-		guard let document = self.document else {
-			return
-		}
 		
-		DispatchQueue.global(qos: .background).async {
-			var thumbnails: [NSImage] = []
+		document!.addPhotos(from: images, at: start,
+		
+		// this gets triggered whenever a new photo was imported
 			
-			// get thumbnail images from our package
-			for object in document.objects {
-				guard let thumbnail = document.getPhoto(for: object, isThumbnail: true) else {
-					continue
-				}
-				
-				thumbnails.append(thumbnail)
-			}
+		available: { row, isInserting in
+			self.insertOrRemoveRow(at: row, inserting: isInserting)
+		},
+					
+		// this gets triggered whenever a thumbnail gets generated
 			
-			DispatchQueue.main.async {
-				self.thumbnails = thumbnails
-				self.photosTableView.reloadData()
-			}
-		}
+		thumbnailAvailable: {
+			self.reloadTableView()
+		})
 	}
 	
 	func deletePhoto(at row: Int) {
+		
 		let object = self.document!.objects[row]
 		
 		// reset our detail view if we're deleting the active object
-		if self.annotationsView.object == object {
-			self.annotationsView.object = nil
+		if annotationsView.object == object {
+			annotationsView.object = nil
 		}
 		
-		self.document!.removePhoto(at: row)
-		self.document!.updateChangeCount(.changeDone)
-		
-		self.photosTableView.removeRows(at: [row], withAnimation: .slideUp)
+		document!.removePhoto(at: row) { deleting in
+			if deleting {
+				self.photosTableView.removeRows(at: [row], withAnimation: .slideUp)
+			} else {
+				self.photosTableView.insertRows(at: [row], withAnimation: .slideDown)
+			}
+		}
 
-		// no crashes allowed!
-		self.lastPopover?.performClose(self)
+		// close our annotation editor popover (if it's active)
+		lastPopover?.performClose(self)
+	}
+	
+	func addImages(images: [NSImage], at start: Int = -1) {
+				
+		document!.addPhotos(images, at: start,
+							
+		available: { row, isInserting in
+			self.insertOrRemoveRow(at: row, inserting: isInserting)
+		},
+		
+		thumbnailAvailable: {
+			self.reloadTableView()
+		})
 	}
 	
 	func deleteSelectedPhoto() {

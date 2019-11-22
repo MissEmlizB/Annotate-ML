@@ -14,6 +14,7 @@ class WindowController: NSWindowController {
 	static let documentAvailable = NSNotification.Name(rawValue: "documentIsAvailable")
 	
 	@IBOutlet weak var saveIndicator: NSProgressIndicator?
+	@IBOutlet var shareMenu: NSMenu!
 	
 	weak var viewController: ViewController?
 	weak var labelsWC: NSWindowController?
@@ -37,8 +38,7 @@ class WindowController: NSWindowController {
 		exportPanel = NSSavePanel()
 		
 		viewController = (contentViewController as! ViewController)
-		window!.delegate = viewController
-		
+
 		NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSWindow.didBecomeKeyNotification, object: window)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(willClose(notification:)), name: NSWindow.willCloseNotification, object: window)
@@ -139,25 +139,38 @@ class WindowController: NSWindowController {
 				return
 			}
 			
-			let urls = self.openImagePanel.urls
-			
-			// load the selected photos then pass it to our view controller
-			DispatchQueue.global(qos: .userInitiated).async {
-				var images: [NSImage] = []
-				
-				for url in urls {
-					guard let photo = NSImage(contentsOf: url) else {
-						continue
-					}
-					
-					images.append(photo)
-				}
-				
-				DispatchQueue.main.async {
-					self.viewController?.addImages(images: images)
-				}
-			}
+			self.viewController?.addImages(images: self.openImagePanel.urls)
 		}
+	}
+	
+	@IBAction func showShareMenu(sender: NSButton) {
+		shareMenu.popUp(positioning: shareMenu.items.first, at: sender.frame.origin, in: sender)
+	}
+	
+	@IBAction func shareDocument(sender: AnyObject) {
+		
+		var service: NSSharingService.Name!
+		
+		switch sender.tag {
+		case 0:
+			service = .sendViaAirDrop
+			
+		case 1:
+			service = .cloudSharing
+			
+		case 2:
+			service = .composeMessage
+			
+		case 3:
+			service = .composeEmail
+			
+		default:
+			return
+		}
+		
+		// share our document using the selected service
+		let sharingService = NSSharingService(named: service)
+		sharingService?.perform(withItems: [document as! Document])
 	}
 	
 	// MARK: Other Actions

@@ -66,13 +66,26 @@ extension FileWrapper {
 		
 		self.removeFileWrapper(wrapper)
 	}
+	
+	func addFileWrapper(_ fileWrapper: FileWrapper, canOverwrite: Bool) {
+		
+		if canOverwrite, let filename = fileWrapper.filename {
+			// check if the file already exists
+			if let existingFileWrapper = fileWrappers?[filename] {
+				// if it does, then remove it
+				self.removeFileWrapper(existingFileWrapper)
+			}
+		}
+		
+		self.addFileWrapper(fileWrapper)
+	}
 }
 
 // MARK: Thumbnailing
 
 /// Creates a thumbnail of a photo
 /// - Parameter photo: the photo to use
-func thumbnailify(photo: NSImage) -> NSImage? {
+func thumbnailify(photoData data: Data, size: NSSize) -> NSImage? {
 	
 	let options: [CFString: Any] = [
 		kCGImageSourceCreateThumbnailFromImageIfAbsent: true,
@@ -82,16 +95,16 @@ func thumbnailify(photo: NSImage) -> NSImage? {
 	]
 	
 	// create image thumbnail using Image I/O
-	guard let imageSource = CGImageSourceCreateWithData(photo.tiffRepresentation! as CFData, nil),
+	guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil),
 		let image = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options as CFDictionary)
 		else {
 			return nil
 	}
 	
 	// thumbnail size
-	let ratio = thumbnailSize * photo.size.width
-	let width = photo.size.width * ratio
-	let height = photo.size.height * ratio
+	let ratio = thumbnailSize * size.width
+	let width = size.width * ratio
+	let height = size.height * ratio
 	
 	return NSImage(cgImage: image, size: NSSize(width: width, height: height))
 }

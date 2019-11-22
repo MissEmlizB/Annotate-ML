@@ -15,6 +15,7 @@ class PhotoAnnotation: NSObject, NSSecureCoding {
 
 	var photoFilename: String!
 	var annotations: [Annotation] = []
+	var thumbnail: NSImage?
 		
 	init(filename: String) {
 		self.photoFilename = filename

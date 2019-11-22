@@ -417,9 +417,8 @@ extension AnnotationsView {
 		h = 0
 			
 		// create and select our new annotation
-		createAnnotation(withRect: rect) {
-			self.delegate?.annotationSelected(annotation: $0, at: $0.cgRect.origin)
-		}
+		let annotation = createAnnotation(withRect: rect)
+		self.delegate?.annotationSelected(annotation: annotation, at: annotation.cgRect.origin)
 	}
 }
 
@@ -523,28 +522,6 @@ extension AnnotationsView {
 		return nil
 	}
 	
-	private func findMissing(annotation: Annotation?, withPositionToMatch position: CGPoint) -> Annotation? {
-		
-		guard annotation == nil else {
-			return annotation
-		}
-		
-		guard let object = self.object else {
-			return nil
-		}
-		
-		let x = Float(position.x)
-		let y = Float(position.y)
-		
-		for anno in object.annotations {
-			if anno.x == x && anno.y == y {
-				return anno
-			}
-		}
-		
-		return nil
-	}
-	
 	// MARK: Undo Actions
 	
 	func renameAnnotation(annotation: Annotation?, old: String, new: String) {
@@ -554,19 +531,15 @@ extension AnnotationsView {
 		
 		setNeedsDisplay()
 		annotation.label = new
-		
-		let rect = annotation.cgRect
-		
+				
 		undoManager?.registerUndo(withTarget: self) {
-			
-			weak var annotation = $0.findMissing(annotation: annotation, withRectToMatch: rect)
-			
+						
 			$0.undoManager?.registerUndo(withTarget: $0) {
 				$0.renameAnnotation(annotation: annotation, old: old, new: new)
 				$0.delegate?.annotationActionRedone()
 			}
 			
-			annotation?.label = old
+			annotation.label = old
 			$0.setNeedsDisplay()
 			
 			$0.delegate?.annotationActionUndone()
@@ -581,16 +554,11 @@ extension AnnotationsView {
 		}
 		
 		let annotation = object.annotations[position]
-		let rect = annotation.cgRect
 		
 		object.annotations.remove(at: position)
 		setNeedsDisplay()
 	
 		undoManager?.registerUndo(withTarget: self) {
-			
-			guard let annotation = $0.findMissing(annotation: annotation, withRectToMatch: rect) else {
-				return
-			}
 			
 			$0.undoManager?.registerUndo(withTarget: $0) {
 				$0.deleteAnnotation(position: position)
@@ -603,23 +571,27 @@ extension AnnotationsView {
 		undoManager?.setActionName("uADEL".l)
 	}
 	
-	private func createAnnotation(withRect rect: CGRect, completion: ((Annotation) -> ())? = nil) {
+	private func createAnnotation(withRect rect: CGRect, object oannotation: Annotation? = nil) -> Annotation {
 		
-		// create a new annotation object
-		let annotation = Annotation(rect: rect)
+		var annotation: Annotation!
+		
+		if oannotation == nil {
+			// create a new annotation object
+			annotation = Annotation(rect: rect)
+			delegate?.annotationCreated(annotation: annotation)
+		} else {
+			// since this is a redo operation, we'll just insert the original annotation back to our list
+			annotation = oannotation!
+		}
+		
 		object?.annotations.append(annotation)
-		
-		delegate?.annotationCreated(annotation: annotation)
-		
 		setNeedsDisplay()
 		
 		// register our undo action
 		undoManager?.registerUndo(withTarget: self) {
-			
-			weak var annotation = $0.findMissing(annotation: annotation, withRectToMatch: rect)
-			
+						
 			$0.undoManager?.registerUndo(withTarget: $0) {
-				$0.createAnnotation(withRect: rect)
+				let _ = $0.createAnnotation(withRect: rect, object: annotation)
 				$0.delegate?.annotationActionRedone()
 			}
 			
@@ -629,7 +601,7 @@ extension AnnotationsView {
 		}
 		
 		undoManager?.setActionName("uACR".l)
-		completion?(annotation)
+		return annotation
 	}
 	
 	private func resizeAnnotation(annotation: Annotation?, withRect newRect: CGRect, oldRect: CGRect) {
@@ -641,10 +613,8 @@ extension AnnotationsView {
 		annotation.cgRect = newRect
 		setNeedsDisplay()
 		
-		undoManager?.registerUndo(withTarget: annotation) {
-			
-			weak var annotation = self.findMissing(annotation: $0, withRectToMatch: newRect)
-			
+		undoManager?.registerUndo(withTarget: annotation) { _ in
+						
 			self.undoManager?.registerUndo(withTarget: self) {
 				
 				weak var annotation = $0.findMissing(annotation: annotation, withRectToMatch: oldRect)
@@ -653,7 +623,7 @@ extension AnnotationsView {
 				$0.delegate?.annotationActionRedone()
 			}
 			
-			annotation?.cgRect = oldRect
+			annotation.cgRect = oldRect
 			self.delegate?.annotationActionUndone()
 			self.setNeedsDisplay()
 		}
@@ -672,20 +642,16 @@ extension AnnotationsView {
 		
 		setNeedsDisplay()
 		
-		undoManager?.registerUndo(withTarget: annotation) {
-			
-			weak var annotation = self.findMissing(annotation: $0, withPositionToMatch: newPosition)
-			
+		undoManager?.registerUndo(withTarget: annotation) { _ in
+						
 			self.undoManager?.registerUndo(withTarget: self) {
-				
-				weak var annotation = $0.findMissing(annotation: annotation, withPositionToMatch: oldPosition)
-				
+								
 				$0.moveAnnotation(annotation: annotation, oldPosition: oldPosition, newPosition: newPosition)
 				$0.delegate?.annotationActionRedone()
 			}
 			
-			annotation?.x = Float(oldPosition.x)
-			annotation?.y = Float(oldPosition.y)
+			annotation.x = Float(oldPosition.x)
+			annotation.y = Float(oldPosition.y)
 			
 			self.setNeedsDisplay()
 			self.delegate?.annotationActionUndone()
