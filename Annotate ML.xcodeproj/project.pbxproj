@@ -21,6 +21,12 @@
 		A14D07EF235DC86500E47BD3 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07EE235DC86500E47BD3 /* WindowController.swift */; };
 		A14D07F1235DD9C000E47BD3 /* AnnotationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07F0235DD9C000E47BD3 /* AnnotationsView.swift */; };
 		A14D07F3235DF48F00E47BD3 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */; };
+		A17AEDDF2388F440005B19CA /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17AEDDE2388F440005B19CA /* OnboardingViewController.swift */; };
+		A17AEDE123890236005B19CA /* OnboardingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17AEDE023890236005B19CA /* OnboardingVideoViewController.swift */; };
+		A17AEDE223890B18005B19CA /* Importing - Dark.m4v in Resources */ = {isa = PBXBuildFile; fileRef = A17FC0C62388C6BD000D4AF6 /* Importing - Dark.m4v */; };
+		A17AEDE323890B1A005B19CA /* Importing - Light.m4v in Resources */ = {isa = PBXBuildFile; fileRef = A17FC0C72388C6BD000D4AF6 /* Importing - Light.m4v */; };
+		A17AEDE423890B1D005B19CA /* Annotation - Dark.m4v in Resources */ = {isa = PBXBuildFile; fileRef = A16177FD2388B56800EA1074 /* Annotation - Dark.m4v */; };
+		A17AEDE523890B20005B19CA /* Annotation - Light.m4v in Resources */ = {isa = PBXBuildFile; fileRef = A16177FE2388B56800EA1074 /* Annotation - Light.m4v */; };
 		A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */; };
 		A18ECD1823730BEB00B8851C /* Resnet50Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */; };
 		A1F0BE7E2360546900AF1FD9 /* AnnotationLabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */; };
@@ -66,6 +72,12 @@
 		A14D07EE235DC86500E47BD3 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		A14D07F0235DD9C000E47BD3 /* AnnotationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsView.swift; sourceTree = "<group>"; };
 		A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
+		A16177FD2388B56800EA1074 /* Annotation - Dark.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Annotation - Dark.m4v"; sourceTree = "<group>"; };
+		A16177FE2388B56800EA1074 /* Annotation - Light.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Annotation - Light.m4v"; sourceTree = "<group>"; };
+		A17AEDDE2388F440005B19CA /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OnboardingViewController.swift; path = "Annotate ML/OnboardingViewController.swift"; sourceTree = SOURCE_ROOT; };
+		A17AEDE023890236005B19CA /* OnboardingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OnboardingVideoViewController.swift; path = "Annotate ML/OnboardingVideoViewController.swift"; sourceTree = SOURCE_ROOT; };
+		A17FC0C62388C6BD000D4AF6 /* Importing - Dark.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Importing - Dark.m4v"; sourceTree = "<group>"; };
+		A17FC0C72388C6BD000D4AF6 /* Importing - Light.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Importing - Light.m4v"; sourceTree = "<group>"; };
 		A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = "Annotate ML/PreferencesViewController.swift"; sourceTree = SOURCE_ROOT; };
 		A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50Int8LUT.mlmodel; sourceTree = "<group>"; };
 		A1D724CA237D819F00C54DCF /* ib-cant-see-redo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ib-cant-see-redo.h"; sourceTree = "<group>"; };
@@ -101,6 +113,8 @@
 		A1111A772361AB500090A74F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				A17AEDE023890236005B19CA /* OnboardingVideoViewController.swift */,
+				A17AEDDE2388F440005B19CA /* OnboardingViewController.swift */,
 				A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */,
 				A14D07BA235DC28900E47BD3 /* ViewController.swift */,
 				A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */,
@@ -129,6 +143,7 @@
 		A12B29282363112700116875 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				A16177FC2388B55A00EA1074 /* Movies */,
 				A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */,
 				A12B29242363110400116875 /* Localizable.strings */,
 				A14D07BE235DC28B00E47BD3 /* Assets.xcassets */,
@@ -232,6 +247,17 @@
 				A12B29272363111500116875 /* Storyboards */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		A16177FC2388B55A00EA1074 /* Movies */ = {
+			isa = PBXGroup;
+			children = (
+				A17FC0C62388C6BD000D4AF6 /* Importing - Dark.m4v */,
+				A17FC0C72388C6BD000D4AF6 /* Importing - Light.m4v */,
+				A16177FD2388B56800EA1074 /* Annotation - Dark.m4v */,
+				A16177FE2388B56800EA1074 /* Annotation - Light.m4v */,
+			);
+			name = Movies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,7 +365,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A14D07BF235DC28B00E47BD3 /* Assets.xcassets in Resources */,
+				A17AEDE223890B18005B19CA /* Importing - Dark.m4v in Resources */,
+				A17AEDE523890B20005B19CA /* Annotation - Light.m4v in Resources */,
+				A17AEDE323890B1A005B19CA /* Importing - Light.m4v in Resources */,
 				A12B29252363110400116875 /* Localizable.strings in Resources */,
+				A17AEDE423890B1D005B19CA /* Annotation - Dark.m4v in Resources */,
 				A14D07C2235DC28C00E47BD3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -376,6 +406,8 @@
 				A14D07E7235DC2CD00E47BD3 /* PhotoAnnotation.swift in Sources */,
 				A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */,
 				A1111A7A2361ABAA0090A74F /* LabelsViewController.swift in Sources */,
+				A17AEDE123890236005B19CA /* OnboardingVideoViewController.swift in Sources */,
+				A17AEDDF2388F440005B19CA /* OnboardingViewController.swift in Sources */,
 				A14D07B9235DC28900E47BD3 /* AppDelegate.swift in Sources */,
 				A14D07BD235DC28900E47BD3 /* Document.swift in Sources */,
 			);

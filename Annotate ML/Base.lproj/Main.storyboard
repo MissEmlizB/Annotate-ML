@@ -460,6 +460,12 @@ CA
                                                 <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Show Introduction Guide" id="dk0-Hw-3Te">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <segue destination="lnz-2V-fL7" kind="show" id="Gru-6s-8OK"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -495,6 +501,180 @@ CA
                 <customObject id="2SL-Jj-oCz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="42.5" y="-353"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="kcm-z2-m0F">
+            <objects>
+                <windowController storyboardIdentifier="Intro" showSeguePresentationStyle="single" id="lnz-2V-fL7" sceneMemberID="viewController">
+                    <window key="window" title="Welcome" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="wqv-4u-wiB">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="119" y="189" width="557" height="321"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <connections>
+                            <outlet property="delegate" destination="lnz-2V-fL7" id="pVR-m2-IU1"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="vf9-dI-ke6" kind="relationship" relationship="window.shadowedContentViewController" id="O2c-mf-hZo"/>
+                    </connections>
+                </windowController>
+                <customObject id="STu-FP-RKK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="593" y="-1021"/>
+        </scene>
+        <!--Onboarding View Controller-->
+        <scene sceneID="DAU-Hn-pBN">
+            <objects>
+                <pagecontroller transitionStyle="horizontalStrip" id="vf9-dI-ke6" customClass="OnboardingViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="4mo-er-3tH">
+                        <rect key="frame" x="0.0" y="0.0" width="689" height="500"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="onboardingPageCount">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </pagecontroller>
+                <customObject id="2dz-v7-sBS" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1248" y="-1027"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="V85-pR-sgZ">
+            <objects>
+                <viewController storyboardIdentifier="Onboarding 0" id="0bk-7D-6KO" sceneMemberID="viewController">
+                    <view key="view" id="ncx-gJ-De1">
+                        <rect key="frame" x="0.0" y="0.0" width="689" height="500"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="21" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DFd-Li-Z0F">
+                                <rect key="frame" x="207" y="134" width="275" height="233"/>
+                                <subviews>
+                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="goO-gp-iad">
+                                        <rect key="frame" x="58" y="73" width="160" height="160"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="160" id="PA6-Hi-csE"/>
+                                            <constraint firstAttribute="height" constant="160" id="vuh-GY-cRe"/>
+                                        </constraints>
+                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AppIcon" id="wSX-ig-MK7"/>
+                                    </imageView>
+                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NT7-71-Vo1">
+                                        <rect key="frame" x="0.0" y="0.0" width="275" height="52"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rpp-RB-tPo">
+                                                <rect key="frame" x="-2" y="24" width="279" height="28"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Welcome to Annotate ML!" id="gYx-ft-v7I">
+                                                    <font key="font" metaFont="systemMedium" size="24"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sz0-a4-Hb7">
+                                                <rect key="frame" x="25" y="0.0" width="226" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Annotate your photos for Create ML!" id="c0m-Xb-c6W">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VOu-o3-Yko">
+                                <rect key="frame" x="275" y="20" width="140" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Swipe left to see more" id="SQp-Cd-2XG">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="VOu-o3-Yko" secondAttribute="bottom" constant="20" id="QWx-aK-I0R"/>
+                            <constraint firstItem="DFd-Li-Z0F" firstAttribute="centerX" secondItem="ncx-gJ-De1" secondAttribute="centerX" id="ReH-Ia-dEK"/>
+                            <constraint firstItem="DFd-Li-Z0F" firstAttribute="centerY" secondItem="ncx-gJ-De1" secondAttribute="centerY" id="rcC-qd-cFG"/>
+                            <constraint firstItem="VOu-o3-Yko" firstAttribute="centerX" secondItem="ncx-gJ-De1" secondAttribute="centerX" id="y9V-Mj-Xkj"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="cYL-cQ-Xiw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1960" y="-1027"/>
+        </scene>
+        <!--Onboarding Video View Controller-->
+        <scene sceneID="JeZ-T8-fu0">
+            <objects>
+                <viewController storyboardIdentifier="Onboarding 1" id="0yh-IP-INl" customClass="OnboardingVideoViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="O7b-AP-ycm">
+                        <rect key="frame" x="0.0" y="0.0" width="689" height="500"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0EI-5U-hmZ">
+                                <rect key="frame" x="18" y="459" width="318" height="21"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Importing photos" id="HqV-Lc-l9F">
+                                    <font key="font" metaFont="systemMedium" size="18"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="gyJ-XK-i8C">
+                                <rect key="frame" x="105" y="20" width="480" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="476" id="uzK-WN-OTX"/>
+                                </constraints>
+                                <textFieldCell key="cell" selectable="YES" title="The fastest way to import photos is by dragging images directly into your photos list." id="fGE-SW-fJC">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="Ds2-5f-oOS">
+                                <rect key="frame" x="20" y="70" width="649" height="360"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="649" id="i5n-ie-cJm"/>
+                                    <constraint firstAttribute="height" constant="360" id="sFb-AH-RKN"/>
+                                </constraints>
+                            </customView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="0EI-5U-hmZ" firstAttribute="top" secondItem="O7b-AP-ycm" secondAttribute="top" constant="20" id="5lJ-s0-ydq"/>
+                            <constraint firstItem="gyJ-XK-i8C" firstAttribute="centerX" secondItem="O7b-AP-ycm" secondAttribute="centerX" id="670-Te-O9P"/>
+                            <constraint firstAttribute="bottom" secondItem="gyJ-XK-i8C" secondAttribute="bottom" constant="20" id="Frm-Zf-bdq"/>
+                            <constraint firstItem="Ds2-5f-oOS" firstAttribute="centerY" secondItem="O7b-AP-ycm" secondAttribute="centerY" id="hv7-9L-Txs"/>
+                            <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="0EI-5U-hmZ" secondAttribute="trailing" constant="355" id="iPN-3r-TrM"/>
+                            <constraint firstItem="Ds2-5f-oOS" firstAttribute="centerX" secondItem="O7b-AP-ycm" secondAttribute="centerX" id="loI-5m-AcK"/>
+                            <constraint firstItem="0EI-5U-hmZ" firstAttribute="leading" secondItem="O7b-AP-ycm" secondAttribute="leading" constant="20" id="rI4-ME-7fh"/>
+                        </constraints>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="filename" value="Importing"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="videoPlayer" destination="Ds2-5f-oOS" id="R8f-pv-zl5"/>
+                    </connections>
+                </viewController>
+                <customObject id="ldn-7K-CfB" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2675.5" y="-1027"/>
         </scene>
         <!--Preferences View Controller-->
         <scene sceneID="RUq-Z2-epe">
@@ -576,7 +756,7 @@ CA
                 </viewController>
                 <customObject id="hXf-f9-bgi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="671" y="-335"/>
+            <point key="canvasLocation" x="671" y="-353"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -586,7 +766,7 @@ CA
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="641" height="353"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
                         <toolbar key="toolbar" implicitIdentifier="9A3B0A0D-B710-43CA-B121-26E4B17E2FB4" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="0T6-HU-hgD">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Tgv-Ff-Amz"/>
@@ -962,20 +1142,20 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
-                                <rect key="frame" x="0.0" y="0.0" width="641" height="416"/>
+                                <rect key="frame" x="0.0" y="0.0" width="641" height="403"/>
                                 <subviews>
                                     <customView misplaced="YES" id="n6S-qq-ccF">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="416"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="143" height="403"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
-                                                <rect key="frame" x="0.0" y="-1" width="143" height="416"/>
+                                                <rect key="frame" x="0.0" y="-1" width="143" height="403"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="5q7-hE-Sez">
-                                                    <rect key="frame" x="1" y="1" width="141" height="414"/>
+                                                    <rect key="frame" x="1" y="1" width="141" height="401"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="5vY-MX-0AQ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="414"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="401"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1053,17 +1233,17 @@ CA
                                         </constraints>
                                     </customView>
                                     <customView misplaced="YES" id="14O-xD-Zmz">
-                                        <rect key="frame" x="144" y="0.0" width="497" height="416"/>
+                                        <rect key="frame" x="144" y="0.0" width="497" height="403"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="20" minMagnification="0.0001" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rik-Es-Gue">
-                                                <rect key="frame" x="0.0" y="-1" width="497" height="416"/>
+                                                <rect key="frame" x="0.0" y="-1" width="497" height="403"/>
                                                 <clipView key="contentView" id="7l0-fe-uJU">
-                                                    <rect key="frame" x="1" y="1" width="495" height="414"/>
+                                                    <rect key="frame" x="1" y="1" width="495" height="401"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r38-hr-pgj" customClass="AnnotationsView" customModule="Annotate_ML" customModuleProvider="target">
-                                                            <rect key="frame" x="3" y="-34" width="489" height="445"/>
+                                                            <rect key="frame" x="3" y="-47" width="489" height="445"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" id="42g-qE-bAJ"/>
                                                         </imageView>
@@ -1071,11 +1251,11 @@ CA
                                                     <color key="backgroundColor" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xbV-x7-h5p">
-                                                    <rect key="frame" x="1" y="399" width="495" height="16"/>
+                                                    <rect key="frame" x="1" y="386" width="495" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.87096774193548387" horizontal="NO" id="7zK-ks-tXZ">
-                                                    <rect key="frame" x="480" y="1" width="16" height="414"/>
+                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.79545454545454541" horizontal="NO" id="7zK-ks-tXZ">
+                                                    <rect key="frame" x="480" y="1" width="16" height="401"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -1121,7 +1301,7 @@ CA
                         <windowCollectionBehavior key="collectionBehavior" transient="YES" fullScreenAuxiliary="YES" fullScreenDisallowsTiling="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="249" width="305" height="448"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
                         <connections>
                             <outlet property="delegate" destination="Qr5-WZ-fj1" id="ete-2V-SYx"/>
                         </connections>
@@ -1518,7 +1698,7 @@ CA
                 </viewController>
                 <customObject id="QeM-ZF-lqm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1247" y="154"/>
+            <point key="canvasLocation" x="1416" y="154"/>
         </scene>
         <!--Annotation Label View Controller-->
         <scene sceneID="39L-DC-AKn">
@@ -1682,8 +1862,127 @@ CA
             </objects>
             <point key="canvasLocation" x="43" y="1094"/>
         </scene>
+        <!--Onboarding Video View Controller-->
+        <scene sceneID="360-fp-nuq">
+            <objects>
+                <viewController storyboardIdentifier="Onboarding 2" id="0wb-bQ-zQn" customClass="OnboardingVideoViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="d6N-7c-won">
+                        <rect key="frame" x="0.0" y="0.0" width="689" height="500"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="P8a-B4-Td3">
+                                <rect key="frame" x="18" y="459" width="318" height="21"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Annotating your photos" id="Rh6-BA-EVu">
+                                    <font key="font" metaFont="systemMedium" size="18"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5Ui-O9-N83">
+                                <rect key="frame" x="105" y="20" width="480" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="476" id="QjJ-8i-O76"/>
+                                </constraints>
+                                <textFieldCell key="cell" selectable="YES" id="EMS-a3-I8U">
+                                    <font key="font" metaFont="system"/>
+                                    <string key="title">Creating annotations is just as easy! Click and drag to draw boxes around your subject. Then use the annotation editor to label them.</string>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="nCL-BS-KYI">
+                                <rect key="frame" x="20" y="70" width="649" height="360"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="649" id="J3a-Gc-uxD"/>
+                                    <constraint firstAttribute="height" constant="360" id="dDR-O7-Yfb"/>
+                                </constraints>
+                            </customView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="nCL-BS-KYI" firstAttribute="centerY" secondItem="d6N-7c-won" secondAttribute="centerY" id="3wj-XY-rpC"/>
+                            <constraint firstItem="P8a-B4-Td3" firstAttribute="top" secondItem="d6N-7c-won" secondAttribute="top" constant="20" id="Nfw-CG-3fM"/>
+                            <constraint firstItem="nCL-BS-KYI" firstAttribute="centerX" secondItem="d6N-7c-won" secondAttribute="centerX" id="PZG-pu-tz9"/>
+                            <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="P8a-B4-Td3" secondAttribute="trailing" constant="355" id="UL8-3V-Ccp"/>
+                            <constraint firstAttribute="bottom" secondItem="5Ui-O9-N83" secondAttribute="bottom" constant="20" id="Wyd-Z9-ikM"/>
+                            <constraint firstItem="P8a-B4-Td3" firstAttribute="leading" secondItem="d6N-7c-won" secondAttribute="leading" constant="20" id="X5e-Ct-b4s"/>
+                            <constraint firstItem="5Ui-O9-N83" firstAttribute="centerX" secondItem="d6N-7c-won" secondAttribute="centerX" id="mtI-Cl-tLU"/>
+                        </constraints>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="filename" value="Annotation"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="videoPlayer" destination="nCL-BS-KYI" id="Cyy-ad-en1"/>
+                    </connections>
+                </viewController>
+                <customObject id="MeA-FQ-48P" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3389" y="-1027"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="8zx-B3-YC9">
+            <objects>
+                <viewController storyboardIdentifier="Onboarding 3" id="Qqs-dV-4Kf" sceneMemberID="viewController">
+                    <view key="view" id="8hj-pc-bmR">
+                        <rect key="frame" x="0.0" y="0.0" width="689" height="500"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0y1-YB-H4G">
+                                <rect key="frame" x="316" y="188" width="309" height="125"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q1d-qk-z0h">
+                                        <rect key="frame" x="102" y="104" width="106" height="21"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Getting help" id="0aS-JF-F9e">
+                                            <font key="font" metaFont="systemMedium" size="18"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="xW3-Ur-3p5">
+                                        <rect key="frame" x="-2" y="0.0" width="313" height="96"/>
+                                        <textFieldCell key="cell" selectable="YES" id="nsS-3y-7qC">
+                                            <font key="font" metaFont="system"/>
+                                            <string key="title">If you ever need help in using Annotate ML, you can consult the guide from your menu bar (Help -&gt; Annotate ML). Also, feel free to DM me on Twitter at @MissEmlizB, if you have more questions or if you have suggestions for future versions of the app.</string>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QnN-Ws-mJE">
+                                <rect key="frame" x="20" y="20" width="288" height="460"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="460" id="W9k-p9-KF0"/>
+                                    <constraint firstAttribute="width" constant="288" id="nS7-av-TFa"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="AppIcon" id="iTo-X5-Bgs"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="0y1-YB-H4G" firstAttribute="centerY" secondItem="8hj-pc-bmR" secondAttribute="centerY" id="0eK-N9-2yB"/>
+                            <constraint firstAttribute="bottom" secondItem="QnN-Ws-mJE" secondAttribute="bottom" constant="20" id="3pC-Vw-NZM"/>
+                            <constraint firstItem="QnN-Ws-mJE" firstAttribute="top" secondItem="8hj-pc-bmR" secondAttribute="top" constant="20" id="YwC-12-l67"/>
+                            <constraint firstItem="0y1-YB-H4G" firstAttribute="leading" secondItem="QnN-Ws-mJE" secondAttribute="trailing" constant="8" id="cbM-KQ-Cha"/>
+                            <constraint firstAttribute="trailing" secondItem="0y1-YB-H4G" secondAttribute="trailing" constant="64" id="ecW-cu-Klu"/>
+                            <constraint firstItem="QnN-Ws-mJE" firstAttribute="leading" secondItem="8hj-pc-bmR" secondAttribute="leading" constant="20" id="uu4-vO-MgR"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="L8Q-D1-6Vw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4112.5" y="-1027"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="AppIcon" width="128" height="128"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSGoBackTemplate" width="9" height="12"/>
         <image name="NSGoForwardTemplate" width="9" height="12"/>
