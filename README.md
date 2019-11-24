@@ -1,6 +1,6 @@
 ![Banner](/Readme%20Photos/banner.png)
 
-### Annotate ML is an easy-to-use photo annotation app for Create ML object detectors.
+### Annotate ML is an easy-to-use macOS app to label your photos for Create ML.
 
 ![Screenshot](/Readme%20Photos/app.png)
 
@@ -13,6 +13,7 @@ https://unsplash.com/photos/w1JE5duY62M
 https://unsplash.com/photos/NaaiDPPlXwk
 https://unsplash.com/photos/sVRSQNPJMq4
 ```
+
 
 
 ### Downloads
