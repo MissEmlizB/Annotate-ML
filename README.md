@@ -22,3 +22,4 @@ There are currently no available releases for Annotate ML. However, feel free to
 
 ### Contact
 If you encounter issues with Annotate ML, (or if you want to suggest features for future versions) feel free to send me a DM on Twitter at @MissEmlizB.
+ 
