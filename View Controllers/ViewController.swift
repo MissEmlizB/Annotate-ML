@@ -285,7 +285,25 @@ extension ViewController {
 		self.photosTableView.selectRowIndexes([selection], byExtendingSelection: false)
 	}
 	
+	@IBAction func deleteSelectedPhoto(sender: AnyObject) {
+		let selectedRow = photosTableView.selectedRow
+		
+		guard selectedRow != -1 else {
+			return
+		}
+		
+		self.deletePhoto(at: selectedRow)
+	}
+	
 	func addImages(images: [URL], at start: Int = -1) {
+		
+		let row = photosTableView.selectedRow
+		
+		// if our selected row is being affected, deactivate the annotations view
+		if row >= start && row < start + images.count {
+			photosTableView.deselectAll(self)
+			annotationsView.object = nil
+		}
 		
 		document!.addPhotos(from: images, at: start,
 		
@@ -306,8 +324,9 @@ extension ViewController {
 		
 		let object = self.document!.objects[row]
 		
-		// reset our detail view if we're deleting the active object
-		if annotationsView.object == object {
+		// deactivate annotations view if our currently selected photo is the one being affected by this action
+		if row == photosTableView.selectedRow || annotationsView.object == object {
+			photosTableView.deselectAll(self)
 			annotationsView.object = nil
 		}
 		
@@ -324,6 +343,14 @@ extension ViewController {
 	}
 	
 	func addImages(images: [NSImage], at start: Int = -1) {
+		
+		let row = photosTableView.selectedRow
+		
+		// if our selected row is being affected, deactivate the annotations view
+		if row >= start && row < start + images.count {
+			photosTableView.deselectAll(self)
+			annotationsView.object = nil
+		}
 				
 		document!.addPhotos(images, at: start,
 							

@@ -296,6 +296,9 @@ extension AnnotationsView {
 					if NSPointInRect(cursor, handle) {
 						highlightedHandle = corner
 						setNeedsDisplay()
+						
+						// resizing cursor
+						NSCursor.resizeLeftRight.set()
 
 						return
 					}
@@ -313,9 +316,15 @@ extension AnnotationsView {
 				highlightedAnnotation = annotation
 				setNeedsDisplay()
 
+				// moving cursor
+				NSCursor.openHand.set()
+				
 				return
 			}
 		}
+		
+		//
+		NSCursor.crosshair.set()
 		
 		state = .normal
 		highlightedAnnotation = nil
@@ -331,7 +340,14 @@ extension AnnotationsView {
 		case .normal:
 			if highlightedAnnotation == nil {
 				start = cursor
+				
+				// drawing cursor
+				NSCursor.crosshair.set()
+				return
 			}
+		
+		case .canEnterDragMode, .resizeMode:
+			NSCursor.closedHand.set()
 			
 		default:
 			break
@@ -373,6 +389,8 @@ extension AnnotationsView {
 	}
 	
 	override func mouseUp(with event: NSEvent) {
+		
+		NSCursor.crosshair.set()
 		
 		let a = abs(w * h)
 		
@@ -419,6 +437,16 @@ extension AnnotationsView {
 		// create and select our new annotation
 		let annotation = createAnnotation(withRect: rect)
 		self.delegate?.annotationSelected(annotation: annotation, at: annotation.cgRect.origin)
+	}
+	
+	override func mouseEntered(with event: NSEvent) {
+		super.mouseEntered(with: event)
+		NSCursor.crosshair.set()
+	}
+	
+	override func mouseExited(with event: NSEvent) {
+		super.mouseExited(with: event)
+		NSCursor.arrow.set()
 	}
 }
 

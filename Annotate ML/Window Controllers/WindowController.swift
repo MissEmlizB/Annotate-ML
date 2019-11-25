@@ -149,6 +149,26 @@ class WindowController: NSWindowController {
 	
 	@IBAction func shareDocument(sender: AnyObject) {
 		
+		if document!.fileURL! == nil {
+			
+			/*
+			For some reason sharing doesn't work if the document
+			isn't saved, so instead of doing nothing, let's just tell the user
+			why sharing is currently unavailable for them.
+			*/
+			
+			let alert = NSAlert()
+			alert.alertStyle = .warning
+			
+			alert.messageText = "S0".l
+			alert.informativeText = "SUIT".l
+			
+			alert.addButton(withTitle: "Ok".l)
+			alert.runModal()
+			
+			return
+		}
+		
 		var service: NSSharingService.Name!
 		
 		switch sender.tag {
@@ -159,10 +179,10 @@ class WindowController: NSWindowController {
 			service = .cloudSharing
 			
 		case 2:
-			service = .composeMessage
+			service = .composeEmail
 			
 		case 3:
-			service = .composeEmail
+			service = .composeMessage
 			
 		default:
 			return
@@ -178,19 +198,6 @@ class WindowController: NSWindowController {
 	func setIndicator(isVisible: Bool) {
 		saveIndicator?.isHidden = !isVisible
 		isVisible ? saveIndicator?.startAnimation(self) : saveIndicator?.stopAnimation(self)
-	}
-	
-	func showMessage(title: String, message: String, style: NSAlert.Style = .informational) {
-		
-		// show a basic alert sheet
-		let alert = NSAlert()
-		
-		alert.alertStyle = style
-		alert.messageText = title
-		alert.informativeText = message
-		
-		alert.addButton(withTitle: "Ok")
-		alert.beginSheetModal(for: window!, completionHandler: nil)
 	}
 }
 
@@ -226,7 +233,6 @@ extension WindowController {
 						: "EIT0".l
 					
 					alert.addButton(withTitle: "Ok".l)
-					
 					alert.runModal()
 				}
 			}
