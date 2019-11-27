@@ -152,10 +152,7 @@ extension LabelsViewController: NSTableViewDelegate, NSTableViewDataSource {
 		
 		let deleteAction = NSTableViewRowAction(style: .destructive, title: "Del".l) { _, row in
 			
-			self.document!.customLabels.remove(at: row)
-			tableView.removeRows(at: [row], withAnimation: .slideUp)
-			
-			self.document!.updateChangeCount(.changeDone)
+			self.removeCustomLabel(at: row)
 		}
 		
 		return [deleteAction]
@@ -231,17 +228,21 @@ extension LabelsViewController {
 	
 	// MARK: Actions
 	@IBAction func addCustomLabel(sender: AnyObject) {
-		var name = "CLD".l
-		let count = document!.customLabels.count
+		addCustomLabel()
+	}
+	
+	@IBAction func removeCustomLabel(sender: AnyObject) {
+		let selectedRow = myLabels.selectedRow
 		
-		if count > 0 {
-			name += " \(count + 1)"
+		guard selectedRow >= 0 && selectedRow < document!.customLabels.count else {
+			return
 		}
 		
-		document!.customLabels.append(name)
-		document!.updateChangeCount(.changeDone)
-		
-		myLabels.insertRows(at: [count], withAnimation: .slideDown)
+		removeCustomLabel(at: selectedRow)
+	}
+	
+	@IBAction func refreshLabels(sender: AnyObject) {
+		document!.indexLabels()
 	}
 	
 	// MARK: Touchbar Actions
@@ -297,6 +298,9 @@ extension LabelsViewController {
 		detectedLabels?.reloadData()
 		myLabels?.reloadData()
 		
+		// update our labels
+		refreshLabels(sender: self)
+		
 		// register our undo action
 		guard registersUndo else {
 			return
@@ -311,5 +315,57 @@ extension LabelsViewController {
 		}
 		
 		undoManager?.setActionName("uLVMREN".l)
+	}
+	
+	private func addCustomLabel() {
+		var name = "CLD".l
+		let count = document!.customLabels.count
+		
+		if count > 0 {
+			name += " \(count + 1)"
+		}
+		
+		document!.customLabels.append(name)
+		document!.updateChangeCount(.changeDone)
+		
+		myLabels.insertRows(at: [count], withAnimation: .slideDown)
+		
+		//
+		undoManager?.registerUndo(withTarget: self) {
+			$0.undoManager?.registerUndo(withTarget: self) {
+				$0.addCustomLabel()
+			}
+			
+			$0.document!.customLabels.removeLast()
+			$0.document!.updateChangeCount(.changeUndone)
+			
+			$0.myLabels.removeRows(at: [count], withAnimation: .slideUp)
+		}
+		
+		undoManager?.setActionName("uLEACL".l)
+	}
+	
+	private func removeCustomLabel(at row: Int) {
+		
+		let object = self.document!.customLabels[row]
+		
+		self.document!.customLabels.remove(at: row)
+		myLabels.removeRows(at: [row], withAnimation: .slideUp)
+		
+		self.document!.updateChangeCount(.changeDone)
+		
+		//
+		undoManager?.registerUndo(withTarget: self) {
+			$0.undoManager?.registerUndo(withTarget: self) {
+				$0.removeCustomLabel(at: row)
+			}
+			
+			$0.document!.customLabels.insert(object, at: row)
+			$0.document!.updateChangeCount(.changeUndone)
+			
+			$0.myLabels.insertRows(at: [row], withAnimation: .slideDown)
+		}
+		
+		undoManager?.setActionName("uLERCL".l)
 	}
 }

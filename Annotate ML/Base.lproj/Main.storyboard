@@ -1054,11 +1054,6 @@ CA
                                                 <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="BXY-wc-z0C"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show Labels" keyEquivalent="l" id="xQp-xg-sBy">
-                                            <connections>
-                                                <action selector="showLabelsWithSender:" target="Ady-hI-5gd" id="X7k-dM-ef8"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Customize Toolbar…" id="1UK-8n-QPP">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -1093,6 +1088,39 @@ CA
                                         <menuItem title="Next Photo" keyEquivalent="" id="aFT-oN-Hbo">
                                             <connections>
                                                 <action selector="nextPhotoWithSender:" target="Ady-hI-5gd" id="7qh-dI-fdj"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Labels" id="Hmy-F0-q24">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Labels" id="1t1-Nq-rEs">
+                                    <items>
+                                        <menuItem title="Show Labels Editor" keyEquivalent="l" id="xQp-xg-sBy">
+                                            <connections>
+                                                <action selector="showLabelsWithSender:" target="Ady-hI-5gd" id="X7k-dM-ef8"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="jqg-Oq-agq"/>
+                                        <menuItem title="Add Custom Label" keyEquivalent="N" id="awD-gL-0sQ">
+                                            <connections>
+                                                <action selector="addCustomLabelWithSender:" target="Ady-hI-5gd" id="wk2-Qr-pzF"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Delete Custom Label" id="ORk-II-Vbc">
+                                            <string key="keyEquivalent" base64-UTF8="YES">
+CA
+</string>
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="removeCustomLabelWithSender:" target="Ady-hI-5gd" id="Aol-FX-mn3"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="LBu-so-AXr"/>
+                                        <menuItem title="Refresh Labels List" keyEquivalent="r" id="Sw2-mB-AJ5">
+                                            <connections>
+                                                <action selector="refreshLabelsWithSender:" target="Ady-hI-5gd" id="C8a-oc-11c"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1815,20 +1843,20 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
-                                <rect key="frame" x="0.0" y="0.0" width="641" height="360"/>
+                                <rect key="frame" x="0.0" y="0.0" width="641" height="351"/>
                                 <subviews>
                                     <customView misplaced="YES" id="n6S-qq-ccF">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="360"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="143" height="351"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
-                                                <rect key="frame" x="0.0" y="-1" width="143" height="360"/>
+                                                <rect key="frame" x="0.0" y="-1" width="143" height="351"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="5q7-hE-Sez">
-                                                    <rect key="frame" x="1" y="1" width="141" height="358"/>
+                                                    <rect key="frame" x="1" y="1" width="141" height="349"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="5vY-MX-0AQ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="358"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="349"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1836,7 +1864,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="138" minWidth="40" maxWidth="1000" id="vrG-KO-Ldp">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1906,17 +1934,17 @@ CA
                                         </constraints>
                                     </customView>
                                     <customView misplaced="YES" id="14O-xD-Zmz">
-                                        <rect key="frame" x="144" y="0.0" width="497" height="360"/>
+                                        <rect key="frame" x="144" y="0.0" width="497" height="351"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="20" minMagnification="0.0001" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rik-Es-Gue">
-                                                <rect key="frame" x="0.0" y="-1" width="497" height="360"/>
+                                                <rect key="frame" x="0.0" y="-1" width="497" height="351"/>
                                                 <clipView key="contentView" id="7l0-fe-uJU">
-                                                    <rect key="frame" x="1" y="1" width="495" height="358"/>
+                                                    <rect key="frame" x="1" y="1" width="495" height="349"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r38-hr-pgj" customClass="AnnotationsView" customModule="Annotate_ML" customModuleProvider="target">
-                                                            <rect key="frame" x="3" y="-90" width="489" height="445"/>
+                                                            <rect key="frame" x="3" y="-99" width="489" height="445"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" id="42g-qE-bAJ"/>
                                                         </imageView>
@@ -1924,13 +1952,14 @@ CA
                                                     <color key="backgroundColor" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xbV-x7-h5p">
-                                                    <rect key="frame" x="1" y="343" width="495" height="16"/>
+                                                    <rect key="frame" x="1" y="334" width="495" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.91954022988505746" horizontal="NO" id="7zK-ks-tXZ">
-                                                    <rect key="frame" x="480" y="1" width="16" height="358"/>
+                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.90625" horizontal="NO" id="7zK-ks-tXZ">
+                                                    <rect key="frame" x="480" y="1" width="16" height="349"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
+                                                <accessibility description="Annotations View"/>
                                             </scrollView>
                                         </subviews>
                                         <constraints>
@@ -2018,6 +2047,9 @@ CA
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="removeCustomLabelWithSender:" target="LGN-b1-RUb" id="7Pm-7v-aty"/>
+                                        </connections>
                                     </button>
                                 </viewController>
                             </touchBarItem>
@@ -2043,36 +2075,65 @@ CA
                                 <rect key="frame" x="0.0" y="0.0" width="352" height="522"/>
                             </visualEffectView>
                             <stackView distribution="equalSpacing" orientation="vertical" alignment="leading" spacing="4" horizontalStackHuggingPriority="250" verticalStackHuggingPriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JCs-Ky-WxA">
-                                <rect key="frame" x="20" y="31" width="312" height="460"/>
+                                <rect key="frame" x="20" y="27" width="312" height="468"/>
                                 <subviews>
                                     <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rZm-c2-Msf">
-                                        <rect key="frame" x="0.0" y="228" width="312" height="232"/>
+                                        <rect key="frame" x="0.0" y="228" width="312" height="240"/>
                                         <subviews>
                                             <stackView distribution="equalSpacing" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4EK-8j-Mbp">
-                                                <rect key="frame" x="0.0" y="208" width="312" height="24"/>
+                                                <rect key="frame" x="0.0" y="208" width="312" height="32"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Liz-Oa-I9b">
-                                                        <rect key="frame" x="-2" y="4" width="66" height="16"/>
+                                                        <rect key="frame" x="-2" y="8" width="66" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="My Labels" id="VhO-PX-qWm">
                                                             <font key="font" usesAppearanceFont="YES"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <button identifier="Add a new user-defined label" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bHx-Nb-2yR">
-                                                        <rect key="frame" x="288" y="0.0" width="24" height="24"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="24" id="GWT-G2-Jd3"/>
-                                                            <constraint firstAttribute="height" constant="24" id="iZd-Nf-0ZT"/>
-                                                        </constraints>
-                                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="w2t-3n-rap">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="addCustomLabelWithSender:" target="X2x-B9-AWw" id="gyz-TQ-XTd"/>
-                                                        </connections>
-                                                    </button>
+                                                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2mg-kS-XDx">
+                                                        <rect key="frame" x="244" y="0.0" width="68" height="32"/>
+                                                        <subviews>
+                                                            <button toolTip="Remove the currently selected custom label from your project." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="roR-bZ-1rv">
+                                                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="32" id="4zg-xh-P5D"/>
+                                                                    <constraint firstAttribute="width" constant="32" id="Ewx-9c-6w6"/>
+                                                                </constraints>
+                                                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="YoO-dh-sh8">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <accessibility description="Delete selected custom label"/>
+                                                                <connections>
+                                                                    <action selector="removeCustomLabelWithSender:" target="X2x-B9-AWw" id="npV-HR-8ma"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button toolTip="Add a new custom label to your project." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="T7k-NB-fa6">
+                                                                <rect key="frame" x="36" y="0.0" width="32" height="32"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="32" id="c9K-xb-URU"/>
+                                                                    <constraint firstAttribute="width" constant="32" id="ce6-bD-UIU"/>
+                                                                </constraints>
+                                                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Q90-Ey-U1N">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <accessibility description="Add custom label"/>
+                                                                <connections>
+                                                                    <action selector="addCustomLabelWithSender:" target="X2x-B9-AWw" id="7e1-Ya-20O"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <visibilityPriorities>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                        </visibilityPriorities>
+                                                        <customSpacing>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                        </customSpacing>
+                                                    </stackView>
                                                 </subviews>
                                                 <visibilityPriorities>
                                                     <integer value="1000"/>
@@ -2098,7 +2159,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="9Ec-6N-uCQ">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2135,7 +2196,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="hWV-TP-Xuq">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2193,6 +2254,7 @@ CA
                                                     <rect key="frame" x="0.0" y="0.0" width="310" height="25"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableHeaderView>
+                                                <accessibility description="Custom labels list"/>
                                             </scrollView>
                                         </subviews>
                                         <constraints>
@@ -2234,7 +2296,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="0FV-7n-xGe">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2274,7 +2336,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="wB9-EA-rPW">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                        <font key="font" metaFont="message" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2332,6 +2394,7 @@ CA
                                                     <rect key="frame" x="0.0" y="0.0" width="310" height="25"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableHeaderView>
+                                                <accessibility description="Detected labels list"/>
                                             </scrollView>
                                         </subviews>
                                         <visibilityPriorities>
@@ -2408,6 +2471,7 @@ CA
 </string>
                                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                                         </buttonCell>
+                                                        <accessibility description="Delete Annotation"/>
                                                         <connections>
                                                             <action selector="deleteWithSender:" target="ag3-kJ-hIa" id="X4D-CB-unb"/>
                                                         </connections>
@@ -2429,6 +2493,7 @@ CA
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </comboBoxCell>
+                                                <accessibility description="Annotation label"/>
                                             </comboBox>
                                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bds-6I-l5f">
                                                 <rect key="frame" x="0.0" y="0.0" width="410" height="32"/>
@@ -2601,10 +2666,10 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0y1-YB-H4G">
-                                <rect key="frame" x="316" y="181" width="309" height="139"/>
+                                <rect key="frame" x="316" y="165" width="309" height="171"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q1d-qk-z0h">
-                                        <rect key="frame" x="78" y="104" width="153" height="35"/>
+                                        <rect key="frame" x="78" y="136" width="153" height="35"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Getting help" id="0aS-JF-F9e">
                                             <font key="font" metaFont="systemThin" size="30"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -2612,10 +2677,13 @@ CA
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="xW3-Ur-3p5">
-                                        <rect key="frame" x="-2" y="0.0" width="313" height="96"/>
+                                        <rect key="frame" x="-2" y="0.0" width="313" height="128"/>
                                         <textFieldCell key="cell" selectable="YES" id="nsS-3y-7qC">
                                             <font key="font" metaFont="system"/>
-                                            <string key="title">If you need help using Annotate ML, you can consult the guide from your menu bar (Help -&gt; Annotate ML). Also, feel free to DM me on Twitter at @MissEmlizB, if you have more questions or if you have suggestions for future versions of the app.</string>
+                                            <string key="title">If you need help using Annotate ML, you can always consult the guide, at any time, from the menu bar (Help -&gt; Annotate ML Help).
+
+If you have more questions or if you have suggestions for future versions of the app, Feel free to contact me on Twitter at @MissEmlizB.
+</string>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -2926,7 +2994,7 @@ CA
                                     <rect key="frame" x="-100" y="-100" width="670" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.94827586206896552" horizontal="NO" id="SA2-uT-ujH">
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.99568965517241381" horizontal="NO" id="SA2-uT-ujH">
                                     <rect key="frame" x="655" y="1" width="16" height="404"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -2996,7 +3064,7 @@ CA
                                                                         <font key="font" metaFont="system"/>
                                                                         <string key="title">Besides providing an overview of your project's classes, the labels editor also provides you with tools to easily add/remove/rename your labels.
 
-You can open it using the "Labels" button in the toolbar (and touch bar), or by using the menu bar shortcut under View -&gt; Show Labels.</string>
+You can open it using the "Labels" button in the toolbar (and touch bar), or by using the menu bar shortcut under Labels -&gt; Show Labels Editor.</string>
                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -3086,10 +3154,10 @@ You can open it using the "Labels" button in the toolbar (and touch bar), or by 
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Custom-Labels" id="ZSa-RO-92g"/>
                                                         </imageView>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="opZ-rf-Ia5">
-                                                            <rect key="frame" x="288" y="41" width="342" height="111"/>
+                                                            <rect key="frame" x="288" y="25" width="342" height="143"/>
                                                             <subviews>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XRC-xX-ACv">
-                                                                    <rect key="frame" x="-2" y="88" width="138" height="23"/>
+                                                                    <rect key="frame" x="-2" y="120" width="138" height="23"/>
                                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="Custom Labels" id="kuq-Wh-9NR">
                                                                         <font key="font" metaFont="systemMedium" size="20"/>
                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -3097,12 +3165,12 @@ You can open it using the "Labels" button in the toolbar (and touch bar), or by 
                                                                     </textFieldCell>
                                                                 </textField>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="GL9-UH-alF">
-                                                                    <rect key="frame" x="-2" y="0.0" width="346" height="80"/>
+                                                                    <rect key="frame" x="-2" y="0.0" width="346" height="112"/>
                                                                     <textFieldCell key="cell" selectable="YES" id="QYY-JU-Wiy">
                                                                         <font key="font" metaFont="system"/>
                                                                         <string key="title">You can add your custom label suggestions to the annotation editor by adding a new custom label in the labels editor.
 
-(You can delete custom labels by swiping left on them.)</string>
+You can delete the currently selected (custom) label by either swiping left on it or by using Labels -&gt; Delete Custom Label.</string>
                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -3170,7 +3238,7 @@ You can open it using the "Labels" button in the toolbar (and touch bar), or by 
                                     <rect key="frame" x="-100" y="-100" width="670" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.4181034482758621" horizontal="NO" id="XXR-oj-a6q">
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.89655172413793105" horizontal="NO" id="XXR-oj-a6q">
                                     <rect key="frame" x="655" y="1" width="16" height="427"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -3207,6 +3275,7 @@ You can open it using the "Labels" button in the toolbar (and touch bar), or by 
         <image name="NSGoLeftTemplate" width="9" height="12"/>
         <image name="NSGoRightTemplate" width="9" height="12"/>
         <image name="NSListViewTemplate" width="14" height="10"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="NSShareTemplate" width="11" height="16"/>
         <image name="NSTouchBarAddDetailTemplate" width="18" height="30"/>
         <image name="NSTouchBarDeleteTemplate" width="15" height="30"/>

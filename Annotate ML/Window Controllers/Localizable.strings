@@ -42,7 +42,13 @@
 "uAM" = "move annotation"; // undo: annotation moved
 
 "uPSW" = "select photo"; // undo: photo switched
-"uLVMREN" = "mass rename labels"; // undo: labels view mass rename
+"uLVMREN" = "rename label"; // undo: labels view mass rename
 
 "uDPIMP" = "import photo(s)"; // undo: document photo import
 "uDPDEL" = "delete photo"; // undo: document photo delete
+
+"uLEACL" = "add custom label"; // undo: labels editor add custom label
+"uLERCL" = "remove custom label"; // undo: labels editor remove custom label
+
+// accessibility labels //
+"aSBPH" = "Changed selected photo"; // Accessibility Sidebar photo label

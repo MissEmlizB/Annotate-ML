@@ -95,7 +95,11 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 		cell.photo.image = thumbnail
 		
 		isProcessing ? cell.processingIndicator.startAnimation(self) : cell.processingIndicator.stopAnimation(self)
+		
 		cell.processingIndicator.isHidden = !isProcessing
+		
+		// set its accessibility label
+		cell.setAccessibilityLabel("aSBPH".l)
 		
 		return cell
 	}
