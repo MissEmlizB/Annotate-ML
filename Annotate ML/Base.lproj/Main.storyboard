@@ -488,9 +488,8 @@ Note: This feature requires macOS 10.14 "Mojave" or later, and a device running 
                                                                 </textField>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="w8F-E9-n3v">
                                                                     <rect key="frame" x="-2" y="0.0" width="346" height="48"/>
-                                                                    <textFieldCell key="cell" selectable="YES" id="kW1-VO-U6C">
+                                                                    <textFieldCell key="cell" selectable="YES" title="Click and drag on the photo to draw your annotation box. Once you've finished, type its label in the annotation editor." id="kW1-VO-U6C">
                                                                         <font key="font" metaFont="system"/>
-                                                                        <string key="title">Click and drag on the photo to draw your annotation box. Once you've finished, the annotation editor will appear, prompting you to label it.</string>
                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -541,7 +540,7 @@ Note: This feature requires macOS 10.14 "Mojave" or later, and a device running 
                                                                     <rect key="frame" x="-2" y="0.0" width="346" height="64"/>
                                                                     <textFieldCell key="cell" selectable="YES" id="oaC-m1-aZi">
                                                                         <font key="font" metaFont="system"/>
-                                                                        <string key="title">Move your cursor over any annotation to reveal their resizing handles. Clicking and dragging on them will let you move and resize the annotation box in whichever direction you want. </string>
+                                                                        <string key="title">Move your cursor over any annotation to reveal their resizing handles. Clicking and dragging on them allows you to move and resize the annotation box in whichever direction you want. </string>
                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -1843,20 +1842,20 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
-                                <rect key="frame" x="0.0" y="0.0" width="641" height="351"/>
+                                <rect key="frame" x="0.0" y="0.0" width="641" height="349"/>
                                 <subviews>
                                     <customView misplaced="YES" id="n6S-qq-ccF">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="351"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="143" height="349"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
-                                                <rect key="frame" x="0.0" y="-1" width="143" height="351"/>
+                                                <rect key="frame" x="0.0" y="-1" width="143" height="349"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="5q7-hE-Sez">
-                                                    <rect key="frame" x="1" y="1" width="141" height="349"/>
+                                                    <rect key="frame" x="1" y="1" width="141" height="347"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="5vY-MX-0AQ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="349"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="347"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1934,17 +1933,17 @@ CA
                                         </constraints>
                                     </customView>
                                     <customView misplaced="YES" id="14O-xD-Zmz">
-                                        <rect key="frame" x="144" y="0.0" width="497" height="351"/>
+                                        <rect key="frame" x="144" y="0.0" width="497" height="349"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="20" minMagnification="0.0001" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rik-Es-Gue">
-                                                <rect key="frame" x="0.0" y="-1" width="497" height="351"/>
+                                                <rect key="frame" x="0.0" y="-1" width="497" height="349"/>
                                                 <clipView key="contentView" id="7l0-fe-uJU">
-                                                    <rect key="frame" x="1" y="1" width="495" height="349"/>
+                                                    <rect key="frame" x="1" y="1" width="495" height="347"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r38-hr-pgj" customClass="AnnotationsView" customModule="Annotate_ML" customModuleProvider="target">
-                                                            <rect key="frame" x="3" y="-99" width="489" height="445"/>
+                                                            <rect key="frame" x="3" y="-101" width="489" height="445"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" id="42g-qE-bAJ"/>
                                                         </imageView>
@@ -1952,11 +1951,11 @@ CA
                                                     <color key="backgroundColor" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xbV-x7-h5p">
-                                                    <rect key="frame" x="1" y="334" width="495" height="16"/>
+                                                    <rect key="frame" x="1" y="332" width="495" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.90625" horizontal="NO" id="7zK-ks-tXZ">
-                                                    <rect key="frame" x="480" y="1" width="16" height="349"/>
+                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.95918367346938771" horizontal="NO" id="7zK-ks-tXZ">
+                                                    <rect key="frame" x="480" y="1" width="16" height="347"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <accessibility description="Annotations View"/>
@@ -2666,10 +2665,10 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0y1-YB-H4G">
-                                <rect key="frame" x="316" y="165" width="309" height="171"/>
+                                <rect key="frame" x="316" y="173" width="309" height="155"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q1d-qk-z0h">
-                                        <rect key="frame" x="78" y="136" width="153" height="35"/>
+                                        <rect key="frame" x="78" y="120" width="153" height="35"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Getting help" id="0aS-JF-F9e">
                                             <font key="font" metaFont="systemThin" size="30"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -2677,13 +2676,12 @@ CA
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="xW3-Ur-3p5">
-                                        <rect key="frame" x="-2" y="0.0" width="313" height="128"/>
+                                        <rect key="frame" x="-2" y="0.0" width="313" height="112"/>
                                         <textFieldCell key="cell" selectable="YES" id="nsS-3y-7qC">
                                             <font key="font" metaFont="system"/>
                                             <string key="title">If you need help using Annotate ML, you can always consult the guide, at any time, from the menu bar (Help -&gt; Annotate ML Help).
 
-If you have more questions or if you have suggestions for future versions of the app, Feel free to contact me on Twitter at @MissEmlizB.
-</string>
+If you have questions or if you have suggestions for future versions of the app, Feel free to contact me on Twitter at @MissEmlizB.</string>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
@@ -3238,7 +3236,7 @@ You can delete the currently selected (custom) label by either swiping left on i
                                     <rect key="frame" x="-100" y="-100" width="670" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.89655172413793105" horizontal="NO" id="XXR-oj-a6q">
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.99137931034482762" horizontal="NO" id="XXR-oj-a6q">
                                     <rect key="frame" x="655" y="1" width="16" height="427"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
