@@ -29,6 +29,9 @@
 		A17AEDE523890B20005B19CA /* Annotation - Light.m4v in Resources */ = {isa = PBXBuildFile; fileRef = A16177FE2388B56800EA1074 /* Annotation - Light.m4v */; };
 		A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */; };
 		A18ECD1823730BEB00B8851C /* Resnet50Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */; };
+		A1E7268124B2CDFD009E6AA9 /* Exporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7268024B2CDFD009E6AA9 /* Exporter.swift */; };
+		A1E7268424B2CEFE009E6AA9 /* CreateMLExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7268324B2CEFE009E6AA9 /* CreateMLExporter.swift */; };
+		A1E7268824B2DBB0009E6AA9 /* TuriExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7268724B2DBB0009E6AA9 /* TuriExporter.swift */; };
 		A1F0BE7E2360546900AF1FD9 /* AnnotationLabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */; };
 		A1F1AD55236469FB003261C6 /* ThumbnailCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F1AD54236469FB003261C6 /* ThumbnailCellView.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +84,9 @@
 		A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = "Annotate ML/PreferencesViewController.swift"; sourceTree = SOURCE_ROOT; };
 		A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50Int8LUT.mlmodel; sourceTree = "<group>"; };
 		A1D724CA237D819F00C54DCF /* ib-cant-see-redo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ib-cant-see-redo.h"; sourceTree = "<group>"; };
+		A1E7268024B2CDFD009E6AA9 /* Exporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exporter.swift; sourceTree = "<group>"; };
+		A1E7268324B2CEFE009E6AA9 /* CreateMLExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMLExporter.swift; sourceTree = "<group>"; };
+		A1E7268724B2DBB0009E6AA9 /* TuriExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuriExporter.swift; sourceTree = "<group>"; };
 		A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationLabelViewController.swift; sourceTree = "<group>"; };
 		A1F1AD54236469FB003261C6 /* ThumbnailCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ThumbnailCellView.swift; path = "View Controllers/ThumbnailCellView.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -222,6 +228,7 @@
 		A14D07E9235DC2DB00E47BD3 /* Document */ = {
 			isa = PBXGroup;
 			children = (
+				A1E7268224B2CEE1009E6AA9 /* Exporters */,
 				A14D07BC235DC28900E47BD3 /* Document.swift */,
 				A14D07EC235DC42500E47BD3 /* Annotation.swift */,
 				A14D07E6235DC2CD00E47BD3 /* PhotoAnnotation.swift */,
@@ -258,6 +265,16 @@
 				A16177FE2388B56800EA1074 /* Annotation - Light.m4v */,
 			);
 			name = Movies;
+			sourceTree = "<group>";
+		};
+		A1E7268224B2CEE1009E6AA9 /* Exporters */ = {
+			isa = PBXGroup;
+			children = (
+				A1E7268024B2CDFD009E6AA9 /* Exporter.swift */,
+				A1E7268324B2CEFE009E6AA9 /* CreateMLExporter.swift */,
+				A1E7268724B2DBB0009E6AA9 /* TuriExporter.swift */,
+			);
+			path = Exporters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -323,7 +340,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1110;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Emily Blackwell";
 				TargetAttributes = {
 					A14D07B4235DC28900E47BD3 = {
@@ -397,14 +414,17 @@
 			files = (
 				A1F1AD55236469FB003261C6 /* ThumbnailCellView.swift in Sources */,
 				A1F0BE7E2360546900AF1FD9 /* AnnotationLabelViewController.swift in Sources */,
+				A1E7268124B2CDFD009E6AA9 /* Exporter.swift in Sources */,
 				A14D07BB235DC28900E47BD3 /* ViewController.swift in Sources */,
 				A14D07EF235DC86500E47BD3 /* WindowController.swift in Sources */,
 				A14D07F3235DF48F00E47BD3 /* CommonExtensions.swift in Sources */,
+				A1E7268824B2DBB0009E6AA9 /* TuriExporter.swift in Sources */,
 				A14D07ED235DC42500E47BD3 /* Annotation.swift in Sources */,
 				A14D07F1235DD9C000E47BD3 /* AnnotationsView.swift in Sources */,
 				A18ECD1823730BEB00B8851C /* Resnet50Int8LUT.mlmodel in Sources */,
 				A14D07E7235DC2CD00E47BD3 /* PhotoAnnotation.swift in Sources */,
 				A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */,
+				A1E7268424B2CEFE009E6AA9 /* CreateMLExporter.swift in Sources */,
 				A1111A7A2361ABAA0090A74F /* LabelsViewController.swift in Sources */,
 				A17AEDE123890236005B19CA /* OnboardingVideoViewController.swift in Sources */,
 				A17AEDDF2388F440005B19CA /* OnboardingViewController.swift in Sources */,
@@ -574,6 +594,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Annotate ML/Annotate_ML.entitlements";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 4VC3JB53HL;
@@ -595,6 +616,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Annotate ML/Annotate_ML.entitlements";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 4VC3JB53HL;

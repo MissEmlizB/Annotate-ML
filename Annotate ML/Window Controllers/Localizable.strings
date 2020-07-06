@@ -10,7 +10,7 @@
 "E0" = "Export Failed!"; // export (0 = false)
 "E1" = "Export Successful!"; // export (1 = true)
 "EIT0" = "There was a problem exporting your data!"; //export informative text (failed)
-"EIT1" = "You can find your exported data in"; // export informative text (success)
+"EIT1" = "You can find your exported data at"; // export informative text (success)
 
 // sharing //
 "S0" = "Sharing Unavailable"; // sharing (0 = false)

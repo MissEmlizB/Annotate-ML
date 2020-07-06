@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="14550"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="the Touch Bar" minToolsVersion="8.1" minSystemVersion="10.12.2" requiredIntegratedClassName="NSTouchBar"/>
     </dependencies>
@@ -808,6 +808,12 @@ CA
                                                             <action selector="exportWithSender:" target="Ady-hI-5gd" id="EPc-rf-kut"/>
                                                         </connections>
                                                     </menuItem>
+                                                    <menuItem title="Turi Create" keyEquivalent="E" id="Ll3-M4-nOQ">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="exportTuriWithSender:" target="Ady-hI-5gd" id="XbY-IX-Gv3"/>
+                                                        </connections>
+                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
@@ -1381,14 +1387,14 @@ CA
             <objects>
                 <viewController showSeguePresentationStyle="single" id="r3B-4W-2X0" customClass="PreferencesViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="nul-ug-KTb">
-                        <rect key="frame" x="0.0" y="0.0" width="382" height="122"/>
+                        <rect key="frame" x="0.0" y="0.0" width="382" height="134"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hhj-LO-EW0">
-                                <rect key="frame" x="10" y="19" width="362" height="84"/>
+                                <rect key="frame" x="10" y="14" width="362" height="106"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lSE-Pw-ubJ">
-                                        <rect key="frame" x="-2" y="68" width="366" height="16"/>
+                                        <rect key="frame" x="-2" y="90" width="366" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Editor" id="xpp-WK-evC">
                                             <font key="font" metaFont="systemMedium" size="13"/>
                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -1396,13 +1402,23 @@ CA
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FZJ-LB-RSg">
-                                        <rect key="frame" x="-2" y="44" width="284" height="18"/>
+                                        <rect key="frame" x="-2" y="66" width="284" height="18"/>
                                         <buttonCell key="cell" type="check" title="Show suggestions in the annotations editor" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="c9l-Ui-LH5">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
                                             <action selector="checkboxChangedWithSender:" target="r3B-4W-2X0" id="hFV-MZ-ubR"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="lpZ-hV-jD5">
+                                        <rect key="frame" x="-2" y="44" width="127" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Show image size " bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="opq-8P-n7V">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="checkboxChangedWithSender:" target="r3B-4W-2X0" id="aTV-yQ-7RQ"/>
                                         </connections>
                                     </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="50i-oW-BeY">
@@ -1414,8 +1430,8 @@ CA
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="0Ar-OS-dXW">
-                                        <rect key="frame" x="-2" y="-2" width="359" height="18"/>
-                                        <buttonCell key="cell" type="check" title="Combine title bar and tool bar (like Calendar and Safari)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="VTK-mM-eO7">
+                                        <rect key="frame" x="-2" y="-2" width="157" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Show document name" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="VTK-mM-eO7">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -1433,8 +1449,10 @@ CA
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
@@ -1451,12 +1469,13 @@ CA
                     </view>
                     <connections>
                         <outlet property="caltoolbarCheckbox" destination="0Ar-OS-dXW" id="PRR-Mq-mKu"/>
+                        <outlet property="imageSizeCheckbox" destination="lpZ-hV-jD5" id="OdF-hV-Whb"/>
                         <outlet property="suggestionsCheckbox" destination="FZJ-LB-RSg" id="gNC-Gf-pjo"/>
                     </connections>
                 </viewController>
                 <customObject id="hXf-f9-bgi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-539" y="39"/>
+            <point key="canvasLocation" x="-539" y="45"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -1682,7 +1701,8 @@ CA
                             <touchBarItem id="7Nz-f4-1Nz">
                                 <viewController key="viewController" id="YkL-ky-Xv7">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rnd-VZ-u91">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarGoBackTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zrv-pf-8Cz">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1696,7 +1716,8 @@ CA
                             <touchBarItem id="waC-Cn-CCN">
                                 <viewController key="viewController" id="syd-iX-Ggd">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ttq-3j-Uaj">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarGoForwardTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Jgm-lW-weA">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1711,7 +1732,8 @@ CA
                             <touchBarItem id="Iif-1F-q3P">
                                 <viewController key="viewController" id="1sy-jq-FQy">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g0o-Hw-71L">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Undo" bezelStyle="rounded" image="buttonCell:ef5-da-bAK:image" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ef5-da-bAK">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1725,7 +1747,8 @@ CA
                             <touchBarItem id="LQc-BD-q71">
                                 <viewController key="viewController" id="ab6-ZI-xoc">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1Tc-zm-4R2">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Redo" bezelStyle="rounded" image="buttonCell:ef5-da-bAK:image" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ey9-6z-gnN">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1739,7 +1762,8 @@ CA
                             <touchBarItem id="DgQ-2x-Obd">
                                 <viewController key="viewController" id="I7I-E5-wcH">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dQy-6D-zZH">
-                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="102" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Reset Zoom" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6UC-hr-cRg">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1754,7 +1778,8 @@ CA
                             <touchBarItem id="etE-8I-qtb">
                                 <viewController key="viewController" id="gb0-K1-mea">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TPP-mr-BrA">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarAddDetailTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g2f-R4-VqO">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1768,7 +1793,8 @@ CA
                             <touchBarItem id="KY9-Nf-QQr">
                                 <viewController key="viewController" id="ES5-fK-ITL">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xra-vV-MyU">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarFolderTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="FLk-pZ-ys5">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1782,7 +1808,8 @@ CA
                             <touchBarItem id="H6e-kX-gvB">
                                 <viewController key="viewController" id="P3N-kF-und">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oPb-dy-EO1">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="84" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Labels" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fFN-1r-J2S">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1838,24 +1865,24 @@ CA
             <objects>
                 <viewController id="5gI-5U-AMq" customClass="ViewController" customModule="Annotate_ML" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="ERx-hH-rdd">
-                        <rect key="frame" x="0.0" y="0.0" width="641" height="441"/>
+                        <rect key="frame" x="0.0" y="0.0" width="641" height="322"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-F3-w3a">
-                                <rect key="frame" x="0.0" y="0.0" width="641" height="349"/>
+                                <rect key="frame" x="0.0" y="0.0" width="641" height="298"/>
                                 <subviews>
                                     <customView misplaced="YES" id="n6S-qq-ccF">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="349"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="143" height="298"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsb-gn-Aan">
-                                                <rect key="frame" x="0.0" y="-1" width="143" height="349"/>
+                                                <rect key="frame" x="0.0" y="-1" width="143" height="298"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="5q7-hE-Sez">
-                                                    <rect key="frame" x="1" y="1" width="141" height="347"/>
+                                                    <rect key="frame" x="1" y="1" width="141" height="296"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="5vY-MX-0AQ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="347"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="141" height="296"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1863,7 +1890,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="138" minWidth="40" maxWidth="1000" id="vrG-KO-Ldp">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -1933,17 +1960,17 @@ CA
                                         </constraints>
                                     </customView>
                                     <customView misplaced="YES" id="14O-xD-Zmz">
-                                        <rect key="frame" x="144" y="0.0" width="497" height="349"/>
+                                        <rect key="frame" x="144" y="0.0" width="497" height="298"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="20" minMagnification="0.0001" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rik-Es-Gue">
-                                                <rect key="frame" x="0.0" y="-1" width="497" height="349"/>
+                                                <rect key="frame" x="0.0" y="-1" width="497" height="298"/>
                                                 <clipView key="contentView" id="7l0-fe-uJU">
-                                                    <rect key="frame" x="1" y="1" width="495" height="347"/>
+                                                    <rect key="frame" x="1" y="1" width="495" height="296"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r38-hr-pgj" customClass="AnnotationsView" customModule="Annotate_ML" customModuleProvider="target">
-                                                            <rect key="frame" x="3" y="-101" width="489" height="445"/>
+                                                            <rect key="frame" x="3" y="-152" width="489" height="445"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" id="42g-qE-bAJ"/>
                                                         </imageView>
@@ -1951,11 +1978,11 @@ CA
                                                     <color key="backgroundColor" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xbV-x7-h5p">
-                                                    <rect key="frame" x="1" y="332" width="495" height="16"/>
+                                                    <rect key="frame" x="1" y="281" width="495" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.95918367346938771" horizontal="NO" id="7zK-ks-tXZ">
-                                                    <rect key="frame" x="480" y="1" width="16" height="347"/>
+                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.66442953020134232" horizontal="NO" id="7zK-ks-tXZ">
+                                                    <rect key="frame" x="480" y="1" width="16" height="296"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <accessibility description="Annotations View"/>
@@ -1974,16 +2001,41 @@ CA
                                     <real value="250"/>
                                 </holdingPriorities>
                             </splitView>
+                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="popover" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="YX8-tC-iIP">
+                                <rect key="frame" x="511" y="20" width="110" height="40"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nF3-jz-eBV">
+                                        <rect key="frame" x="18" y="12" width="74" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Image Size" id="vPQ-kG-HUe">
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="nF3-jz-eBV" firstAttribute="leading" secondItem="YX8-tC-iIP" secondAttribute="leading" constant="20" id="FJ0-qY-eZO"/>
+                                    <constraint firstItem="nF3-jz-eBV" firstAttribute="centerX" secondItem="YX8-tC-iIP" secondAttribute="centerX" id="KDq-Mh-PyQ"/>
+                                    <constraint firstAttribute="height" constant="40" id="Oyu-S9-lw0"/>
+                                    <constraint firstAttribute="trailing" secondItem="nF3-jz-eBV" secondAttribute="trailing" constant="20" id="Tk0-gx-UDf"/>
+                                    <constraint firstItem="nF3-jz-eBV" firstAttribute="centerY" secondItem="YX8-tC-iIP" secondAttribute="centerY" id="gOB-1q-lkZ"/>
+                                </constraints>
+                            </visualEffectView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="gxT-F3-w3a" firstAttribute="bottom" secondItem="YX8-tC-iIP" secondAttribute="bottom" constant="20" id="IjW-e8-V7t"/>
                             <constraint firstItem="gxT-F3-w3a" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="3" id="R6E-al-oso"/>
                             <constraint firstAttribute="bottom" secondItem="gxT-F3-w3a" secondAttribute="bottom" id="aMn-BV-kEh"/>
                             <constraint firstItem="gxT-F3-w3a" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" id="eTf-Kd-ujp"/>
+                            <constraint firstItem="YX8-tC-iIP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gxT-F3-w3a" secondAttribute="leading" constant="480" id="heQ-gC-JeQ"/>
+                            <constraint firstItem="gxT-F3-w3a" firstAttribute="trailing" secondItem="YX8-tC-iIP" secondAttribute="trailing" constant="20" id="tbL-mE-1P5"/>
                             <constraint firstAttribute="trailing" secondItem="gxT-F3-w3a" secondAttribute="trailing" id="v4A-wC-X8x"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="annotationsView" destination="r38-hr-pgj" id="Nrb-HE-9yY"/>
+                        <outlet property="imageSizeBG" destination="YX8-tC-iIP" id="jO8-p0-OyT"/>
+                        <outlet property="imageSizeLabel" destination="nF3-jz-eBV" id="Gnx-ob-cNP"/>
                         <outlet property="photosTableView" destination="5vY-MX-0AQ" id="ycV-fR-iib"/>
                         <outlet property="scrollView" destination="Rik-Es-Gue" id="7aR-Wi-c6l"/>
                         <outlet property="splitView" destination="gxT-F3-w3a" id="0Eo-CH-xyj"/>
@@ -1991,7 +2043,7 @@ CA
                 </viewController>
                 <customObject id="2Tp-Fl-jBw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="44" y="747"/>
+            <point key="canvasLocation" x="43.5" y="746.5"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="nR8-FG-E2h">
@@ -2012,7 +2064,8 @@ CA
                             <touchBarItem id="kch-CI-VQG">
                                 <viewController key="viewController" id="X5I-gh-CqU">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BH0-RK-g8b">
-                                        <rect key="frame" x="0.0" y="0.0" width="108" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="120" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Mass Rename" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ad9-ih-8GP">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -2027,7 +2080,8 @@ CA
                             <touchBarItem id="k4v-AA-t8W">
                                 <viewController key="viewController" id="ka0-P2-2Kw">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6kd-b5-Ay1">
-                                        <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="156" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="New Custom Label" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qJG-dc-qpV">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -2041,7 +2095,8 @@ CA
                             <touchBarItem id="Hl8-eT-Kje">
                                 <viewController key="viewController" id="iks-8o-yHG">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KHW-o3-44q">
-                                        <rect key="frame" x="0.0" y="0.0" width="162" height="30"/>
+                                        <rect key="frame" x="0.0" y="-11" width="174" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Delete Custom Label" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5H8-FZ-b1m">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -2158,7 +2213,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="9Ec-6N-uCQ">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2195,7 +2250,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="hWV-TP-Xuq">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2295,7 +2350,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="0FV-7n-xGe">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2335,7 +2390,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="wB9-EA-rPW">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="message" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>

@@ -18,6 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	private var appearanceObserver: NSKeyValueObservation!
 	var model: VNCoreMLModel?
+	
+	static let exportCoordinator = NSFileCoordinator()
 	 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		

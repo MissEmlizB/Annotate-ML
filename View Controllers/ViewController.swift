@@ -19,6 +19,9 @@ class ViewController: NSViewController {
 	
 	@IBOutlet weak var splitView: NSSplitView!
 	
+	@IBOutlet weak var imageSizeLabel: NSTextField!
+	@IBOutlet weak var imageSizeBG: NSVisualEffectView!
+	
 	private weak var lastPopover: NSPopover?
 	private weak var document: Document?
 	
@@ -57,8 +60,35 @@ class ViewController: NSViewController {
 		
 		// update our annotations view whenever the user renames a label
 		annotationsView.setup()
+		
+		// Image size
+		let defaults = UserDefaults.standard
+		
+		if defaults.object(forKey: kPreferencesShowsImageSize) == nil {
+			defaults.setValue(true, forKey: kPreferencesShowsImageSize)
+		}
+		
+		let showsImageSize = defaults.bool(forKey: kPreferencesShowsImageSize) 
+		
+		imageSizeBG.isHidden = !showsImageSize
 	}
 
+	override func viewWillAppear() {
+		
+		super.viewWillAppear()
+		
+		NC.observe(PreferencesViewController.preferencesChanged,
+				   using: #selector(preferencesChanged(notification:)),
+				   on: self)
+	}
+	
+	override func viewWillDisappear() {
+		
+		super.viewWillDisappear()
+
+		NC.stopObserving(PreferencesViewController.preferencesChanged, on: self)
+	}
+	
 	override var representedObject: Any? {
 		didSet {
 			if let document = representedObject as? Document {
@@ -236,6 +266,19 @@ extension ViewController: AnnotationsViewDelegate {
 	
 	func annotationActionRedone() {
 		document!.updateChangeCount(.changeRedone)
+	}
+	
+	func annotationImageSizeAvailable(size: NSSize) {
+		
+		// Update our image size label
+		guard !imageSizeBG.isHidden else {
+			return
+		}
+		
+		let width = Int(size.width)
+		let height = Int(size.height)
+		
+		imageSizeLabel.stringValue = "\(width) x \(height) px"
 	}
 }
 
@@ -457,5 +500,34 @@ extension ViewController {
 	
 	private func renameAnnotation(annotation: Annotation, old: String, new: String) {
 		annotationsView.renameAnnotation(annotation: annotation, old: old, new: new)
+	}
+}
+
+extension ViewController {
+
+	// MARK: Preferences
+	
+	@objc private func preferencesChanged(notification: NSNotification?) {
+		
+		guard let changes = notification?.userInfo as? [String: Bool] else {
+			return
+		}
+		
+		if let isSizeShown = changes[kPreferencesShowsImageSize] {
+			
+			// Animate hiding/showing our image size label
+			let animation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
+			animation.isRemovedOnCompletion = true
+			animation.fromValue = isSizeShown ? 0.0 : 1.0
+			animation.toValue = isSizeShown ? 1.0 : 0.0
+			
+			CATransaction.begin()
+			
+			imageSizeBG.layer!.opacity = animation.toValue as! Float
+			animation.run(forKey: "opacity", object: imageSizeBG.layer!,
+						  arguments: [:])
+			
+			CATransaction.commit()
+		}
 	}
 }

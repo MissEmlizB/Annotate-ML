@@ -53,6 +53,7 @@ class WindowController: NSWindowController {
     }
 	
 	// MARK: Notification Actions
+	
 	@objc func didBecomeActive(notification: NSNotification) {
 		// allow our labels view to adapt it's UI for the currently-active document
 		NotificationCenter.default.post(name: WindowController.documentAvailable, object: document, userInfo: nil)
@@ -204,10 +205,33 @@ class WindowController: NSWindowController {
 extension WindowController {
 	
 	// MARK: Document Actions
-	
-	@IBAction func export(sender: AnyObject) {
 
+	private func exportCompletion(url: URL, success: Bool) {
+		
+		DispatchQueue.main.async {
+			
+			self.setIndicator(isVisible: false)
+			
+			// show the appropriate message
+			let alert = NSAlert()
+			
+			alert.alertStyle = success ? .informational : .critical
+			
+			alert.messageText = success ? "E1".l : "E0".l
+			
+			alert.informativeText = success
+				? "\("EIT1".l) \(url.path)."
+				: "EIT0".l
+			
+			alert.addButton(withTitle: "Ok".l)
+			alert.runModal()
+		}
+	}
+	
+	private func exportDocument(export: @escaping (Document, URL) -> Void) {
+		
 		exportPanel.beginSheetModal(for: window!) { response in
+			
 			guard response == .OK, let url = self.exportPanel.url else {
 				return
 			}
@@ -215,26 +239,25 @@ extension WindowController {
 			self.setIndicator(isVisible: true)
 			
 			let document = self.viewController?.representedObject as! Document
-			document.exportCreateML(url: url) { success in
-				
-				DispatchQueue.main.async {
-					
-					self.setIndicator(isVisible: false)
-					
-					// show the appropriate message
-					let alert = NSAlert()
-					
-					alert.alertStyle = success ? .informational : .critical
-					
-					alert.messageText = success ? "E1".l : "E0".l
-					
-					alert.informativeText = success
-						? "\("EIT1".l) \(url.path)."
-						: "EIT0".l
-					
-					alert.addButton(withTitle: "Ok".l)
-					alert.runModal()
-				}
+			
+			DispatchQueue.global(qos: .userInteractive).async {
+				export(document, url)
+			}
+		}
+	}
+	
+	@IBAction func export(sender: AnyObject) {
+		self.exportDocument { document, url in
+			document.exportCreateML(url: url) {
+				self.exportCompletion(url: url, success: $0)
+			}
+		}
+	}
+	
+	@IBAction func exportTuri(sender: AnyObject) {
+		self.exportDocument { document, url in
+			document.exportTuriCreate(url: url) {
+				self.exportCompletion(url: url, success: $0)
 			}
 		}
 	}
