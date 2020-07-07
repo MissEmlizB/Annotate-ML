@@ -51,8 +51,10 @@ class TuriExporter: CreateMLExporter {
 					"height": h * sh
 				]
 				
-				print(coordinates)
-				print("Rs: \(rw) x \(rh) Ss: \(w) x \(h)")
+				#if DEBUG
+					print(coordinates)
+					print("Rs: \(rw) x \(rh) Ss: \(w) x \(h)")
+				#endif
 				
 				annotations.append([
 					"label": annotation.label,
@@ -66,6 +68,27 @@ class TuriExporter: CreateMLExporter {
 				let line = "\(photoName),\(json)"
 				csv.append(line)
 			}
+		}
+		
+		// Export our Python templates
+		do {
+			try TemplateWriter.writeFile(filename: "Dataset", extension: "py", toUrl: url) {
+				$0.replacingOccurrences(of: "%PATH%", with: url.path)
+			}
+			
+			try TemplateWriter.writeFile(filename: "Visualise", extension: "py", toUrl: url)
+			
+			try TemplateWriter.writeFile(filename: "Create", extension: "py", toUrl: url)
+			
+			try TemplateWriter.writeFile(filename: "Requirements", extension: "txt", toUrl: url)
+		}
+		catch {
+			#if DEBUG
+				print(error.localizedDescription)
+			#endif
+			
+			completion?(false)
+			return
 		}
 		
 		// Export our annotations file

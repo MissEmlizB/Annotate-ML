@@ -48,9 +48,20 @@ class CreateMLExporter: DocumentExporter {
 		
 		let photosURL = fileURL?.appendingPathComponent("Photos", isDirectory: true)
 		
+		// Create our Photos directory
+		let outputDirectory = url.appendingPathComponent("Photos")
+		
+		if fm.fileExists(atPath: outputDirectory.path) {
+			try? fm.removeItem(at: outputDirectory)
+		}
+		
+		try? fm.createDirectory(at: outputDirectory, withIntermediateDirectories: false, attributes: [:])
+		
+		// Copy/write our photos to it
 		for object in objects {
 			let photoName = object.photoFilename!
-			let filename = url.appendingPathComponent(photoName).path
+			let filename = outputDirectory
+				.appendingPathComponent(photoName).path
 			
 			if fileURL != nil {
 				// if the project is already saved, we'll just copy
@@ -74,7 +85,7 @@ class CreateMLExporter: DocumentExporter {
 			}
 			
 			// log its annotations
-			writeAnnotation(object, photoName)
+			writeAnnotation(object, "Photos/\(photoName)")
 		}
 	}
 	
@@ -134,12 +145,6 @@ class CreateMLExporter: DocumentExporter {
 	// MARK: Export
 	
 	func export(url: URL, completion: CompletionHandler?) {
-		
-		let coordinator = AppDelegate.exportCoordinator
-		var error: NSError?
-		
-		coordinator.coordinate(writingItemAt: url, options: .forReplacing, error: &error) { url in
-			self._exportObjects(url: url, completion: completion)
-		}
+		self._exportObjects(url: url, completion: completion)
 	}
 }

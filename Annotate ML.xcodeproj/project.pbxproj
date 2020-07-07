@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		A1111A7A2361ABAA0090A74F /* LabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1111A792361ABAA0090A74F /* LabelsViewController.swift */; };
+		A11A5D3524B49F9800A9F592 /* Requirements.txt in Resources */ = {isa = PBXBuildFile; fileRef = A11A5D3124B49F9700A9F592 /* Requirements.txt */; };
+		A11A5D3624B49F9800A9F592 /* Visualise.py in Resources */ = {isa = PBXBuildFile; fileRef = A11A5D3224B49F9700A9F592 /* Visualise.py */; };
+		A11A5D3724B49F9800A9F592 /* Dataset.py in Resources */ = {isa = PBXBuildFile; fileRef = A11A5D3324B49F9800A9F592 /* Dataset.py */; };
+		A11A5D3824B49F9800A9F592 /* Create.py in Resources */ = {isa = PBXBuildFile; fileRef = A11A5D3424B49F9800A9F592 /* Create.py */; };
+		A11A5D3B24B49FF100A9F592 /* TemplateWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A5D3A24B49FF100A9F592 /* TemplateWriter.swift */; };
 		A12B29252363110400116875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A12B29242363110400116875 /* Localizable.strings */; };
 		A14D07B9235DC28900E47BD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07B8235DC28900E47BD3 /* AppDelegate.swift */; };
 		A14D07BB235DC28900E47BD3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07BA235DC28900E47BD3 /* ViewController.swift */; };
@@ -55,6 +60,11 @@
 
 /* Begin PBXFileReference section */
 		A1111A792361ABAA0090A74F /* LabelsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelsViewController.swift; sourceTree = "<group>"; };
+		A11A5D3124B49F9700A9F592 /* Requirements.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Requirements.txt; sourceTree = "<group>"; };
+		A11A5D3224B49F9700A9F592 /* Visualise.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Visualise.py; sourceTree = "<group>"; };
+		A11A5D3324B49F9800A9F592 /* Dataset.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Dataset.py; sourceTree = "<group>"; };
+		A11A5D3424B49F9800A9F592 /* Create.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Create.py; sourceTree = "<group>"; };
+		A11A5D3A24B49FF100A9F592 /* TemplateWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateWriter.swift; sourceTree = "<group>"; };
 		A12B29242363110400116875 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "Window Controllers/Localizable.strings"; sourceTree = "<group>"; };
 		A14D07B5235DC28900E47BD3 /* Annotate ML.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Annotate ML.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A14D07B8235DC28900E47BD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -138,6 +148,25 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		A11A5D3024B49F8A00A9F592 /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				A11A5D3924B49F9A00A9F592 /* TuriCreate */,
+			);
+			path = Templates;
+			sourceTree = "<group>";
+		};
+		A11A5D3924B49F9A00A9F592 /* TuriCreate */ = {
+			isa = PBXGroup;
+			children = (
+				A11A5D3424B49F9800A9F592 /* Create.py */,
+				A11A5D3324B49F9800A9F592 /* Dataset.py */,
+				A11A5D3124B49F9700A9F592 /* Requirements.txt */,
+				A11A5D3224B49F9700A9F592 /* Visualise.py */,
+			);
+			path = TuriCreate;
+			sourceTree = "<group>";
+		};
 		A12B29272363111500116875 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +178,7 @@
 		A12B29282363112700116875 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				A11A5D3024B49F8A00A9F592 /* Templates */,
 				A16177FC2388B55A00EA1074 /* Movies */,
 				A18ECD1723730BEB00B8851C /* Resnet50Int8LUT.mlmodel */,
 				A12B29242363110400116875 /* Localizable.strings */,
@@ -242,6 +272,7 @@
 				A1D724CA237D819F00C54DCF /* ib-cant-see-redo.h */,
 				A14D07B8235DC28900E47BD3 /* AppDelegate.swift */,
 				A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */,
+				A11A5D3A24B49FF100A9F592 /* TemplateWriter.swift */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -382,12 +413,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				A14D07BF235DC28B00E47BD3 /* Assets.xcassets in Resources */,
+				A11A5D3824B49F9800A9F592 /* Create.py in Resources */,
+				A11A5D3724B49F9800A9F592 /* Dataset.py in Resources */,
 				A17AEDE223890B18005B19CA /* Importing - Dark.m4v in Resources */,
+				A11A5D3524B49F9800A9F592 /* Requirements.txt in Resources */,
 				A17AEDE523890B20005B19CA /* Annotation - Light.m4v in Resources */,
 				A17AEDE323890B1A005B19CA /* Importing - Light.m4v in Resources */,
 				A12B29252363110400116875 /* Localizable.strings in Resources */,
 				A17AEDE423890B1D005B19CA /* Annotation - Dark.m4v in Resources */,
 				A14D07C2235DC28C00E47BD3 /* Main.storyboard in Resources */,
+				A11A5D3624B49F9800A9F592 /* Visualise.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +453,7 @@
 				A14D07BB235DC28900E47BD3 /* ViewController.swift in Sources */,
 				A14D07EF235DC86500E47BD3 /* WindowController.swift in Sources */,
 				A14D07F3235DF48F00E47BD3 /* CommonExtensions.swift in Sources */,
+				A11A5D3B24B49FF100A9F592 /* TemplateWriter.swift in Sources */,
 				A1E7268824B2DBB0009E6AA9 /* TuriExporter.swift in Sources */,
 				A14D07ED235DC42500E47BD3 /* Annotation.swift in Sources */,
 				A14D07F1235DD9C000E47BD3 /* AnnotationsView.swift in Sources */,
@@ -605,6 +641,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.emilyblackwell.Annotate-ML";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -628,6 +665,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.emilyblackwell.Annotate-ML";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

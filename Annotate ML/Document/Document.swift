@@ -497,7 +497,7 @@ class Document: NSDocument {
 				for annotation in object.annotations {
 					let label = annotation.label
 					
-					// exclude unlabled items and user-defined labels
+					// exclude unlabeled items and user-defined labels
 					guard label != "ALD".l && !label.isEmpty && !udl.contains(label) else {
 						continue
 					}
