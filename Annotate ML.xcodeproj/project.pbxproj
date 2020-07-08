@@ -26,6 +26,8 @@
 		A14D07EF235DC86500E47BD3 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07EE235DC86500E47BD3 /* WindowController.swift */; };
 		A14D07F1235DD9C000E47BD3 /* AnnotationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07F0235DD9C000E47BD3 /* AnnotationsView.swift */; };
 		A14D07F3235DF48F00E47BD3 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */; };
+		A157BD6024B62F6C00972724 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A157BD5F24B62F6C00972724 /* SplitViewController.swift */; };
+		A157BD6324B62FA100972724 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A157BD6124B62FA100972724 /* SidebarViewController.swift */; };
 		A17AEDDF2388F440005B19CA /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17AEDDE2388F440005B19CA /* OnboardingViewController.swift */; };
 		A17AEDE123890236005B19CA /* OnboardingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17AEDE023890236005B19CA /* OnboardingVideoViewController.swift */; };
 		A17AEDE223890B18005B19CA /* Importing - Dark.m4v in Resources */ = {isa = PBXBuildFile; fileRef = A17FC0C62388C6BD000D4AF6 /* Importing - Dark.m4v */; };
@@ -85,6 +87,8 @@
 		A14D07EE235DC86500E47BD3 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		A14D07F0235DD9C000E47BD3 /* AnnotationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsView.swift; sourceTree = "<group>"; };
 		A14D07F2235DF48F00E47BD3 /* CommonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
+		A157BD5F24B62F6C00972724 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
+		A157BD6124B62FA100972724 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		A16177FD2388B56800EA1074 /* Annotation - Dark.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Annotation - Dark.m4v"; sourceTree = "<group>"; };
 		A16177FE2388B56800EA1074 /* Annotation - Light.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Annotation - Light.m4v"; sourceTree = "<group>"; };
 		A17AEDDE2388F440005B19CA /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OnboardingViewController.swift; path = "Annotate ML/OnboardingViewController.swift"; sourceTree = SOURCE_ROOT; };
@@ -132,6 +136,8 @@
 				A17AEDE023890236005B19CA /* OnboardingVideoViewController.swift */,
 				A17AEDDE2388F440005B19CA /* OnboardingViewController.swift */,
 				A18ECD0B2372F1ED00B8851C /* PreferencesViewController.swift */,
+				A157BD5F24B62F6C00972724 /* SplitViewController.swift */,
+				A157BD6124B62FA100972724 /* SidebarViewController.swift */,
 				A14D07BA235DC28900E47BD3 /* ViewController.swift */,
 				A1F0BE7D2360546800AF1FD9 /* AnnotationLabelViewController.swift */,
 				A1111A792361ABAA0090A74F /* LabelsViewController.swift */,
@@ -460,8 +466,10 @@
 				A18ECD1823730BEB00B8851C /* Resnet50Int8LUT.mlmodel in Sources */,
 				A14D07E7235DC2CD00E47BD3 /* PhotoAnnotation.swift in Sources */,
 				A18ECD0C2372F1ED00B8851C /* PreferencesViewController.swift in Sources */,
+				A157BD6324B62FA100972724 /* SidebarViewController.swift in Sources */,
 				A1E7268424B2CEFE009E6AA9 /* CreateMLExporter.swift in Sources */,
 				A1111A7A2361ABAA0090A74F /* LabelsViewController.swift in Sources */,
+				A157BD6024B62F6C00972724 /* SplitViewController.swift in Sources */,
 				A17AEDE123890236005B19CA /* OnboardingVideoViewController.swift in Sources */,
 				A17AEDDF2388F440005B19CA /* OnboardingViewController.swift in Sources */,
 				A14D07B9235DC28900E47BD3 /* AppDelegate.swift in Sources */,

@@ -26,9 +26,9 @@ def toInt(v):
 
 # Option: proportions
 try:
-    split = float(options["proportions"])
+    split = float(options["fraction"])
 except:
-    print("Warning: --proportions must be a value between 0.0 to 1.0!")
+    print("Warning: --fraction must be a value between 0.0 to 1.0!")
     sys.exit(1)
 
 

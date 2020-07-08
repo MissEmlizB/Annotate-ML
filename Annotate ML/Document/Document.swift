@@ -18,8 +18,8 @@ fileprivate let kThumbnailsDir = "Thumbnails"
 fileprivate let CreateMLImageTypes = ["png", "jpg", "jpeg"]
 
 protocol DocumentDelegate {
-	func projectDidLoad()
-	func projectChanged()
+	func projectDidLoad(document: Document)
+	func projectChanged(document: Document)
 }
 
 class Document: NSDocument {
@@ -86,11 +86,14 @@ class Document: NSDocument {
 		self.addWindowController(windowController)
 		
 		// allow the view controller to access our objects array
-		windowController.contentViewController?.representedObject = self
+		let splitViewController = windowController.contentViewController as! SplitViewController
+		
+		splitViewController.document = self
 	}
 	
 	override func revertToSaved(_ sender: Any?) {
-		delegate?.projectChanged()
+		
+		delegate?.projectChanged(document: self)
 		super.revertToSaved(sender)
 	}
 	
@@ -138,7 +141,7 @@ class Document: NSDocument {
 			DispatchQueue.main.async {
 				self.objects = objects
 				self.photoIndex = photoIndex
-				self.delegate.projectDidLoad()
+				self.delegate.projectDidLoad(document: self)
 				self.isLoading = false
 			}
 		}
@@ -457,8 +460,17 @@ class Document: NSDocument {
 		}
 		
 		let filename = object.photoFilename!
+		var photoWrapper: FileWrapper!
 		
-		guard let photoWrapper = wrapper.fileWrappers?[filename],
+		// Find a matching file wrapper
+		for file in wrapper.fileWrappers!.values {
+			if file.isRegularFile && file.preferredFilename == filename {
+				photoWrapper = file
+				break
+			}
+		}
+		
+		guard photoWrapper != nil,
 			let data = photoWrapper.regularFileContents,
 			let photo = NSImage(data: data)
 			else {

@@ -37,7 +37,8 @@ class WindowController: NSWindowController {
 
 		exportPanel = NSSavePanel()
 		
-		viewController = (contentViewController as! ViewController)
+		let splitViewController = (contentViewController as! SplitViewController)
+		self.viewController = splitViewController.editor
 
 		NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSWindow.didBecomeKeyNotification, object: window)
 		
@@ -232,13 +233,12 @@ extension WindowController {
 		
 		exportPanel.beginSheetModal(for: window!) { response in
 			
-			guard response == .OK, let url = self.exportPanel.url else {
+			guard response == .OK, let url = self.exportPanel.url,
+				let document = self.viewController?.document else {
 				return
 			}
 			
 			self.setIndicator(isVisible: true)
-			
-			let document = self.viewController?.representedObject as! Document
 			
 			DispatchQueue.global(qos: .userInteractive).async {
 				export(document, url)
