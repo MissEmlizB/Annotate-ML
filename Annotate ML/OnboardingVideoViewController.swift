@@ -15,7 +15,7 @@ class OnboardingVideoViewController: NSViewController {
 		didSet {
 			setUpVideoPlayer()
 			
-			NotificationCenter.default.addObserver(self, selector: #selector((appearanceChanged(notification:))), name: AppDelegate.appearanceChanged, object: nil)
+			NC.observe(AppDelegate.appearanceChanged, using: #selector(appearanceChanged(notification:)), on: self)
 		}
 	}
 	

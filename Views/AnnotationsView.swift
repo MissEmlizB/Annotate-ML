@@ -111,7 +111,7 @@ class AnnotationsView: NSImageView {
 	}
 	
 	func setup() {
-		NotificationCenter.default.addObserver(self, selector: #selector(labelWasRenamed(notfication:)), name: LabelsViewController.labelRenamed, object: nil)
+		NC.observe(LabelsViewController.labelRenamed, using: #selector(labelWasRenamed(notfication:)), on: self)
 	}
 	
 	private func findClickedAnnotation(in event: NSEvent) {

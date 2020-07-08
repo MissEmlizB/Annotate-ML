@@ -21,12 +21,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		
-		// send a notification whenever the user changes their system appearance
+		// Send a notification whenever the user changes their system appearance
 		// https://indiestack.com/2018/10/supporting-dark-mode-responding-to-change/
 		
 		if #available(macOS 10.14, *) {
 			appearanceObserver = NSApp.observe(\.effectiveAppearance) { _, _ in
-				NotificationCenter.default.post(name: AppDelegate.appearanceChanged, object: nil)
+				NC.post(AppDelegate.appearanceChanged, object: nil)
 			}
 		}
 		

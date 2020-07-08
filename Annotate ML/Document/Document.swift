@@ -522,10 +522,11 @@ class Document: NSDocument {
 			}
 			
 			DispatchQueue.main.async {
-				self.labels = labels
-				NotificationCenter.default.post(name: Document.labelsIndexed, object: self, userInfo: nil)
 				
-				// this task has finished successfully!
+				self.labels = labels
+				NC.post(Document.labelsIndexed, object: self)
+				
+				// This task has finished successfully!
 				self.indexingTask = nil
 			}
 		}
@@ -533,6 +534,7 @@ class Document: NSDocument {
 		// run our indexing task in the background
 		indexingTask = task
 		
-		DispatchQueue.global(qos: .background).asyncAfter(deadline: .now(), execute: task)
+		DispatchQueue.global(qos: .background)
+			.asyncAfter(deadline: .now(), execute: task)
 	}
 }

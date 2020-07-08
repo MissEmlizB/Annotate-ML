@@ -40,11 +40,11 @@ class WindowController: NSWindowController {
 		let splitViewController = (contentViewController as! SplitViewController)
 		self.viewController = splitViewController.editor
 
-		NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSWindow.didBecomeKeyNotification, object: window)
+		NC.observe(NSWindow.didBecomeKeyNotification, using: #selector(didBecomeActive(notification:)), on: self, watch: self.window)
+
+		NC.observe(NSWindow.willCloseNotification, using: #selector(willClose(notification:)), on: self, watch: self.window)
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(willClose(notification:)), name: NSWindow.willCloseNotification, object: window)
-		
-		NotificationCenter.default.addObserver(self, selector: #selector(changeTitlebarAppearance(notification:)), name: PreferencesViewController.preferencesChanged, object: nil)
+		NC.observe(PreferencesViewController.preferencesChanged, using: #selector(changeTitlebarAppearance(notification:)), on: self)
 		
 		// update our title/tool bar appearance
 		
@@ -56,18 +56,18 @@ class WindowController: NSWindowController {
 	// MARK: Notification Actions
 	
 	@objc func didBecomeActive(notification: NSNotification) {
-		// allow our labels view to adapt it's UI for the currently-active document
-		NotificationCenter.default.post(name: WindowController.documentAvailable, object: document, userInfo: nil)
+		// Allow our labels view to update its UI for the currently-active document
+		NC.post(WindowController.documentAvailable, object: self.document)
 	}
 	
 	@objc func willClose(notification: NSNotification) {
 
 		// unregister our observers
-		NotificationCenter.default.removeObserver(self, name: NSWindow.didBecomeKeyNotification, object: window)
+		NC.stopObserving(NSWindow.didBecomeKeyNotification, on: self, specifically: self.window)
 		
-		NotificationCenter.default.removeObserver(self, name: NSWindow.willCloseNotification, object: window)
+		NC.stopObserving(NSWindow.willCloseNotification, on: self, specifically: self.window)
 		
-		NotificationCenter.default.removeObserver(self, name: PreferencesViewController.preferencesChanged, object: nil)
+		NC.stopObserving(PreferencesViewController.preferencesChanged, on: self)
 	}
 	
 	@objc func changeTitlebarAppearance(notification: NSNotification) {
@@ -272,7 +272,7 @@ extension WindowController {
 			let wc = segue.destinationController as! NSWindowController
 			let vc = wc.contentViewController as! LabelsViewController
 			
-			vc.document = viewController?.representedObject as? Document
+			vc.document = viewController?.document
 			labelsWC = wc
 		}
 	}

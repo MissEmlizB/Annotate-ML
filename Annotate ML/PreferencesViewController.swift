@@ -65,7 +65,7 @@ class PreferencesViewController: NSViewController {
 		case 1:
 			changes[kPreferencesCalendarStyleTitlebar] = isChecked
 			defaults.set(isChecked, forKey: kPreferencesCalendarStyleTitlebar)
-			
+		
 		case 2:
 			changes[kPreferencesShowsImageSize] = isChecked
 			defaults.set(isChecked, forKey: kPreferencesShowsImageSize)
@@ -74,7 +74,7 @@ class PreferencesViewController: NSViewController {
 			break
 		}
 		
-		// allow our UI to respond appropriately to the changes
-		NotificationCenter.default.post(name: PreferencesViewController.preferencesChanged, object: nil, userInfo: changes)
+		// Let our app respond appropriately to changes
+		NC.post(PreferencesViewController.preferencesChanged, info: changes, object: nil)
 	}
 }

@@ -1714,6 +1714,20 @@ CA
                     </window>
                     <touchBar key="touchBar" id="XWe-0T-w00">
                         <touchBarItems>
+                            <touchBarItem id="TiP-g6-6b8">
+                                <viewController key="viewController" id="kcR-tQ-FsJ">
+                                    <button key="view" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bxP-p2-QYo">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarSidebarTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="O3b-1z-XgD">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="toggleSidebar:" target="6f7-a7-6o1" id="mFi-yU-VPe"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
                             <touchBarItem id="7Nz-f4-1Nz">
                                 <viewController key="viewController" id="YkL-ky-Xv7">
                                     <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rnd-VZ-u91">
@@ -1796,20 +1810,6 @@ CA
                                         </buttonCell>
                                         <connections>
                                             <action selector="openImagesWithSender:" target="jGA-0Y-lOj" id="Q4p-ij-VDL"/>
-                                        </connections>
-                                    </button>
-                                </viewController>
-                            </touchBarItem>
-                            <touchBarItem id="KY9-Nf-QQr">
-                                <viewController key="viewController" id="ES5-fK-ITL">
-                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xra-vV-MyU">
-                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
-                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarFolderTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="FLk-pZ-ys5">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" usesAppearanceFont="YES"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="exportWithSender:" target="jGA-0Y-lOj" id="2nD-jP-c4a"/>
                                         </connections>
                                     </button>
                                 </viewController>
@@ -1916,7 +1916,7 @@ CA
                                             <tableColumns>
                                                 <tableColumn width="192" minWidth="40" maxWidth="1000" id="iKl-hq-xWB">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                        <font key="font" metaFont="label" size="11"/>
+                                                        <font key="font" metaFont="menu" size="11"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>
@@ -2235,7 +2235,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="9Ec-6N-uCQ">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="label" size="11"/>
+                                                                        <font key="font" metaFont="menu" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2272,7 +2272,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="hWV-TP-Xuq">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="label" size="11"/>
+                                                                        <font key="font" metaFont="menu" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2372,7 +2372,7 @@ CA
                                                             <tableColumns>
                                                                 <tableColumn width="118" minWidth="40" maxWidth="1000" id="0FV-7n-xGe">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Label">
-                                                                        <font key="font" metaFont="label" size="11"/>
+                                                                        <font key="font" metaFont="menu" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -2412,7 +2412,7 @@ CA
                                                                 </tableColumn>
                                                                 <tableColumn width="186" minWidth="40" maxWidth="1000" id="wB9-EA-rPW">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total Annotations">
-                                                                        <font key="font" metaFont="label" size="11"/>
+                                                                        <font key="font" metaFont="menu" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -3598,6 +3598,7 @@ You can delete the currently selected (custom) label by either swiping left on i
         <image name="NSTouchBarFolderTemplate" width="22" height="30"/>
         <image name="NSTouchBarGoBackTemplate" width="10" height="30"/>
         <image name="NSTouchBarGoForwardTemplate" width="10" height="30"/>
+        <image name="NSTouchBarSidebarTemplate" width="22" height="30"/>
         <image name="Step 1" width="531" height="387"/>
         <image name="Step 2" width="873" height="606"/>
         <image name="Step 3" width="465" height="320"/>
