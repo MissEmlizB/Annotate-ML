@@ -9,8 +9,14 @@
 import Cocoa
 import ImageIO
 
+
 fileprivate let handleSize: CGFloat = 16
 fileprivate let thumbnailSize: CGFloat = 120
+
+// MARK: Aliases
+
+typealias NC = NotificationCenter
+typealias NCName = NSNotification.Name
 
 // MARK: Colour Foreground
 extension NSColor {
@@ -151,3 +157,86 @@ extension NSRect {
 		]
 	}
 }
+
+// MARK: Notification Centre
+
+extension NotificationCenter {
+	
+	static func post(_ name: NCName, info userInfo: [AnyHashable: Any]? = nil, object: Any? = nil, onMain main: Bool = false) {
+		
+		let centre = NotificationCenter.default
+		
+		if main {
+			DispatchQueue.main.async {
+				centre.post(name: name, object: object, userInfo: userInfo)
+			}
+		}
+		
+		else {
+			centre.post(name: name, object: object, userInfo: userInfo)
+		}
+	}
+	
+	static func post(_ name: NCName, value object: Any? = nil, info userInfo: [AnyHashable: Any]? = nil, onMain main: Bool = false) {
+	
+		NotificationCenter.post(name, info: userInfo, object: object, onMain: main)
+	}
+	
+	static func observe(_ name: NCName, using selector: Selector, on observer: Any, watch object: Any? = nil) {
+		
+		let centre = NotificationCenter.default
+		centre.addObserver(observer, selector: selector, name: name, object: object)
+	}
+	
+	static func stopObserving(_ name: NCName, on observer: Any, specifically object: Any? = nil) {
+		
+		let centre = NotificationCenter.default
+		centre.removeObserver(observer, name: name, object: object)
+	}
+}
+
+extension NSNotification.Name {
+	
+	static func name(_ string: String) -> NSNotification.Name {
+		return NSNotification.Name(rawValue: string)
+	}
+}
+
+// MARK: Accessibility
+
+#if os(macOS)
+
+func alert(title: String, message: String, style: NSAlert.Style = .informational) {
+	
+	let alert = NSAlert()
+	
+	alert.messageText = title
+	alert.informativeText = message
+	alert.alertStyle = style
+	alert.addButton(withTitle: "ok".l)
+	
+	alert.runModal()
+}
+
+extension NSAccessibility {
+	
+	static var reducedMotionEnabled: Bool {
+		get {
+			if #available(macOS 10.12, *) {
+				return NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+			}
+			
+			else {
+				return false
+			}
+		}
+	}
+
+	static var highContrastEnabled: Bool {
+		get {
+			NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+		}
+	}
+}
+
+#endif

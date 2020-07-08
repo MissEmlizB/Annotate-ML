@@ -18,8 +18,8 @@ fileprivate let kThumbnailsDir = "Thumbnails"
 fileprivate let CreateMLImageTypes = ["png", "jpg", "jpeg"]
 
 protocol DocumentDelegate {
-	func projectDidLoad()
-	func projectChanged()
+	func projectDidLoad(document: Document)
+	func projectChanged(document: Document)
 }
 
 class Document: NSDocument {
@@ -86,11 +86,14 @@ class Document: NSDocument {
 		self.addWindowController(windowController)
 		
 		// allow the view controller to access our objects array
-		windowController.contentViewController?.representedObject = self
+		let splitViewController = windowController.contentViewController as! SplitViewController
+		
+		splitViewController.document = self
 	}
 	
 	override func revertToSaved(_ sender: Any?) {
-		delegate?.projectChanged()
+		
+		delegate?.projectChanged(document: self)
 		super.revertToSaved(sender)
 	}
 	
@@ -138,7 +141,7 @@ class Document: NSDocument {
 			DispatchQueue.main.async {
 				self.objects = objects
 				self.photoIndex = photoIndex
-				self.delegate.projectDidLoad()
+				self.delegate.projectDidLoad(document: self)
 				self.isLoading = false
 			}
 		}
@@ -155,76 +158,13 @@ class Document: NSDocument {
 	// MARK: Export
 	
 	func exportCreateML(url: URL, completion: ((Bool) -> Void)? = nil) {
-		
-		let wrapper = self.photosWrapper
-		let fm = FileManager.default
-		let objects = self.objects
-		
-		DispatchQueue.global(qos: .userInitiated).async {
-			
-			// create a directory to store our photos
-			do {
-				try fm.createDirectory(at: url, withIntermediateDirectories: false, attributes: .none)
-			} catch {
-				completion?(false)
-				return
-			}
-			
-			var json: [[String: Any]] = []
-			let projectLocation = self.fileURL
-			let photosURL = projectLocation?.appendingPathComponent("Photos", isDirectory: true)
-			
-			// export our photos
-			for object in objects {
-				let photoName = object.photoFilename!
-				let filename = url.appendingPathComponent(photoName).path
-				
-				if projectLocation != nil {
-					// if the project is already saved, we'll just copy
-					// the files from our package to the selected folder
-					
-					let photoURL = photosURL!.appendingPathComponent(photoName)
-					try? fm.copyItem(atPath: photoURL.path, toPath: filename)
-					
-				} else {
-					
-					// if not, we'll just create them
-					guard let photoWrapper = wrapper?.fileWrappers?[photoName],
-						let photoData = photoWrapper.regularFileContents,
-						let photo = NSImage(data: photoData),
-						let data = photo.tiffRepresentation?.bitmap?.png
-						else {
-							continue
-					}
-					
-					fm.createFile(atPath: filename, contents: data, attributes: [:])
-				}
-				
-				// log its annotations
-				var objectEntry: [String: Any] = ["image": photoName]
-				var annotations: [[String: Any]] = []
-				
-				for annotation in object.annotations {
-					annotations.append(["label": annotation.label, "coordinates": annotation.json])
-				}
-				
-				objectEntry["annotations"] = annotations
-				json.append(objectEntry)
-			}
-			
-			// write the annotations file
-			let annotationsPath = url.appendingPathComponent("annotations.json").path
-			
-			guard let annotationsData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
-				
-				completion?(false)
-				return
-			}
-			
-			fm.createFile(atPath: annotationsPath, contents: annotationsData, attributes: .none)
-			
-			completion?(true)
-		}
+		CreateMLExporter(document: self)
+			.export(url: url, completion: completion)
+	}
+	
+	func exportTuriCreate(url: URL, completion: ((Bool) -> Void)? = nil) {
+		TuriExporter(document: self)
+			.export(url: url, completion: completion)
 	}
 	
 	// MARK: Package Actions
@@ -386,6 +326,15 @@ class Document: NSDocument {
 				let object = PhotoAnnotation(filename: filename)
 				self.objects.insert(object, at: base)
 				
+				// Get its real size
+				let imageRep = image.representations.first!
+				object.rw = imageRep.pixelsWide
+				object.rh = imageRep.pixelsHigh
+				
+				// Get its scaled size
+				object.w = Int(image.size.width)
+				object.h = Int(image.size.height)
+				
 				DispatchQueue.main.async {
 					available?(base, true)
 				}
@@ -511,14 +460,36 @@ class Document: NSDocument {
 		}
 		
 		let filename = object.photoFilename!
+		var photoWrapper: FileWrapper!
 		
-		guard let photoWrapper = wrapper.fileWrappers?[filename],
+		// Find a matching file wrapper
+		for file in wrapper.fileWrappers!.values {
+			if file.isRegularFile && file.preferredFilename == filename {
+				photoWrapper = file
+				break
+			}
+		}
+		
+		guard photoWrapper != nil,
 			let data = photoWrapper.regularFileContents,
 			let photo = NSImage(data: data)
 			else {
 			return nil
 		}
 		
+		// Update its real size property (if it's not set)
+		if object.rw == -1 || object.rh == -1 {
+			let imageRep = photo.representations.first!
+			object.rw = imageRep.pixelsWide
+			object.rh = imageRep.pixelsHigh
+		}
+		
+		// Update its scaled size
+		if object.w == -1 || object.h == -1 {
+			object.w = Int(photo.size.width)
+			object.h = Int(photo.size.height)
+		}
+			
 		return photo
 	}
 	
@@ -538,7 +509,7 @@ class Document: NSDocument {
 				for annotation in object.annotations {
 					let label = annotation.label
 					
-					// exclude unlabled items and user-defined labels
+					// exclude unlabeled items and user-defined labels
 					guard label != "ALD".l && !label.isEmpty && !udl.contains(label) else {
 						continue
 					}
@@ -551,10 +522,11 @@ class Document: NSDocument {
 			}
 			
 			DispatchQueue.main.async {
-				self.labels = labels
-				NotificationCenter.default.post(name: Document.labelsIndexed, object: self, userInfo: nil)
 				
-				// this task has finished successfully!
+				self.labels = labels
+				NC.post(Document.labelsIndexed, object: self)
+				
+				// This task has finished successfully!
 				self.indexingTask = nil
 			}
 		}
@@ -562,6 +534,7 @@ class Document: NSDocument {
 		// run our indexing task in the background
 		indexingTask = task
 		
-		DispatchQueue.global(qos: .background).asyncAfter(deadline: .now(), execute: task)
+		DispatchQueue.global(qos: .background)
+			.asyncAfter(deadline: .now(), execute: task)
 	}
 }

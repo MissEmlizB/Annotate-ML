@@ -37,13 +37,14 @@ class WindowController: NSWindowController {
 
 		exportPanel = NSSavePanel()
 		
-		viewController = (contentViewController as! ViewController)
+		let splitViewController = (contentViewController as! SplitViewController)
+		self.viewController = splitViewController.editor
 
-		NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSWindow.didBecomeKeyNotification, object: window)
+		NC.observe(NSWindow.didBecomeKeyNotification, using: #selector(didBecomeActive(notification:)), on: self, watch: self.window)
+
+		NC.observe(NSWindow.willCloseNotification, using: #selector(willClose(notification:)), on: self, watch: self.window)
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(willClose(notification:)), name: NSWindow.willCloseNotification, object: window)
-		
-		NotificationCenter.default.addObserver(self, selector: #selector(changeTitlebarAppearance(notification:)), name: PreferencesViewController.preferencesChanged, object: nil)
+		NC.observe(PreferencesViewController.preferencesChanged, using: #selector(changeTitlebarAppearance(notification:)), on: self)
 		
 		// update our title/tool bar appearance
 		
@@ -53,19 +54,20 @@ class WindowController: NSWindowController {
     }
 	
 	// MARK: Notification Actions
+	
 	@objc func didBecomeActive(notification: NSNotification) {
-		// allow our labels view to adapt it's UI for the currently-active document
-		NotificationCenter.default.post(name: WindowController.documentAvailable, object: document, userInfo: nil)
+		// Allow our labels view to update its UI for the currently-active document
+		NC.post(WindowController.documentAvailable, object: self.document)
 	}
 	
 	@objc func willClose(notification: NSNotification) {
 
 		// unregister our observers
-		NotificationCenter.default.removeObserver(self, name: NSWindow.didBecomeKeyNotification, object: window)
+		NC.stopObserving(NSWindow.didBecomeKeyNotification, on: self, specifically: self.window)
 		
-		NotificationCenter.default.removeObserver(self, name: NSWindow.willCloseNotification, object: window)
+		NC.stopObserving(NSWindow.willCloseNotification, on: self, specifically: self.window)
 		
-		NotificationCenter.default.removeObserver(self, name: PreferencesViewController.preferencesChanged, object: nil)
+		NC.stopObserving(PreferencesViewController.preferencesChanged, on: self)
 	}
 	
 	@objc func changeTitlebarAppearance(notification: NSNotification) {
@@ -204,37 +206,58 @@ class WindowController: NSWindowController {
 extension WindowController {
 	
 	// MARK: Document Actions
-	
-	@IBAction func export(sender: AnyObject) {
 
+	private func exportCompletion(url: URL, success: Bool) {
+		
+		DispatchQueue.main.async {
+			
+			self.setIndicator(isVisible: false)
+			
+			// show the appropriate message
+			let alert = NSAlert()
+			
+			alert.alertStyle = success ? .informational : .critical
+			
+			alert.messageText = success ? "E1".l : "E0".l
+			
+			alert.informativeText = success
+				? "\("EIT1".l) \(url.path)."
+				: "EIT0".l
+			
+			alert.addButton(withTitle: "Ok".l)
+			alert.runModal()
+		}
+	}
+	
+	private func exportDocument(export: @escaping (Document, URL) -> Void) {
+		
 		exportPanel.beginSheetModal(for: window!) { response in
-			guard response == .OK, let url = self.exportPanel.url else {
+			
+			guard response == .OK, let url = self.exportPanel.url,
+				let document = self.viewController?.document else {
 				return
 			}
 			
 			self.setIndicator(isVisible: true)
 			
-			let document = self.viewController?.representedObject as! Document
-			document.exportCreateML(url: url) { success in
-				
-				DispatchQueue.main.async {
-					
-					self.setIndicator(isVisible: false)
-					
-					// show the appropriate message
-					let alert = NSAlert()
-					
-					alert.alertStyle = success ? .informational : .critical
-					
-					alert.messageText = success ? "E1".l : "E0".l
-					
-					alert.informativeText = success
-						? "\("EIT1".l) \(url.path)."
-						: "EIT0".l
-					
-					alert.addButton(withTitle: "Ok".l)
-					alert.runModal()
-				}
+			DispatchQueue.global(qos: .userInteractive).async {
+				export(document, url)
+			}
+		}
+	}
+	
+	@IBAction func export(sender: AnyObject) {
+		self.exportDocument { document, url in
+			document.exportCreateML(url: url) {
+				self.exportCompletion(url: url, success: $0)
+			}
+		}
+	}
+	
+	@IBAction func exportTuri(sender: AnyObject) {
+		self.exportDocument { document, url in
+			document.exportTuriCreate(url: url) {
+				self.exportCompletion(url: url, success: $0)
 			}
 		}
 	}
@@ -249,7 +272,7 @@ extension WindowController {
 			let wc = segue.destinationController as! NSWindowController
 			let vc = wc.contentViewController as! LabelsViewController
 			
-			vc.document = viewController?.representedObject as? Document
+			vc.document = viewController?.document
 			labelsWC = wc
 		}
 	}

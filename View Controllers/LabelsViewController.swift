@@ -26,15 +26,15 @@ class LabelsViewController: NSViewController {
 	
 	weak var document: Document! {
 		didSet {
-			// initial tally
-			tallyLabels()
+			// Initial tally
+			self.tallyLabels()
 			
-			// register ourselves to receive indexing notifications
-			NotificationCenter.default.addObserver(self, selector: #selector(labelsAreAvailable(notification:)), name: Document.labelsIndexed, object: document)
+			// Register ourselves to receive indexing notifications
+			NC.observe(Document.labelsIndexed, using: #selector(labelsAreAvailable(notification:)), on: self, watch: self.document)
 			
-			// update our UI
-			myLabels.reloadData()
-			detectedLabels.reloadData()
+			// Update our UI
+			self.myLabels.reloadData()
+			self.detectedLabels.reloadData()
 		}
 	}
 
@@ -49,8 +49,8 @@ class LabelsViewController: NSViewController {
 		detectedLabels.delegate = self
 		detectedLabels.dataSource = self
     
-		// whenever the active window changes, adapt our UI to match their document
-		NotificationCenter.default.addObserver(self, selector: #selector(activeDocumentChanged(notification:)), name: WindowController.documentAvailable, object: nil)
+		// Whenever the active window changes, adapt our UI to match their document
+		NC.observe(WindowController.documentAvailable, using: #selector(activeDocumentChanged(notification:)), on: self)
 	}
 	
 	// MARK: Tally
@@ -220,7 +220,7 @@ extension LabelsViewController {
 		
 		// if we have any previous document references, remove this as its observer
 		if self.document != nil {
-			NotificationCenter.default.removeObserver(self, name: Document.labelsIndexed, object: self.document)
+			NC.stopObserving(Document.labelsIndexed, on: self, specifically: self.document)
 		}
 		
 		self.document = document
@@ -290,9 +290,9 @@ extension LabelsViewController {
 			}
 		}
 		
-		// update our UI
+		// Update our UI
 		document!.updateChangeCount(.changeDone)
-		NotificationCenter.default.post(name: LabelsViewController.labelRenamed, object: nil)
+		NC.post(LabelsViewController.labelRenamed, object: nil)
 		
 		// update our tables
 		detectedLabels?.reloadData()

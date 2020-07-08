@@ -11,6 +11,7 @@ import Cocoa
 // preferences keys
 let kPreferencesSuggestionsEnabled = "suggestionsEnabled"
 let kPreferencesCalendarStyleTitlebar = "combinedTitleBarAndToolBarAppearance"
+let kPreferencesShowsImageSize = "showsImageSize"
 
 class PreferencesViewController: NSViewController {
 
@@ -21,6 +22,7 @@ class PreferencesViewController: NSViewController {
 	
 	@IBOutlet weak var suggestionsCheckbox: NSButton!
 	@IBOutlet weak var caltoolbarCheckbox: NSButton!
+	@IBOutlet weak var imageSizeCheckbox: NSButton!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +31,8 @@ class PreferencesViewController: NSViewController {
 		setState(of: suggestionsCheckbox, forKey: kPreferencesSuggestionsEnabled, default: false)
 		
 		setState(of: caltoolbarCheckbox, forKey: kPreferencesCalendarStyleTitlebar, default: false)
+		
+		setState(of: imageSizeCheckbox, forKey: kPreferencesShowsImageSize, default: true)
     }
 	
 	// MARK: Actions
@@ -45,7 +49,8 @@ class PreferencesViewController: NSViewController {
 	}
 	
 	@IBAction func checkboxChanged(sender: NSButton) {
-		var changes: [String: Any] = [:]
+		
+		var changes: [String: Bool] = [:]
 		let tag = sender.tag
 		let isChecked = sender.state == .on
 		
@@ -60,12 +65,16 @@ class PreferencesViewController: NSViewController {
 		case 1:
 			changes[kPreferencesCalendarStyleTitlebar] = isChecked
 			defaults.set(isChecked, forKey: kPreferencesCalendarStyleTitlebar)
+		
+		case 2:
+			changes[kPreferencesShowsImageSize] = isChecked
+			defaults.set(isChecked, forKey: kPreferencesShowsImageSize)
 			
 		default:
 			break
 		}
 		
-		// allow our UI to respond appropriately to the changes
-		NotificationCenter.default.post(name: PreferencesViewController.preferencesChanged, object: nil, userInfo: changes)
+		// Let our app respond appropriately to changes
+		NC.post(PreferencesViewController.preferencesChanged, info: changes, object: nil)
 	}
 }

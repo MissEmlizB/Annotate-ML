@@ -20,6 +20,8 @@ protocol AnnotationsViewDelegate {
 	func annotationSelected(annotation: Annotation, at: NSPoint)
 	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage?
 	
+	func annotationImageSizeAvailable(size: NSSize)
+	
 	func annotationActionUndone()
 	func annotationActionRedone()
 }
@@ -75,15 +77,25 @@ class AnnotationsView: NSImageView {
 			}
 			
 			DispatchQueue.main.async {
-				// update our image view
-				self.image = image
-				let size = image.size
 				
-				// make sure that our image view matches the image's size
+				// Update our image view
+				self.image = image
+				
+				let imageRep = image.representations.first!
+				
+				// The actual photo size
+				let size = NSSize(width: imageRep.pixelsWide, height: imageRep.pixelsHigh)
+				
+				// Size scaled for the user's screen
+				let scaledSize = image.size
+				
+				self.delegate?.annotationImageSizeAvailable(size: size)
+				
+				// Make sure that our image view matches the image's real size
 				self.frame.size = size
 
-				// also, make sure our UI scales well with the image
-				let scale = (size.width + size.height) / 1000
+				// Also, make sure our UI scales well with the image
+				let scale = (scaledSize.width + scaledSize.height) / 1000
 
 				self.annotationUIScale = scale
 				self.annotationLineThickness = 4.0 * scale
@@ -92,14 +104,14 @@ class AnnotationsView: NSImageView {
 				
 				self.annotationBGOffset = self.annotationLineThickness / 2
 				
-				// finally, make sure that the entire image is visible when it has been selected
+				// Make sure that the entire image is visible
 				self.enclosingScrollView?.magnify(toFit: self.frame)
 			}
 		}
 	}
 	
 	func setup() {
-		NotificationCenter.default.addObserver(self, selector: #selector(labelWasRenamed(notfication:)), name: LabelsViewController.labelRenamed, object: nil)
+		NC.observe(LabelsViewController.labelRenamed, using: #selector(labelWasRenamed(notfication:)), on: self)
 	}
 	
 	private func findClickedAnnotation(in event: NSEvent) {

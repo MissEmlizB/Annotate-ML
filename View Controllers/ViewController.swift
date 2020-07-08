@@ -12,15 +12,27 @@ fileprivate let cellIdentifier = NSUserInterfaceItemIdentifier("cell")
 
 class ViewController: NSViewController {
 	
-	@IBOutlet weak var photosTableView: NSTableView!
 	@IBOutlet weak var annotationsView: AnnotationsView!
-	
 	@IBOutlet weak var scrollView: NSScrollView!
+	@IBOutlet weak var imageSizeLabel: NSTextField!
+	@IBOutlet weak var imageSizeBG: NSVisualEffectView!
 	
-	@IBOutlet weak var splitView: NSSplitView!
+	weak var photosTableView: NSTableView! {
+		
+		didSet {
+
+			photosTableView.dataSource = self
+			photosTableView.delegate = self
+			
+			// allow the user to drop photos or links to the photos table view
+			photosTableView.registerForDraggedTypes([.fileURL, .png, .tiff, .URL])
+			photosTableView.setDraggingSourceOperationMask(.move, forLocal: true)
+			photosTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
+		}
+	}
 	
 	private weak var lastPopover: NSPopover?
-	private weak var document: Document?
+	weak var document: Document?
 	
 	// labels renaming
 	private var previousLabel: String = ""
@@ -32,11 +44,11 @@ class ViewController: NSViewController {
 		get {
 			let row = photosTableView.selectedRow
 			
-			guard row >= 0 && row < document!.objects.count else {
+			guard row >= 0 && row < self.document!.objects.count else {
 				return nil
 			}
 			
-			return document!.objects[row]
+			return self.document!.objects[row]
 		}
 	}
 
@@ -44,32 +56,38 @@ class ViewController: NSViewController {
 		super.viewDidLoad()
 
 		annotationsView.delegate = self
-		
-		photosTableView.dataSource = self
-		photosTableView.delegate = self
-		
 		scrollView.wantsLayer = true
-		
-		// allow the user to drop photos or links to the photos table view
-		photosTableView.registerForDraggedTypes([.fileURL, .png, .tiff, .URL])
-		photosTableView.setDraggingSourceOperationMask(.move, forLocal: true)
-		photosTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
 		
 		// update our annotations view whenever the user renames a label
 		annotationsView.setup()
+		
+		// Image size
+		let defaults = UserDefaults.standard
+		
+		if defaults.object(forKey: kPreferencesShowsImageSize) == nil {
+			defaults.setValue(true, forKey: kPreferencesShowsImageSize)
+		}
+		
+		let showsImageSize = defaults.bool(forKey: kPreferencesShowsImageSize) 
+		
+		imageSizeBG.isHidden = !showsImageSize
+		imageSizeBG.layer!.cornerRadius = 12.0
 	}
 
-	override var representedObject: Any? {
-		didSet {
-			if let document = representedObject as? Document {
-				self.document = document
-				document.delegate = self
-				
-				if document.isLoading {
-					loadingStarted()
-				}
-			}
-		}
+	override func viewWillAppear() {
+		
+		super.viewWillAppear()
+		
+		NC.observe(PreferencesViewController.preferencesChanged,
+				   using: #selector(preferencesChanged(notification:)),
+				   on: self)
+	}
+	
+	override func viewWillDisappear() {
+		
+		super.viewWillDisappear()
+
+		NC.stopObserving(PreferencesViewController.preferencesChanged, on: self)
 	}
 }
 
@@ -78,15 +96,15 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
 	// MARK: Table View Delegate
 	
 	func numberOfRows(in tableView: NSTableView) -> Int {
-		return document?.objects.count ?? 0
+		return self.document?.objects.count ?? 0
 	}
 	
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		
 		var thumbnail: NSImage?
 		
-		if row >= 0 && row < document!.objects.count {
-			thumbnail = document!.objects[row].thumbnail
+		if row >= 0 && row < self.document!.objects.count {
+			thumbnail = self.document!.objects[row].thumbnail
 		}
 		
 		let cell = photosTableView.makeView(withIdentifier: cellIdentifier, owner: nil) as! ThumbnailCellView
@@ -175,13 +193,18 @@ extension ViewController: DocumentDelegate {
 	func loadingStarted() {
 	}
 	
-	func projectDidLoad() {
+	func projectDidLoad(document: Document) {
+		
+		// Set our document reference
+		if self.document == nil {
+			self.document = document
+		}
 		
 		var rows: IndexSet = []
-
+		
 		// start processing thumbnails
-		for (row, object) in document!.objects.enumerated() {
-			guard let thumbnail = document?.getPhoto(for: object, isThumbnail: true) else {
+		for (row, object) in document.objects.enumerated() {
+			guard let thumbnail = document.getPhoto(for: object, isThumbnail: true) else {
 				continue
 			}
 			
@@ -190,10 +213,10 @@ extension ViewController: DocumentDelegate {
 		}
 
 		photosTableView.insertRows(at: rows, withAnimation: .slideDown)
-		document!.indexLabels()
+		document.indexLabels()
 	}
 	
-	func projectChanged() {
+	func projectChanged(document: Document) {
 		annotationsView.object = nil
 	}
 }
@@ -203,7 +226,7 @@ extension ViewController: AnnotationsViewDelegate {
 	// MARK: Annotations Delegate
 	
 	func annotationCreated(annotation: Annotation) {
-		document!.updateChangeCount(.changeDone)
+		self.document!.updateChangeCount(.changeDone)
 	}
 	
 	func annotationSelected(annotation: Annotation, at: NSPoint) {
@@ -212,8 +235,8 @@ extension ViewController: AnnotationsViewDelegate {
 		let editorVC = storyboard!.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Annotation Popover")) as! AnnotationLabelViewController
 		
 		editorVC.object = annotation
-		editorVC.photo = document!.getPhoto(for: activeObject)
-		editorVC.document = document
+		editorVC.photo = self.document!.getPhoto(for: activeObject)
+		editorVC.document = self.document
 		editorVC.delegate = self
 		
 		let popover = NSPopover()
@@ -227,15 +250,28 @@ extension ViewController: AnnotationsViewDelegate {
 	}
 	
 	func annotationPhotoRequested(for object: PhotoAnnotation) -> NSImage? {
-		return document!.getPhoto(for: object)
+		return self.document!.getPhoto(for: object)
 	}
 	
 	func annotationActionUndone() {
-		document!.updateChangeCount(.changeUndone)
+		self.document!.updateChangeCount(.changeUndone)
 	}
 	
 	func annotationActionRedone() {
-		document!.updateChangeCount(.changeRedone)
+		self.document!.updateChangeCount(.changeRedone)
+	}
+	
+	func annotationImageSizeAvailable(size: NSSize) {
+		
+		// Update our image size label
+		guard !imageSizeBG.isHidden else {
+			return
+		}
+		
+		let width = Int(size.width)
+		let height = Int(size.height)
+		
+		imageSizeLabel.stringValue = "\(width) x \(height) px"
 	}
 }
 
@@ -253,7 +289,7 @@ extension ViewController: AnnotationLabelViewControllerDelegate {
 	
 	func labelChanged() {
 		annotationsView.setNeedsDisplay()
-		document!.indexLabels()
+		self.document!.indexLabels()
 	}
 	
 	func delete(annotation: Annotation) {
@@ -265,7 +301,7 @@ extension ViewController: AnnotationLabelViewControllerDelegate {
 			}
 		}
 		
-		document!.indexLabels()
+		self.document!.indexLabels()
 	}
 }
 
@@ -309,7 +345,7 @@ extension ViewController {
 			annotationsView.object = nil
 		}
 		
-		document!.addPhotos(from: images, at: start,
+		self.document!.addPhotos(from: images, at: start,
 		
 		// this gets triggered whenever a new photo was imported
 			
@@ -356,7 +392,7 @@ extension ViewController {
 			annotationsView.object = nil
 		}
 				
-		document!.addPhotos(images, at: start,
+		self.document!.addPhotos(images, at: start,
 							
 		available: { row, isInserting in
 			self.insertOrRemoveRow(at: row, inserting: isInserting)
@@ -370,7 +406,7 @@ extension ViewController {
 	func deleteSelectedPhoto() {
 		let selected = photosTableView?.selectedRow ?? -1
 		
-		guard selected >= 0 && selected < document!.objects.count else {
+		guard selected >= 0 && selected < self.document!.objects.count else {
 			return
 		}
 		
@@ -384,7 +420,7 @@ extension ViewController {
 	}
 	
 	func nextPhoto() {
-		if photosTableView.selectedRow < document!.objects.count {
+		if photosTableView.selectedRow < self.document!.objects.count {
 			photosTableView.selectRowIndexes([photosTableView.selectedRow + 1], byExtendingSelection: false)
 		}
 	}
@@ -457,5 +493,34 @@ extension ViewController {
 	
 	private func renameAnnotation(annotation: Annotation, old: String, new: String) {
 		annotationsView.renameAnnotation(annotation: annotation, old: old, new: new)
+	}
+}
+
+extension ViewController {
+
+	// MARK: Preferences
+	
+	@objc private func preferencesChanged(notification: NSNotification?) {
+		
+		guard let changes = notification?.userInfo as? [String: Bool] else {
+			return
+		}
+		
+		if let isSizeShown = changes[kPreferencesShowsImageSize] {
+			
+			// Animate hiding/showing our image size label
+			let animation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
+			animation.isRemovedOnCompletion = true
+			animation.fromValue = isSizeShown ? 0.0 : 1.0
+			animation.toValue = isSizeShown ? 1.0 : 0.0
+			
+			CATransaction.begin()
+			
+			imageSizeBG.layer!.opacity = animation.toValue as! Float
+			animation.run(forKey: "opacity", object: imageSizeBG.layer!,
+						  arguments: [:])
+			
+			CATransaction.commit()
+		}
 	}
 }
