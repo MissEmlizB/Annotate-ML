@@ -1716,7 +1716,7 @@ CA
                         <touchBarItems>
                             <touchBarItem id="TiP-g6-6b8">
                                 <viewController key="viewController" id="kcR-tQ-FsJ">
-                                    <button key="view" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bxP-p2-QYo">
+                                    <button key="view" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bxP-p2-QYo">
                                         <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarSidebarTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="O3b-1z-XgD">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1902,13 +1902,13 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="139" horizontalPageScroll="10" verticalLineScroll="139" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubA-X2-Fga">
-                                <rect key="frame" x="0.0" y="0.0" width="197" height="320"/>
+                                <rect key="frame" x="0.0" y="0.0" width="197" height="312"/>
                                 <clipView key="contentView" drawsBackground="NO" id="tkd-kF-F5j">
-                                    <rect key="frame" x="1" y="1" width="195" height="318"/>
+                                    <rect key="frame" x="1" y="1" width="195" height="310"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="137" rowSizeStyle="automatic" viewBased="YES" id="YVu-qj-KhI">
-                                            <rect key="frame" x="0.0" y="0.0" width="195" height="318"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="195" height="310"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2019,7 +2019,7 @@ CA
                                     <rect key="frame" x="1" y="305" width="639" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="b38-Nc-vyG">
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.98399999999999999" horizontal="NO" id="b38-Nc-vyG">
                                     <rect key="frame" x="624" y="1" width="16" height="320"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>

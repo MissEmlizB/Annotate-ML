@@ -14,12 +14,12 @@ arguments.add_argument("-v", "--verbose", help="If True, print progress updates 
 options = vars(arguments.parse_args())
 
 
-def toInt(v):
+def toInt(key):
     """ Try to turn a variable into an int """
     try:
-        v = int(options["maxIterations"])
+        v = int(options[key])
     except:
-        print("Warning: --maxIterations must be a valid integer value!")
+        print("Warning: --%s must be a valid integer value!" % (key))
         sys.exit(1)
 
     return v
@@ -33,10 +33,10 @@ except:
 
 
 # Option: max iterations
-maxIterations = toInt(options["maxIterations"])
+maxIterations = toInt("maxIterations")
 
 # Option: batch size
-batchSize = toInt(options["batchSize"])
+batchSize = toInt("batchSize")
 
 # Option: verbose
 if options["verbose"] == "true" or options["verbose"] == "yes":
