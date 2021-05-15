@@ -62,7 +62,8 @@ class CreateMLExporter: DocumentExporter {
 			let photoName = object.photoFilename!
 			let filename = outputDirectory
 				.appendingPathComponent(photoName).path
-			
+            print(filename)
+
 			if fileURL != nil {
 				// if the project is already saved, we'll just copy
 				// the files from our package to the selected folder
@@ -130,7 +131,7 @@ class CreateMLExporter: DocumentExporter {
 			for annotation in object.annotations {
 				annotations.append([
 					"label": annotation.label,
-					"coordinates": annotation.json
+					"coordinates": annotation.jsonForCreateML
 				])
 			}
 			

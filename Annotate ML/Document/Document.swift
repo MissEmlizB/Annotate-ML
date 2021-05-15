@@ -221,7 +221,7 @@ class Document: NSDocument {
 				let isAnAcceptedFileType = CreateMLImageTypes.contains(url.pathExtension.lowercased())
 				let fileExtension = isAnAcceptedFileType ? url.pathExtension : "png"
 				
-				let filename = "Photo \(index + importCount).\(fileExtension)"
+				let filename = "Photo-\(index + importCount).\(fileExtension)"
 				
 				// copy the image data to our "Photos" directory
 				
