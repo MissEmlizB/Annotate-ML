@@ -131,7 +131,7 @@ class CreateMLExporter: DocumentExporter {
 			for annotation in object.annotations {
 				annotations.append([
 					"label": annotation.label,
-					"coordinates": annotation.jsonForCreateML
+					"coordinates": annotation.json
 				])
 			}
 			
